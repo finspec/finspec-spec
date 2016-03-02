@@ -1,6 +1,6 @@
 {
     "title": "A JSON Schema for FinSpec v0.1.",
-    "id": "https://finspec.io/v0.1/schema.json#",
+    "id": "https://fixspec.com/finspec/v0.1/schema.json#",
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
     "required": [

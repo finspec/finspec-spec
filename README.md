@@ -6,15 +6,13 @@ The goal of FinSpec is to define a standard, protocol-agnostic, machine-readable
 
 Our hope is that the specification will allow both humans and computers to discover and understand the capabilities of an interface without needing to read through lengthy PDF documentation.  As well as creating interactive API documentation, correctly formatted FinSpec documents can be used by developers to validate and mock APIs, acclerating development and reducing errors.
 
-FinSpec specifications can be easily shared and updates communicated with counterparties for free via [here](https://finspec.io).
-
 ## Current Version - 0.1
 
 The current version of the FinSpec specification is 0.1 - and you can find it [here](versions/0.1.md).
 
 ## Schema Validation
 
-We *STRONGLY* recommend validating FinSpec schema validation prior to deployment or sharing with counterparties. A variety of schema validators exist for this purpose - you can find a list [here](http://json-schema.org/implementations.html).
+We *STRONGLY* recommend validating FinSpec schema validation prior to deployment or sharing with counterparties. You can find FinSpec Schema validator [here](https://github.com/finspec/finspec-validator).
 
 ## License
 
