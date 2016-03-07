@@ -80,7 +80,7 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "1",
+                            "enum": 1,
                             "description": "1"
                         }
                     ]
@@ -293,19 +293,19 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "0",
+                            "enum": 0,
                             "description": "Successful"
                         },
                         {
-                            "enum": "1",
+                            "enum": 1,
                             "description": "Recovery Request Limit Reached"
                         },
                         {
-                            "enum": "2",
+                            "enum": 2,
                             "description": "Invalid App ID"
                         },
                         {
-                            "enum": "3",
+                            "enum": 3,
                             "description": "Service Unavailable"
                         }
                     ]
@@ -352,15 +352,15 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "0",
+                            "enum": 0,
                             "description": "Download Complete"
                         },
                         {
-                            "enum": "1",
+                            "enum": 1,
                             "description": "Message Limit Reached"
                         },
                         {
-                            "enum": "3",
+                            "enum": 3,
                             "description": "Service Unavailable"
                         }
                     ]
@@ -468,15 +468,15 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "1",
+                            "enum": 1,
                             "description": "Partition 1"
                         },
                         {
-                            "enum": "2",
+                            "enum": 2,
                             "description": "Partition 2"
                         },
                         {
-                            "enum": "3",
+                            "enum": 3,
                             "description": "Partition 3"
                         }
                     ]
@@ -490,11 +490,11 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "1",
+                            "enum": 1,
                             "description": "Recovery Service Resumed"
                         },
                         {
-                            "enum": "2",
+                            "enum": 2,
                             "description": "Recovery Service Not Available"
                         }
                     ]
@@ -564,11 +564,11 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "1",
+                            "enum": 1,
                             "description": "Client"
                         },
                         {
-                            "enum": "3",
+                            "enum": 3,
                             "description": "House"
                         }
                     ]
@@ -590,7 +590,7 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "0",
+                            "enum": 0,
                             "description": "0"
                         }
                     ]
@@ -604,7 +604,7 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "0",
+                            "enum": 0,
                             "description": "0"
                         }
                     ]
@@ -618,19 +618,19 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "1",
+                            "enum": 1,
                             "description": "Market"
                         },
                         {
-                            "enum": "2",
+                            "enum": 2,
                             "description": "Limit"
                         },
                         {
-                            "enum": "3",
+                            "enum": 3,
                             "description": "Stop"
                         },
                         {
-                            "enum": "4",
+                            "enum": 4,
                             "description": "Stop Limit"
                         }
                     ]
@@ -644,47 +644,47 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "0",
+                            "enum": 0,
                             "description": "Day"
                         },
                         {
-                            "enum": "3",
+                            "enum": 3,
                             "description": "Immediate or Cancel (IOC)"
                         },
                         {
-                            "enum": "4",
+                            "enum": 4,
                             "description": "Fill or Kill (FOK)"
                         },
                         {
-                            "enum": "5",
+                            "enum": 5,
                             "description": "At the Opening (OPG)"
                         },
                         {
-                            "enum": "6",
+                            "enum": 6,
                             "description": "Good Till Date (GTD)"
                         },
                         {
-                            "enum": "8",
+                            "enum": 8,
                             "description": "Good Till Time (GTT)"
                         },
                         {
-                            "enum": "10",
+                            "enum": 10,
                             "description": "At the Close (ATC)"
                         },
                         {
-                            "enum": "12",
+                            "enum": 12,
                             "description": "Closing Price Cross (CPX)"
                         },
                         {
-                            "enum": "50",
+                            "enum": 50,
                             "description": "Good For Auction (GFA)"
                         },
                         {
-                            "enum": "51",
+                            "enum": 51,
                             "description": "Good For Intraday Auction (GFX)"
                         },
                         {
-                            "enum": "52",
+                            "enum": 52,
                             "description": "Good for Scheduled Action (GFS)"
                         }
                     ]
@@ -706,11 +706,11 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "1",
+                            "enum": 1,
                             "description": "Buy"
                         },
                         {
-                            "enum": "2",
+                            "enum": 2,
                             "description": "Sell"
                         }
                     ]
@@ -747,19 +747,19 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "1",
+                            "enum": 1,
                             "description": "Riskless Principal"
                         },
                         {
-                            "enum": "2",
+                            "enum": 2,
                             "description": "Principal"
                         },
                         {
-                            "enum": "3",
+                            "enum": 3,
                             "description": "Agency"
                         },
                         {
-                            "enum": "4",
+                            "enum": 4,
                             "description": "CFD Give Up"
                         }
                     ]
@@ -773,11 +773,11 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "0",
+                            "enum": 0,
                             "description": "Do not cancel"
                         },
                         {
-                            "enum": "1",
+                            "enum": 1,
                             "description": "Check System Configuration"
                         }
                     ]
@@ -791,15 +791,15 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "0",
+                            "enum": 0,
                             "description": "Order"
                         },
                         {
-                            "enum": "5",
+                            "enum": 5,
                             "description": "Pegged Order"
                         },
                         {
-                            "enum": "51",
+                            "enum": 51,
                             "description": "Random Peak Size"
                         }
                     ]
@@ -813,11 +813,11 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "0",
+                            "enum": 0,
                             "description": "Anonymous"
                         },
                         {
-                            "enum": "1",
+                            "enum": 1,
                             "description": "Named"
                         }
                     ]
@@ -838,27 +838,27 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "0",
+                            "enum": 0,
                             "description": "No Constraint (default)"
                         },
                         {
-                            "enum": "1",
+                            "enum": 1,
                             "description": "Only accept order if setting new BBO or joining existing BBO. Otherwise expire order."
                         },
                         {
-                            "enum": "2",
+                            "enum": 2,
                             "description": "Only accept order if will be at BBO or within one visible price-point. Otherwise expire order"
                         },
                         {
-                            "enum": "3",
+                            "enum": 3,
                             "description": "Only accept order if will be at BBO or within two visible price-points. Otherwise expire order"
                         },
                         {
-                            "enum": "99",
+                            "enum": 99,
                             "description": "Only accept order if it will not match with visible contra order. Otherwise expire order"
                         },
                         {
-                            "enum": "100",
+                            "enum": 100,
                             "description": "Only accept order if setting new visible BBO, otherwise expire order"
                         }
                     ]
@@ -948,7 +948,7 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "0",
+                            "enum": 0,
                             "description": "0"
                         }
                     ]
@@ -962,7 +962,7 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "0",
+                            "enum": 0,
                             "description": "0"
                         }
                     ]
@@ -976,11 +976,11 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "1",
+                            "enum": 1,
                             "description": "Buy"
                         },
                         {
-                            "enum": "2",
+                            "enum": 2,
                             "description": "Sell"
                         }
                     ]
@@ -1062,7 +1062,7 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "0",
+                            "enum": 0,
                             "description": "0"
                         }
                     ]
@@ -1076,7 +1076,7 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "0",
+                            "enum": 0,
                             "description": "0"
                         }
                     ]
@@ -1128,47 +1128,47 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "0",
+                            "enum": 0,
                             "description": "Day"
                         },
                         {
-                            "enum": "3",
+                            "enum": 3,
                             "description": "Immediate or Cancel (IOC)"
                         },
                         {
-                            "enum": "4",
+                            "enum": 4,
                             "description": "Fill or Kill (FOK)"
                         },
                         {
-                            "enum": "5",
+                            "enum": 5,
                             "description": "At the Opening (OPG)"
                         },
                         {
-                            "enum": "6",
+                            "enum": 6,
                             "description": "Good Till Date (GTD)"
                         },
                         {
-                            "enum": "8",
+                            "enum": 8,
                             "description": "Good Till Time (GTT)"
                         },
                         {
-                            "enum": "10",
+                            "enum": 10,
                             "description": "At the Close (ATC)"
                         },
                         {
-                            "enum": "12",
+                            "enum": 12,
                             "description": "Closing Price Cross (CPX)"
                         },
                         {
-                            "enum": "50",
+                            "enum": 50,
                             "description": "Good For Auction (GFA)"
                         },
                         {
-                            "enum": "51",
+                            "enum": 51,
                             "description": "Good For Intraday Auction (GFX)"
                         },
                         {
-                            "enum": "52",
+                            "enum": 52,
                             "description": "Good for Scheduled Action (GFS)"
                         }
                     ]
@@ -1182,11 +1182,11 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "1",
+                            "enum": 1,
                             "description": "Buy"
                         },
                         {
-                            "enum": "2",
+                            "enum": 2,
                             "description": "Sell"
                         }
                     ]
@@ -1207,27 +1207,27 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "0",
+                            "enum": 0,
                             "description": "No Constraints (Default)"
                         },
                         {
-                            "enum": "1",
+                            "enum": 1,
                             "description": "Only accept order if setting new BBO or joining existing BBO. Otherwise expire order."
                         },
                         {
-                            "enum": "2",
+                            "enum": 2,
                             "description": "Only accept order if will be at BBO or within one visible price-point. Otherwise expire order"
                         },
                         {
-                            "enum": "3",
+                            "enum": 3,
                             "description": "Only accept order if will be at BBO or within two visible price-points. Otherwise expire order"
                         },
                         {
-                            "enum": "99",
+                            "enum": 99,
                             "description": "Only accept order if it will not match with visible contra order. Otherwise expire order"
                         },
                         {
-                            "enum": "100",
+                            "enum": 100,
                             "description": "Only accept order if setting new visible BBO, otherwise expire order"
                         }
                     ]
@@ -1297,27 +1297,27 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "3",
+                            "enum": 3,
                             "description": "All firm orders of an instrument"
                         },
                         {
-                            "enum": "4",
+                            "enum": 4,
                             "description": "All firm orders of a segment"
                         },
                         {
-                            "enum": "7",
+                            "enum": 7,
                             "description": "All orders submitted by the trader"
                         },
                         {
-                            "enum": "8",
+                            "enum": 8,
                             "description": "All firm orders"
                         },
                         {
-                            "enum": "9",
+                            "enum": 9,
                             "description": "All orders of an instrument, submitted by the trader"
                         },
                         {
-                            "enum": "15",
+                            "enum": 15,
                             "description": "All orders of a segment, submitted by the trader."
                         }
                     ]
@@ -1339,7 +1339,7 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "0",
+                            "enum": 0,
                             "description": "0"
                         }
                     ]
@@ -1353,7 +1353,7 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "0",
+                            "enum": 0,
                             "description": "0"
                         }
                     ]
@@ -1374,11 +1374,11 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "0",
+                            "enum": 0,
                             "description": "Order"
                         },
                         {
-                            "enum": "3",
+                            "enum": 3,
                             "description": "Quote"
                         }
                     ]
@@ -1438,19 +1438,19 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "5",
+                            "enum": 5,
                             "description": "Internal Cross"
                         },
                         {
-                            "enum": "6",
+                            "enum": 6,
                             "description": "Internal BTF"
                         },
                         {
-                            "enum": "7",
+                            "enum": 7,
                             "description": "Committed Cross"
                         },
                         {
-                            "enum": "8",
+                            "enum": 8,
                             "description": "Committed BTF"
                         }
                     ]
@@ -1471,15 +1471,15 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "1",
+                            "enum": 1,
                             "description": "Riskless Principal"
                         },
                         {
-                            "enum": "2",
+                            "enum": 2,
                             "description": "Principal"
                         },
                         {
-                            "enum": "3",
+                            "enum": 3,
                             "description": "Agency"
                         }
                     ]
@@ -1493,11 +1493,11 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "1",
+                            "enum": 1,
                             "description": "Client"
                         },
                         {
-                            "enum": "3",
+                            "enum": 3,
                             "description": "House"
                         }
                     ]
@@ -1526,11 +1526,11 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "1",
+                            "enum": 1,
                             "description": "Executing Firm"
                         },
                         {
-                            "enum": "17",
+                            "enum": 17,
                             "description": "Counterparty Firm"
                         }
                     ]
@@ -1551,15 +1551,15 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "3",
+                            "enum": 3,
                             "description": "Agency"
                         },
                         {
-                            "enum": "2",
+                            "enum": 2,
                             "description": "Principal"
                         },
                         {
-                            "enum": "1",
+                            "enum": 1,
                             "description": "Riskless Principal"
                         }
                     ]
@@ -1573,11 +1573,11 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "1",
+                            "enum": 1,
                             "description": "Client"
                         },
                         {
-                            "enum": "3",
+                            "enum": 3,
                             "description": "House"
                         }
                     ]
@@ -1606,11 +1606,11 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "1",
+                            "enum": 1,
                             "description": "Executing Firm"
                         },
                         {
-                            "enum": "17",
+                            "enum": 17,
                             "description": "Counterparty Firm"
                         }
                     ]
@@ -1639,7 +1639,7 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "2",
+                            "enum": 2,
                             "description": "Limit"
                         }
                     ]
@@ -1653,7 +1653,7 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "0",
+                            "enum": 0,
                             "description": "DAY"
                         }
                     ]
@@ -1715,19 +1715,19 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "5",
+                            "enum": 5,
                             "description": "Internal Cross"
                         },
                         {
-                            "enum": "6",
+                            "enum": 6,
                             "description": "Internal BTF"
                         },
                         {
-                            "enum": "7",
+                            "enum": 7,
                             "description": "Committed Cross"
                         },
                         {
-                            "enum": "8",
+                            "enum": 8,
                             "description": "Committed BTF"
                         }
                     ]
@@ -1907,31 +1907,31 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "0",
+                            "enum": 0,
                             "description": "New"
                         },
                         {
-                            "enum": "1",
+                            "enum": 1,
                             "description": "Partially Filled"
                         },
                         {
-                            "enum": "2",
+                            "enum": 2,
                             "description": "Filled"
                         },
                         {
-                            "enum": "4",
+                            "enum": 4,
                             "description": "Cancelled"
                         },
                         {
-                            "enum": "6",
+                            "enum": 6,
                             "description": "Expired"
                         },
                         {
-                            "enum": "8",
+                            "enum": 8,
                             "description": "Rejected"
                         },
                         {
-                            "enum": "9",
+                            "enum": 9,
                             "description": "Suspended"
                         }
                     ]
@@ -1976,31 +1976,31 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "0",
+                            "enum": 0,
                             "description": "None"
                         },
                         {
-                            "enum": "1",
+                            "enum": 1,
                             "description": "Order Book"
                         },
                         {
-                            "enum": "3",
+                            "enum": 3,
                             "description": "Market Order Container"
                         },
                         {
-                            "enum": "5",
+                            "enum": 5,
                             "description": "Parked Order Queue"
                         },
                         {
-                            "enum": "6",
+                            "enum": 6,
                             "description": "Stop Order Queue"
                         },
                         {
-                            "enum": "7",
+                            "enum": 7,
                             "description": "Pegged Order Container"
                         },
                         {
-                            "enum": "11",
+                            "enum": 11,
                             "description": "Cross Order"
                         }
                     ]
@@ -2030,15 +2030,15 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "3",
+                            "enum": 3,
                             "description": "Order re-priced"
                         },
                         {
-                            "enum": "8",
+                            "enum": 8,
                             "description": "Market Option"
                         },
                         {
-                            "enum": "100",
+                            "enum": 100,
                             "description": "Order Replenishment"
                         }
                     ]
@@ -2052,7 +2052,7 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "0",
+                            "enum": 0,
                             "description": "0"
                         }
                     ]
@@ -2066,11 +2066,11 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "1",
+                            "enum": 1,
                             "description": "Buy"
                         },
                         {
-                            "enum": "2",
+                            "enum": 2,
                             "description": "Sell"
                         }
                     ]
@@ -2143,15 +2143,15 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "0",
+                            "enum": 0,
                             "description": "Visible"
                         },
                         {
-                            "enum": "1",
+                            "enum": 1,
                             "description": "Hidden"
                         },
                         {
-                            "enum": "2",
+                            "enum": 2,
                             "description": "Not Specified"
                         }
                     ]
@@ -2165,15 +2165,15 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "1",
+                            "enum": 1,
                             "description": "Riskless Principal"
                         },
                         {
-                            "enum": "2",
+                            "enum": 2,
                             "description": "Principal"
                         },
                         {
-                            "enum": "3",
+                            "enum": 3,
                             "description": "Agency"
                         }
                     ]
@@ -2349,11 +2349,11 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "0",
+                            "enum": 0,
                             "description": "Rejected"
                         },
                         {
-                            "enum": "7",
+                            "enum": 7,
                             "description": "Accepted"
                         }
                     ]
@@ -2445,11 +2445,11 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "1",
+                            "enum": 1,
                             "description": "Client"
                         },
                         {
-                            "enum": "3",
+                            "enum": 3,
                             "description": "House"
                         }
                     ]
@@ -2509,11 +2509,11 @@
                     "length": 1,
                     "values": [
                         {
-                            "enum": "0",
+                            "enum": 0,
                             "description": "Do not cancel"
                         },
                         {
-                            "enum": "1",
+                            "enum": 1,
                             "description": "Cancel"
                         }
                     ]
