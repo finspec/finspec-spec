@@ -67,6 +67,10 @@
         "info": {
             "$ref": "#/definitions/info"
         },
+        "commonBlocks": {
+            "description": "Definitions of common blocks such as header and footer",
+            "$ref": "#/definitions/messages"
+        },
         "messages": {
             "properties" : {
                 "session": {
@@ -263,6 +267,14 @@
                     "type": "string",
                     "description": "Description of the purpose and use of the message."
                 },
+                "hasHeader": {
+                    "type": "boolean",
+                    "description": "Whether this message starts with the header defines in commonMessages section."
+                },
+                "hasFooter": {
+                    "type": "boolean",
+                    "description": "Whether this message ends with the footer defines in commonMessages section."
+                },
                 "fields": {
                     "$ref": "#/definitions/fields"
                 },
@@ -389,6 +401,10 @@
                     "type": "boolean",
                     "description": "Boolean flag to indicate that this field is present in 100% of cases. Default: false"
                 },
+                "conditions": {
+                    "$ref": "#/definitions/conditions",
+                    "description": "Section defining field conditional requirements"
+                },
                 "fields": {
                     "$ref": "#/definitions/fields",
                     "description": "List of nested fields."
@@ -403,6 +419,41 @@
                     "$ref": "#/definitions/vendorExtension"
                 }
             }
+        },
+        "conditions": {
+          "type": "array",
+          "description": "Field conditional requirements",
+          "required": [
+              "conditions"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "label": {
+                "type": "string",
+                "description": "Decription of the condition rule."
+            },
+            "conditions": {
+                "type": "string",
+                "description": "Expression representing the field conditions."
+            },
+            "isReqd": {
+                "type": "boolean",
+                "description": "Field is mandatory in such conditions"
+            },
+            "isAbsent": {
+                "type": "boolean",
+                "description": "Field should not be present in such conditions"
+            },
+            "values": {
+              "$ref": "#/definitions/values",
+              "description": "valid values in conditions described above"
+            }
+          },
+          "patternProperties": {
+              "^x-": {
+                  "$ref": "#/definitions/vendorExtension"
+              }
+          }
         },
         "values": {
             "type": "array",
