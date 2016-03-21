@@ -379,7 +379,7 @@
                     "description": "Zero-based position of the field within the message."
                 },
                 "wireId": {
-                    "type": "string",
+                    "type": { "enum": ["string", "integer"] },
                     "description": "Wire identifier for the message (eg tag 35 in FIX). Either of wireId or blockId should be present."
                 },
                 "blockId": {
@@ -517,7 +517,7 @@
             "additionalProperties": false,
             "properties": {
                 "enum": {
-                    "type": "string",
+                    "type": { "enum": ["string", "integer"]},
                     "description": "Enumeration as it appears on the wire."
                 },
                 "description": {
