@@ -8,7 +8,7 @@ Our hope is that the specification will allow both humans and computers to disco
 
 ## Current Version - 0.2
 
-The current version of the FinSpec specification is 0.2 - and you can find it [here](versions/0.2.md).
+The current version of the FinSpec specification is 0.2 - and you can find it [here](docs/0.2.md).
 
 ## Schema Validation
 
