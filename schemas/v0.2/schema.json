@@ -428,7 +428,7 @@
                 },
                 "values": {
                     "$ref": "#/definitions/values",
-                     "description": "List of possible values for this field.",
+                     "description": "List of possible values for this field."
                 },
                 "pattern": {
                     "type": "string",
@@ -445,7 +445,7 @@
                 "fields": {
                     "$ref": "#/definitions/fields",
                     "description": "List of nested fields."
-                },
+                }
             },
             "dependencies": {
                 "exclusiveMinValue": [ "minValue" ],
