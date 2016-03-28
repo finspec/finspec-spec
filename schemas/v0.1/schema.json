@@ -319,7 +319,7 @@
                 "alwaysRequired": {
                     "type": "boolean",
                     "description": "Boolean flag to indicate that this field is present in 100% of cases."
-                },
+                }
             },
             "patternProperties": {
                 "^x-": {
