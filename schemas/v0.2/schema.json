@@ -7,7 +7,6 @@
         "finspec",
         "info",
         "protocol",
-        "protocolVersion",
         "isBinary",
         "datatypes",
         "messages"
@@ -22,7 +21,7 @@
         "finspec": {
             "type": "string",
             "enum": [
-                "0.1"
+                "0.2"
             ],
             "description": "The FinSpec version of this document."
         },
@@ -64,18 +63,7 @@
             "$ref": "#/definitions/info"
         },
         "commonBlocks": {
-            "type": "object",
-            "properties" : {
-                "additionalProperties": false,
-                "header": {
-                    "description": "The common message header.",
-                    "$ref": "#/definitions/message"
-                },
-                "footer": {
-                    "description": "The commom message footer.",
-                    "$ref": "#/definitions/message"
-                }
-            }
+            "$ref": "#/definitions/commonBlocks"
         },
         "messages": {
             "type": "object",
@@ -197,7 +185,7 @@
             "type": "object",
             "description": "Description of a specific datatype used by the API.",
             "required": [
-                "type",
+                "name",
                 "baseType",
                 "description"
             ],
@@ -260,6 +248,20 @@
             "patternProperties": {
                 "^x-": {
                     "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        },
+        "commonBlocks": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties" : {
+                "header": {
+                    "description": "The common message header.",
+                    "$ref": "#/definitions/message"
+                },
+                "footer": {
+                    "description": "The commom message footer.",
+                    "$ref": "#/definitions/message"
                 }
             }
         },
@@ -370,7 +372,7 @@
             "description": "Description of a specific field within a message.",
             "required": [
                 "name",
-                "type"
+                "datatype"
             ],
             "additionalProperties": false,
             "properties": {
@@ -379,11 +381,11 @@
                     "description": "Zero-based position of the field within the message."
                 },
                 "wireId": {
-                    "type": { "anyOf": ["string", "integer"] },
+                    "type": "string",
                     "description": "Wire identifier for the message (eg tag 35 in FIX). Either of wireId or blockId should be present."
                 },
                 "blockId": {
-                    "anyOf" : { "$ref": "#/definitions/commonBlocks" },
+                    "type": "string",
                     "description": "Name of the block from the commonBlocks section. Either of wireId or blockId should be present."
                 },
                 "description": {
@@ -395,7 +397,7 @@
                     "description": "Name of the field."
                 },
                 "datatype": {
-                    "anyOf" : { "$ref": "#/definitions/datatypes" },
+                    "type" : "string",
                     "description" : "Field datatype from the list of API datatypes."
                 },
                 "minValue": {
@@ -517,12 +519,19 @@
             "additionalProperties": false,
             "properties": {
                 "enum": {
-                    "type": { "enum": ["string", "integer"]},
+                    "anyOf": [
+                        { "type": "string" },
+                        { "type": "number" }
+                    ],
                     "description": "Enumeration as it appears on the wire."
                 },
                 "description": {
                     "type": "string",
                     "description": "Human-readable sescription of the intended value."
+                },
+                "isDefault": {
+                    "type": "boolean",
+                    "description": "Whether this value should be used as default if field is not present."
                 }
             },
             "patternProperties": {
