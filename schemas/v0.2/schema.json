@@ -1,12 +1,15 @@
 {
-    "title": "A JSON Schema for FinSpec v0.1.",
-    "id": "https://fixspec.com/finspec/v0.1/schema.json#",
+    "title": "A JSON Schema for FinSpec v0.2.",
+    "id": "https://fixspec.com/finspec/v0.2/schema.json#",
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
     "required": [
         "finspec",
         "info",
-        "protocol"
+        "protocol",
+        "isBinary",
+        "datatypes",
+        "messages"
     ],
     "additionalProperties": false,
     "patternProperties": {
@@ -18,7 +21,7 @@
         "finspec": {
             "type": "string",
             "enum": [
-                "0.1"
+                "0.2"
             ],
             "description": "The FinSpec version of this document."
         },
@@ -32,21 +35,49 @@
                 "proprietary"
             ],
             "description": "The protocol type described by this document."
-        }, 
+        },
         "protocolVersion": {
             "type": "string",
             "description": "The version number of the protocol where relevant."
-        },                
+        },
+        "isBinary": {
+            "type": "boolean",
+            "description": "Indicates whether protocol is text or binary."
+        },
+        "charset" : {
+            "type": "string",
+            "description": "Legal character set used for string values e.g. 'UTF8', 'ISO 8859-1', etc."
+        },
+        "endianness" : {
+            "type": "string",
+            "enum": [
+                "little",
+                "big"
+            ],
+            "description": "Default endianness of numerical types for binary/native APIs."
+        },
+        "datatypes" : {
+            "$ref": "#/definitions/datatypes"
+        },
         "info": {
             "$ref": "#/definitions/info"
         },
-        "sessionMessages": {
-            "description": "Messages used for establishing, maintaining and closing API sessions.",
-            "$ref": "#/definitions/messages"
+        "commonBlocks": {
+            "$ref": "#/definitions/commonBlocks"
         },
-        "businessMessages": {
-            "description": "Messages used for sending and receiving business objects.",            
-            "$ref": "#/definitions/messages"
+        "messages": {
+            "type": "object",
+            "description": "Lsit of messages supported by this API spec.",
+            "properties" : {
+                "session": {
+                    "description": "Messages used for establishing, maintaining and closing API sessions.",
+                    "$ref": "#/definitions/messages"
+                },
+                "application": {
+                    "description": "Messages used for sending and receiving business objects.",
+                    "$ref": "#/definitions/messages"
+                }
+            }
         }
     },
     "definitions": {
@@ -72,7 +103,7 @@
                 "issuer": {
                     "type": "string",
                     "description": "The name of the API issuer."
-                },                
+                },
                 "issueDate": {
                     "type": "string",
                     "description": "The issue date of the API description expressed in YYYY-MM-DD format.",
@@ -86,7 +117,7 @@
                 "title": {
                     "type": "string",
                     "description": "A unique and precise title of the API service."
-                },  
+                },
                 "contacts": {
                     "$ref": "#/definitions/contacts"
                 }
@@ -138,7 +169,101 @@
                 "^x-": {
                     "$ref": "#/definitions/vendorExtension"
                 }
-            }            
+            }
+        },
+        "datatypes": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items" : {
+                "$ref": "#/definitions/datatype"
+            },
+            "description": "List of datatypes used by the API.",
+            "additionalProperties": false
+        },
+        "datatype": {
+            "type": "object",
+            "description": "Description of a specific datatype used by the API.",
+            "required": [
+                "name",
+                "baseType",
+                "description"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Name of the type. e.g. int, uint8e, Price, Boolean, etc."
+                },
+                "baseType": {
+                    "type": "string",
+                    "description": "Specifies the base/raw data type of the value.",
+                    "enum" : [
+                        "char",
+                        "integer",
+                        "number",
+                        "string"
+                    ]
+                },
+                "length": {
+                    "type": "integer",
+                    "description": "Length of value for this type in number of bytes."
+                },
+                "precision": {
+                    "type": "integer",
+                    "description": "Precision for floating point type value."
+                },
+                "isUnsigned": {
+                    "type": "boolean",
+                    "description": "Whether numerical value is unsigned or not. Default: false"
+                },
+                "isBitField": {
+                    "type": "boolean",
+                    "description": "Whether type represents a bit field. Default: false"
+                },
+                "pattern": {
+                    "type": "string",
+                    "description": "Regular expression to describe the pattern of the value for this datatype."
+                },
+                "padChar": {
+                    "type": "string",
+                    "description": "Character used for padding."
+                },
+                "padSide": {
+                    "type": "string",
+                    "description": "Whether field value should be padded to left or right.",
+                    "enum" : [
+                        "left",
+                        "right"
+                    ]
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description/remark for this type."
+                },
+                "examples": {
+                    "$ref": "#/definitions/examples"
+                }
+            },
+            "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        },
+        "commonBlocks": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties" : {
+                "header": {
+                    "description": "The common message header.",
+                    "$ref": "#/definitions/message"
+                },
+                "footer": {
+                    "description": "The commom message footer.",
+                    "$ref": "#/definitions/message"
+                }
+            }
         },
         "messages": {
             "type": "array",
@@ -193,7 +318,7 @@
                 "^x-": {
                     "$ref": "#/definitions/vendorExtension"
                 }
-            }            
+            }
         },
         "examples": {
             "type": "array",
@@ -202,12 +327,12 @@
             "items" : {
                 "$ref": "#/definitions/example"
             },
-            "description": "List of example messages.",
+            "description": "List of examples.",
             "additionalProperties": false
         },
         "example": {
             "type": "object",
-            "description": "Single example of a message.",
+            "description": "Single example.",
             "required": [
                 "example",
                 "description"
@@ -216,7 +341,7 @@
             "properties": {
                 "example": {
                     "type": "string",
-                    "description": "Example message."
+                    "description": "Actual example."
                 },
                 "description": {
                     "type": "string",
@@ -227,8 +352,8 @@
                 "^x-": {
                     "$ref": "#/definitions/vendorExtension"
                 }
-            }            
-        },        
+            }
+        },
         "fields": {
             "type": "array",
             "items" : {
@@ -240,24 +365,32 @@
                 "^x-": {
                     "$ref": "#/definitions/vendorExtension"
                 }
-            }  
+            }
         },
         "field": {
             "type": "object",
             "description": "Description of a specific field within a message.",
             "required": [
                 "name",
-                "type"
+                "datatype"
             ],
             "additionalProperties": false,
             "properties": {
+                "offset": {
+                    "type": "integer",
+                    "description": "Zero-based offset of the field within the message for binary APIs."
+                },
                 "position": {
                     "type": "integer",
-                    "description": "Zero-based position of the field within the message."
+                    "description": "Zero-based position of the field within the message for text/tag-value APIs."
                 },
                 "wireId": {
                     "type": "string",
-                    "description": "Wire identifier for the message (eg tag 35 in FIX)."
+                    "description": "Wire identifier for the message (eg tag 35 in FIX). Either of wireId or blockId should be present."
+                },
+                "blockId": {
+                    "type": "string",
+                    "description": "Name of the block from the commonBlocks section. Either of wireId or blockId should be present."
                 },
                 "description": {
                     "type": "string",
@@ -267,70 +400,113 @@
                     "type": "string",
                     "description": "Name of the field."
                 },
-                "type": {
-                    "type": "string",
-                    "description": "Primitive field datatype.",                    
-                    "enum": [
-                        "integer",
-                        "float",
-                        "char",
-                        "boolean",
-                        "string",
-                        "timestamp"
-                    ]
+                "datatype": {
+                    "type" : "string",
+                    "description" : "Field datatype from the list of API datatypes."
                 },
-                "format": {
-                    "type": "string",
-                    "description": "Extended field datatype.",                    
-                    "enum": [
-                        "int8",
-                        "int16",
-                        "int32",
-                        "int64",
-                        "uInt8",
-                        "uInt16",
-                        "uInt32",
-                        "uInt64",
-                        "float",
-                        "double",
-                        "byte",
-                        "char",
-                        "currency",
-                        "mic",
-                        "utcTime",
-                        "localTime"
-                    ]
-                },                
+                "minValue": {
+                    "type": "number",
+                    "description" : "Minimum permitted field value for numeric types."
+                },
+                "maxValue": {
+                    "type": "number",
+                    "description" : "Maximum permitted field value for numeric types."
+                },
+                "exclusiveMinValue": {
+                    "type": "boolean",
+                    "description" : "Whether 'minValue' value is exclusive or not."
+                },
+                "exclusiveMaxValue": {
+                    "type": "boolean",
+                    "description" : "Whether 'maxValue' value is exclusive or not."
+                },
                 "minLength": {
-                    "type" : "integer",
-                    "description" : "Minimum permitted field value length (inclusive)."
+                    "type": "integer",
+                    "description" : "Minimum permitted length of value for string types."
                 },
                 "maxLength": {
-                    "type" : "integer",
-                    "description" : "Maximum permitted field value length (inclusive)."
+                    "type": "integer",
+                    "description" : "Maximum permitted length of value for string types."
                 },
                 "length": {
-                    "type" : "integer",
-                    "description" : "Required field value length."
+                    "type": "integer",
+                    "description" : "Field value length in number of bytes."
                 },
                 "values": {
-                    "$ref": "#/definitions/values"
+                    "$ref": "#/definitions/values",
+                     "description": "List of possible values for this field."
+                },
+                "pattern": {
+                    "type": "string",
+                    "description": "Regular expression to describe the pattern of the value for this field."
                 },
                 "alwaysRequired": {
                     "type": "boolean",
-                    "description": "Boolean flag to indicate that this field is present in 100% of cases."
+                    "description": "Boolean flag to indicate that this field is present in 100% of cases. Default: false"
+                },
+                "conditions": {
+                    "$ref": "#/definitions/conditions",
+                    "description": "Section defining field conditional requirements"
+                },
+                "fields": {
+                    "$ref": "#/definitions/fields",
+                    "description": "List of nested fields."
                 }
+            },
+            "dependencies": {
+                "exclusiveMinValue": [ "minValue" ],
+                "exclusiveMaxValue": [ "maxValue" ]
             },
             "patternProperties": {
                 "^x-": {
                     "$ref": "#/definitions/vendorExtension"
                 }
-            }  
+            }
+        },
+        "conditions": {
+          "type": "array",
+          "description": "Field conditional requirements",
+          "required": [
+              "conditions"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "label": {
+                "type": "string",
+                "description": "Decription of the condition rule."
+            },
+            "expressionType": {
+                "type": "string",
+                "description": "Type of grammar used in expression field.",
+                "enum": [ "jsep"]
+            },
+            "expression": {
+                "type": "string",
+                "description": "Condition expression. Below block matters if this expression evalualtes to true."
+            },
+            "isReqd": {
+                "type": "boolean",
+                "description": "Field is mandatory in such conditions"
+            },
+            "isAbsent": {
+                "type": "boolean",
+                "description": "Field should not be present in such conditions"
+            },
+            "values": {
+              "$ref": "#/definitions/values",
+              "description": "valid values in conditions described above"
+            }
+          },
+          "patternProperties": {
+              "^x-": {
+                  "$ref": "#/definitions/vendorExtension"
+              }
+          }
         },
         "values": {
             "type": "array",
             "minItems": 1,
-            "uniqueItems": true,            
+            "uniqueItems": true,
             "items" : {
                 "$ref": "#/definitions/value"
             },
@@ -347,7 +523,7 @@
             "additionalProperties": false,
             "properties": {
                 "enum": {
-                    "anyOf": [
+                    "oneOf": [
                         { "type": "string" },
                         { "type": "number" }
                     ],
@@ -356,13 +532,17 @@
                 "description": {
                     "type": "string",
                     "description": "Human-readable sescription of the intended value."
+                },
+                "isDefault": {
+                    "type": "boolean",
+                    "description": "Whether this value should be used as default if field is not present."
                 }
             },
             "patternProperties": {
                 "^x-": {
                     "$ref": "#/definitions/vendorExtension"
                 }
-            }  
+            }
         },
         "vendorExtension": {
             "description": "Any property starting with x- is valid.",

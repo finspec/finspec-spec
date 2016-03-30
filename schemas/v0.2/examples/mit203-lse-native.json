@@ -1,0 +1,2296 @@
+{
+  "finspec": "0.2",
+  "info": {
+    "version": "11.5",
+    "issueDate": "2015-08-26",
+    "liveDate": "2015-08-26",
+    "issuer": "London Stock Exchange",
+    "title": "London Stock Exchange - Native Trading Gateway",
+    "contacts": [
+      {
+        "name": "Customer Services",
+        "phone": "+447908860436",
+        "email": "help@example.com",
+        "url": "http://fixspec.com"
+      }
+    ]
+  },
+  "protocol": "proprietary",
+  "isBinary": true,
+  "endianness": "little",
+  "datatypes": [
+    {
+      "name": "Alpha",
+      "baseType": "char",
+      "length": 1,
+      "description": "A single byte used to hold one ASCII character."
+    },
+    {
+      "name": "Float",
+      "baseType": "integer",
+      "length": 4,
+      "precision": 4,
+      "description": "Signed Little-Endian encoded four byte integer field with four implied decimal places."
+    },
+    {
+      "name": "Price",
+      "baseType": "integer",
+      "length": 8,
+      "precision": 8,
+      "description": "Signed Little-Endian encoded eight byte integer field with eight implied decimal places."
+    },
+    {
+      "name": "Int8",
+      "baseType": "integer",
+      "length": 1,
+      "description": "Little-Endian encoded 8 bit signed integer."
+    },
+    {
+      "name": "Int16",
+      "baseType": "integer",
+      "length": 2,
+      "description": "Little-Endian encoded 16 bit signed integer."
+    },
+    {
+      "name": "UInt32",
+      "baseType": "integer",
+      "length": 4,
+      "isUnsigned": true,
+      "description": "Little-Endian encoded 32 bit unsigned integer."
+    },
+    {
+      "name": "Int32",
+      "baseType": "integer",
+      "length": 4,
+      "description": "Little-Endian encoded 32 bit signed integer."
+    },
+    {
+      "name": "UInt64",
+      "baseType": "integer",
+      "length": 8,
+      "isUnsigned": true,
+      "description": "Little-Endian encoded 64 bit unsigned integer."
+    },
+    {
+      "name": "String",
+      "baseType": "string",
+      "description": "These fields use standard ASCII character bytes. A field will be null terminated if the full fixed length is unused. The first byte will contain a null if the field is unused."
+    }
+  ],
+  "commonBlocks": {
+    "header": {
+      "name": "Message Header",
+      "wireId": "header",
+      "description": "This is the message header.",
+      "fields": [
+        {
+          "offset": 0,
+          "name": "Start of Message",
+          "datatype": "Int8",
+          "description": "Indicates the start of the message. Clients will have to send the binary value of ‘2’ at the start of each message. Server will also follow the same protocol.",
+          "length": 1,
+          "values": [
+            {
+              "enum": 2,
+              "description": "Should always be 2"
+            }
+          ]
+        },
+        {
+          "offset": 1,
+          "name": "Message Length",
+          "datatype": "Int16",
+          "description": "Length of the message from the Message Type field onwards.",
+          "length": 2
+        },
+        {
+          "offset": 3,
+          "name": "Message Type",
+          "datatype": "Alpha",
+          "description": "Type of Message",
+          "length": 1
+        }
+      ]
+    }
+  },
+  "messages": {
+    "session": [
+      {
+        "name": "Logon",
+        "wireId": "0x41",
+        "direction": "both",
+        "description": "Allows the client and server to establish a session.",
+        "fields": [
+          {
+            "offset": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Message header.",
+            "datatype": "block"
+          },
+          {
+            "offset": 4,
+            "name": "User Name",
+            "alwaysRequired": true,
+            "description": "User Name",
+            "datatype": "String",
+            "length": 25
+          },
+          {
+            "offset": 29,
+            "name": "Password",
+            "alwaysRequired": true,
+            "description": "Password",
+            "datatype": "String",
+            "length": 25
+          },
+          {
+            "offset": 54,
+            "name": "New Password",
+            "description": "New Password",
+            "datatype": "String",
+            "length": 25
+          },
+          {
+            "offset": 79,
+            "name": "Message Version",
+            "alwaysRequired": true,
+            "description": "Message Version that will be used in this version. The value has to be always 1.",
+            "datatype": "Int8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 1,
+                "description": "1"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Logon Response",
+        "wireId": "0x42",
+        "direction": "both",
+        "description": "Allows the server to acknowledge a client's Logon.",
+        "fields": [
+          {
+            "offset": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Message header.",
+            "datatype": "block"
+          },
+          {
+            "offset": 4,
+            "name": "Reject Code",
+            "description": "Code Specifying the reason of the reject. Please refer to the Reject Code Specification of the list of reject codes and meanings specific to London Stock Exchange.",
+            "datatype": "UInt32",
+            "length": 4
+          },
+          {
+            "offset": 8,
+            "name": "PasswordExpiryDayCount",
+            "description": "The number of days before the password will expire.",
+            "datatype": "String",
+            "length": 30
+          }
+        ]
+      },
+      {
+        "name": "Logout",
+        "wireId": "0x35",
+        "direction": "both",
+        "description": "Allows the client and server to terminate a session.",
+        "fields": [
+          {
+            "offset": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Message header.",
+            "datatype": "block"
+          },
+          {
+            "offset": 4,
+            "name": "Reason",
+            "description": "Reason of the logout.",
+            "datatype": "String",
+            "length": 20
+          }
+        ]
+      },
+      {
+        "name": "Heartbeat",
+        "wireId": "0x30",
+        "direction": "both",
+        "description": "Allows the client and server to exercise the communication line during periods of inactivity and verify that the interfaces at each end are available.",
+        "fields": [
+          {
+            "offset": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Message header.",
+            "datatype": "block"
+          }
+        ]
+      },
+      {
+        "name": "Missed Message Request",
+        "wireId": "0x4d",
+        "direction": "in",
+        "description": "Allows the client to subscribe to missed messages through the Recovery Channel.",
+        "fields": [
+          {
+            "offset": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Message header.",
+            "datatype": "block"
+          },
+          {
+            "offset": 4,
+            "name": "AppID",
+            "description": "AppID this message relates to",
+            "datatype": "Int8",
+            "length": 1
+          },
+          {
+            "offset": 5,
+            "name": "LastMsgSeqNum",
+            "description": "Last received Sequence No.",
+            "datatype": "Int32",
+            "length": 4
+          }
+        ]
+      },
+      {
+        "name": "Missed Message Request Ack",
+        "wireId": "0x4e",
+        "direction": "out",
+        "description": "Allows the server to acknowledge a client’s Missed Message Request.",
+        "fields": [
+          {
+            "offset": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Message header.",
+            "datatype": "block"
+          },
+          {
+            "offset": 4,
+            "name": "Response Type",
+            "alwaysRequired": true,
+            "description": "Response Type",
+            "datatype": "Int8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 0,
+                "description": "Successful"
+              },
+              {
+                "enum": 1,
+                "description": "Recovery Request Limit Reached"
+              },
+              {
+                "enum": 2,
+                "description": "Invalid App ID"
+              },
+              {
+                "enum": 3,
+                "description": "Service Unavailable"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Missed Message Report",
+        "wireId": "0x50",
+        "direction": "out",
+        "description": "Allows the Server to communicate the result of a Missed Message Request.",
+        "fields": [
+          {
+            "offset": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Message header.",
+            "datatype": "block"
+          },
+          {
+            "offset": 4,
+            "name": "Response Type",
+            "alwaysRequired": true,
+            "description": "Response Type",
+            "datatype": "Int8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 0,
+                "description": "Download Complete"
+              },
+              {
+                "enum": 1,
+                "description": "Message Limit Reached"
+              },
+              {
+                "enum": 3,
+                "description": "Service Unavailable"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Reject",
+        "wireId": "0x33",
+        "direction": "out",
+        "description": "Used to reject a message that does not comply with the Native Trading Gateway messaging protocol.",
+        "fields": [
+          {
+            "offset": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Message header.",
+            "datatype": "block"
+          },
+          {
+            "offset": 4,
+            "name": "RejectCode",
+            "description": "Code specifying the reason for the reject. Please refer to the Reject Code Specification for the list of reject codes and meanings specific to London Stock Exchange.",
+            "datatype": "UInt32",
+            "length": 4
+          },
+          {
+            "offset": 8,
+            "name": "Reject Reason",
+            "description": "Reject Reason",
+            "datatype": "String",
+            "length": 30
+          },
+          {
+            "offset": 38,
+            "name": "Rejected Message Type",
+            "description": "Message type of the rejected message",
+            "datatype": "Alpha",
+            "length": 1
+          },
+          {
+            "offset": 39,
+            "name": "Client Order ID",
+            "description": "Client specified identifier of the rejected message if it is available",
+            "datatype": "String",
+            "length": 20
+          }
+        ]
+      },
+      {
+        "name": "System Status",
+        "wireId": "0x6e",
+        "direction": "out",
+        "description": "This message will be disseminated in the recovery channel to indicate Service Non Availability of a partition (due to order cache outage). This message will also be disseminated when the service is resumed.",
+        "fields": [
+          {
+            "offset": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Message header.",
+            "datatype": "block"
+          },
+          {
+            "offset": 4,
+            "name": "AppID",
+            "description": "Partition ID",
+            "datatype": "Int8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 1,
+                "description": "Partition 1"
+              },
+              {
+                "enum": 2,
+                "description": "Partition 2"
+              },
+              {
+                "enum": 3,
+                "description": "Partition 3"
+              }
+            ]
+          },
+          {
+            "offset": 5,
+            "name": "AppStatus",
+            "description": "Application Status",
+            "datatype": "Int8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 1,
+                "description": "Recovery Service Resumed"
+              },
+              {
+                "enum": 2,
+                "description": "Recovery Service Not Available"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "application": [
+      {
+        "name": "New Order",
+        "wireId": "0x44",
+        "direction": "in",
+        "description": " \n&lt;p&gt;Allows the client to submit a new order.&lt;/p&gt;\n\n&lt;h4&gt;Order Types&lt;/h4&gt;\n\n&lt;p&gt;Clients may submit the order types outlined below via the New Order – Single message.&lt;/p&gt;\n\n&lt;table border=\"1\"&gt;\n\t&lt;thead&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;th style=\"width:114px\"&gt;Order Type&lt;/th&gt;\n\t\t\t&lt;th style=\"width:785px\"&gt;Description&lt;/th&gt;\n\t\t&lt;/tr&gt;\n\t&lt;/thead&gt;\n\t&lt;tbody&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td style=\"width:114px\"&gt;Market&lt;/td&gt;\n\t\t\t&lt;td style=\"width:785px\"&gt;An order that will execute at the best available prices until it is fully filled. Any remainder will be expired.&lt;/td&gt;\n\t\t&lt;/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td style=\"width:114px\"&gt;Limit&lt;/td&gt;\n\t\t\t&lt;td style=\"width:785px\"&gt;An order that will execute at or better than the specified price. The remainder, if any, is added to the order book or expired in terms of its TimeInForce.&lt;/td&gt;\n\t\t&lt;/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td style=\"width:114px\"&gt;Stop&lt;/td&gt;\n\t\t\t&lt;td style=\"width:785px\"&gt;A market order that remains inactive until the market reaches a specified stop price.&lt;/td&gt;\n\t\t&lt;/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td style=\"width:114px\"&gt;Stop Limit&lt;/td&gt;\n\t\t\t&lt;td style=\"width:785px\"&gt;A limit order that remains inactive until the market reaches a specified stop price&lt;/td&gt;\n\t\t&lt;/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td style=\"width:114px\"&gt;Fixed Peak Iceberg&lt;/td&gt;\n\t\t\t&lt;td style=\"width:785px\"&gt;An order that contains a disclosed quantity which will be the maximum quantity displayed in the order book. Once the displayed quantity is reduced to zero, it will be replenished by the lower of the disclosed quantity and the remainder.&lt;/td&gt;\n\t\t&lt;/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td style=\"width:114px\"&gt;Random Replenished Iceberg&lt;/td&gt;\n\t\t\t&lt;td style=\"width:785px\"&gt;An order that contains a disclosed quantity which will be the maximum quantity displayed in the order book. Once the displayed quantity is reduced to zero, the replenishment quantity will be randomly determined within a pre-defined percentage&lt;/td&gt;\n\t\t&lt;/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td style=\"width:114px\"&gt;Hidden&lt;/td&gt;\n\t\t\t&lt;td style=\"width:785px\"&gt;An order that contains no displayed quantity and is not displayed in the order book.&lt;/td&gt;\n\t\t&lt;/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td style=\"width:114px\"&gt;Pegged&lt;/td&gt;\n\t\t\t&lt;td style=\"width:785px\"&gt;A hidden order pegged to the mid-point of the best bid and offer price for instrument. It may be configured by the user with a Limit Price and/or Minimum Execution Size (MES).&lt;/td&gt;\n\t\t&lt;/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td style=\"width:114px\"&gt;Named&lt;/td&gt;\n\t\t\t&lt;td style=\"width:785px\"&gt;An order for which the identity of the submitting member is disclosed in the pre-trade market data feed.&lt;/td&gt;\n\t\t&lt;/tr&gt;\n\t&lt;/tbody&gt;\n&lt;/table&gt;\n\n&lt;h4&gt;&lt;br /&gt;\nTime in Force&lt;/h4&gt;\n \n\n&lt;table border=\"1\" style=\"height:151px; width:952px\"&gt;\n\t&lt;thead&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;th&gt;TIF&lt;/th&gt;\n\t\t\t&lt;th style=\"width:647px\"&gt;Description&lt;/th&gt;\n\t\t&lt;/tr&gt;\n\t&lt;/thead&gt;\n\t&lt;tbody&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;Day&lt;/td&gt;\n\t\t\t&lt;td style=\"width:647px\"&gt;An order that will expire at the end of the day (at market close).&lt;/td&gt;\n\t\t&lt;/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;Immediate or Cancel (IOC)&lt;/td&gt;\n\t\t\t&lt;td style=\"width:647px\"&gt;An order that will be executed on receipt and the remainder, if any, immediately cancelled.&lt;/td&gt;\n\t\t&lt;/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;Fill or Kill (FOK)&lt;/td&gt;\n\t\t\t&lt;td style=\"width:647px\"&gt;An order that will be fully executed on receipt or immediately cancelled at its entirety (if the entire quantity cannot be filled).&lt;/td&gt;\n\t\t&lt;/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;On Open&lt;/td&gt;\n\t\t\t&lt;td style=\"width:647px\"&gt;An order that may only be executed in the opening auction.&lt;/td&gt;\n\t\t&lt;/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;On Close&lt;/td&gt;\n\t\t\t&lt;td style=\"width:647px\"&gt;An order that may only be executed in the closing auction.&lt;/td&gt;\n\t\t&lt;/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;Good For Intra-Day Auction (GFX)&lt;/td&gt;\n\t\t\t&lt;td style=\"width:647px\"&gt;An order that may only be executed in the EDSP auction.&lt;/td&gt;\n\t\t&lt;/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;Good for Auction (GFA)&lt;/td&gt;\n\t\t\t&lt;td style=\"width:647px\"&gt;An order that may only be executed in the next auction.&lt;/td&gt;\n\t\t&lt;/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;Good Till Time (GTT)&lt;/td&gt;\n\t\t\t&lt;td style=\"width:647px\"&gt;An order that will expire at a specified time during the current day&lt;/td&gt;\n\t\t&lt;/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;Good Till Date (GTD)&lt;/td&gt;\n\t\t\t&lt;td style=\"width:647px\"&gt;An order that will expire at the end of a specified day.&lt;/td&gt;\n\t\t&lt;/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;Good Till Cancelled (GTC)&lt;/td&gt;\n\t\t\t&lt;td style=\"width:647px\"&gt;An order that will never expire. This is not available in Millennium Exchange.&lt;/td&gt;\n\t\t&lt;/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;Closing Price Crossing (CPX)&lt;/td&gt;\n\t\t\t&lt;td style=\"width:647px\"&gt;An order that is intended for closing price crossing session.&lt;/td&gt;\n\t\t&lt;/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;Good for next scheduled auction (GFS)&lt;/td&gt;\n\t\t\t&lt;td style=\"width:647px\"&gt;An order that will only be injected at the beginning of the next scheduled intra-day auction excluding the EDSP auction, (i.e. it will not be triggered by a Re-opening Auction Call).&lt;/td&gt;\n\t\t&lt;/tr&gt;\n\t&lt;/tbody&gt;\n&lt;/table&gt;\n\n&lt;h4&gt;&lt;br /&gt;\nOrder capacity&lt;/h4&gt;\n\n&lt;p&gt;The server recognises four order capacities; agency, principal, riskless principal and CFD Give Up. Clients are responsible for indicating the capacity an order is submitted under. The capacity “CFD Give Up” will be applicable only for Sponsored Access users who are given the privilege for capacity conversion.&lt;/p&gt;",
+        "fields": [
+          {
+            "offset": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Message header.",
+            "datatype": "block"
+          },
+          {
+            "offset": 4,
+            "name": "Client Order ID",
+            "alwaysRequired": true,
+            "description": "Client specified identifier of the order",
+            "datatype": "String",
+            "length": 20
+          },
+          {
+            "offset": 24,
+            "name": "Trader ID",
+            "description": "Optional Trader ID that clients may submit",
+            "datatype": "String",
+            "length": 11
+          },
+          {
+            "offset": 35,
+            "name": "Account",
+            "description": "Optional reference of the investor the order is submitted for.",
+            "datatype": "String",
+            "length": 10
+          },
+          {
+            "offset": 45,
+            "name": "ClearingAccount",
+            "description": "Clearing Account Type",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 1,
+                "description": "Client"
+              },
+              {
+                "enum": 3,
+                "description": "House"
+              }
+            ]
+          },
+          {
+            "offset": 46,
+            "name": "Instrument ID",
+            "description": "Identifier of the instrument for which the order is submitted.",
+            "datatype": "UInt32",
+            "length": 4
+          },
+          {
+            "offset": 50,
+            "name": "Reserved Field",
+            "description": "Reserved for future use. This will always be 0.",
+            "datatype": "Int8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 0,
+                "description": "0"
+              }
+            ]
+          },
+          {
+            "offset": 51,
+            "name": "Reserved Field",
+            "description": "Reserved for future use. This will always be 0.",
+            "datatype": "Int8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 0,
+                "description": "0"
+              }
+            ]
+          },
+          {
+            "offset": 52,
+            "name": "Order Type",
+            "description": "Type of the order.",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 1,
+                "description": "Market"
+              },
+              {
+                "enum": 2,
+                "description": "Limit"
+              },
+              {
+                "enum": 3,
+                "description": "Stop"
+              },
+              {
+                "enum": 4,
+                "description": "Stop Limit"
+              }
+            ]
+          },
+          {
+            "offset": 53,
+            "name": "TIF",
+            "description": "Time qualifier of the order.",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 0,
+                "description": "Day"
+              },
+              {
+                "enum": 3,
+                "description": "Immediate or Cancel (IOC)"
+              },
+              {
+                "enum": 4,
+                "description": "Fill or Kill (FOK)"
+              },
+              {
+                "enum": 5,
+                "description": "At the Opening (OPG)"
+              },
+              {
+                "enum": 6,
+                "description": "Good Till Date (GTD)"
+              },
+              {
+                "enum": 8,
+                "description": "Good Till Time (GTT)"
+              },
+              {
+                "enum": 10,
+                "description": "At the Close (ATC)"
+              },
+              {
+                "enum": 12,
+                "description": "Closing Price Cross (CPX)"
+              },
+              {
+                "enum": 50,
+                "description": "Good For Auction (GFA)"
+              },
+              {
+                "enum": 51,
+                "description": "Good For Intraday Auction (GFX)"
+              },
+              {
+                "enum": 52,
+                "description": "Good for Scheduled Action (GFS)"
+              }
+            ]
+          },
+          {
+            "offset": 54,
+            "name": "ExpireDateTime",
+            "description": "This field will indicate the date or the time the order expires on.",
+            "datatype": "UInt32",
+            "length": 4
+          },
+          {
+            "offset": 58,
+            "name": "Side",
+            "description": "Side of the order.",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 1,
+                "description": "Buy"
+              },
+              {
+                "enum": 2,
+                "description": "Sell"
+              }
+            ]
+          },
+          {
+            "offset": 59,
+            "name": "Order Qty",
+            "description": "Total order quantity.",
+            "datatype": "UInt32",
+            "length": 4
+          },
+          {
+            "offset": 63,
+            "name": "Display Qty",
+            "description": "Maximum quantity that may be displayed.",
+            "datatype": "UInt32",
+            "length": 4
+          },
+          {
+            "offset": 67,
+            "name": "Limit Price",
+            "description": "Limit Price. Required if OrderType is Limit or Stop Limit. Else this field will be ignored.",
+            "datatype": "Price",
+            "length": 8
+          },
+          {
+            "offset": 75,
+            "name": "Capacity",
+            "description": "Capacity of the order",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 1,
+                "description": "Riskless Principal"
+              },
+              {
+                "enum": 2,
+                "description": "Principal"
+              },
+              {
+                "enum": 3,
+                "description": "Agency"
+              },
+              {
+                "enum": 4,
+                "description": "CFD Give Up"
+              }
+            ]
+          },
+          {
+            "offset": 76,
+            "name": "Auto Cancel",
+            "description": "Cancel orders on logout/disconnection of session",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 0,
+                "description": "Do not cancel"
+              },
+              {
+                "enum": 1,
+                "description": "Check System Configuration"
+              }
+            ]
+          },
+          {
+            "offset": 77,
+            "name": "Order Sub Type",
+            "description": "Whether the order is a pegged order. If the client submits a Pegged Order with a limit price (so called a “Hard Limit”), the Order Type has to be Limit (2) along with Order Sub Type Pegged Order (5). If the client submits a Pegged without a limit price, the Order Type has to be Market (1) along with Order Sub Type Pegged Order (5). If this is populated with value “51” while a value which is greater than 0 and less than the Order Quantity is populated in DisplayQty, the DisplayQty after replenishment will be randomly sized based on a percentage range upwards from the original DisplayQty. The DisplayQty after replenishment will be “fixed peak”.",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 0,
+                "description": "Order"
+              },
+              {
+                "enum": 5,
+                "description": "Pegged Order"
+              },
+              {
+                "enum": 51,
+                "description": "Random Peak Size"
+              }
+            ]
+          },
+          {
+            "offset": 78,
+            "name": "Anonymity",
+            "description": "Whether the order is a named or anonymous order",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 0,
+                "description": "Anonymous"
+              },
+              {
+                "enum": 1,
+                "description": "Named"
+              }
+            ]
+          },
+          {
+            "offset": 79,
+            "name": "Stopped Price",
+            "description": "Stop Price.Required if Order Type is Stop or Stop Limit. Else this field will be ignored.",
+            "datatype": "Price",
+            "length": 8
+          },
+          {
+            "offset": 87,
+            "name": "PassiveOnlyOrder",
+            "description": "Order level parameter to allow clients to specify that they would like their order to rest prior to execution, with flexibility for visible orders to rest at a specified price level on the book. Passive Only Orders will execute against hidden orders sat within the BBO on order entry.Any fully hidden order will be rejected if it has enum 100, 1,2 or 3. No passive only order validation will be done if field is not stamped or has 0 stamped on it.",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 0,
+                "description": "No Constraint (default)"
+              },
+              {
+                "enum": 1,
+                "description": "Only accept order if setting new BBO or joining existing BBO. Otherwise expire order."
+              },
+              {
+                "enum": 2,
+                "description": "Only accept order if will be at BBO or within one visible price-point. Otherwise expire order"
+              },
+              {
+                "enum": 3,
+                "description": "Only accept order if will be at BBO or within two visible price-points. Otherwise expire order"
+              },
+              {
+                "enum": 99,
+                "description": "Only accept order if it will not match with visible contra order. Otherwise expire order"
+              },
+              {
+                "enum": 100,
+                "description": "Only accept order if setting new visible BBO, otherwise expire order"
+              }
+            ]
+          },
+          {
+            "offset": 88,
+            "name": "Reserved Field",
+            "description": "Reserved for future use",
+            "datatype": "String",
+            "length": 9
+          },
+          {
+            "offset": 97,
+            "name": "Minimum Quantity",
+            "description": "Minimum Execution Size (MES) of an order. A value of 0 (zero) means no MES. MES is only valid for pegged orders. If a non zero value is specified for a non-pegged order type the message will be rejected.",
+            "datatype": "UInt32",
+            "length": 4
+          }
+        ]
+      },
+      {
+        "name": "Order Cancel Request",
+        "wireId": "0x46",
+        "direction": "in",
+        "description": "&lt;p&gt;Allows the client to cancel a live order.&lt;br /&gt;\nThe remainder of a live order may be cancelled via the Order Cancel Request message with the OrdSubType set to Order (0). The server will respond with an Execution Report or Order Cancel Reject to confirm or reject the cancellation request respectively.&lt;br /&gt;\nIn a scenario where the Order Cancel Request message is submitted by a different user from the user who submitted the original order, the Execution Report will be sent to the cancelling user. If the user cancelling the order does not have permissions to cancel orders on behalf of the firm, the cancel request will be rejected.&lt;br /&gt;\nThe client should identify the order being amended cancelled by either the Original Client Order ID or Order ID. If an Order Cancel/Replace Request contains values for both Original Client Order ID and Order ID, the server will only process the Order ID.&lt;br /&gt;\nAn open Committed Cross/BTF order may be cancelled by sending a Cross Order Cancel Request message. The server will respond with an Execution Report or Order Cancel Reject message to confirm or reject the cancellation request respectively. The Execution Report message returns the CrossID of the original Committed Cross/BTF order being cancelled.&lt;br /&gt;\nThe client should identify the order being cancelled by providing the Buy Side Original ClOrdID or Sell Side Original ClOrdID field.&lt;/p&gt;",
+        "fields": [
+          {
+            "offset": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Message header.",
+            "datatype": "block"
+          },
+          {
+            "offset": 4,
+            "name": "Client Order ID",
+            "description": "Client specified identifier of the request. It is optional to specify this.",
+            "datatype": "String",
+            "length": 20
+          },
+          {
+            "offset": 24,
+            "name": "Original Client Order ID",
+            "description": "Client Order ID of the order being amended. This field will be ignored if order ID is also specified.",
+            "datatype": "String",
+            "length": 20
+          },
+          {
+            "offset": 44,
+            "name": "Order ID",
+            "description": "Unique identifier of the order assigned by the matching engine.",
+            "datatype": "String",
+            "length": 12
+          },
+          {
+            "offset": 56,
+            "name": "Instrument ID",
+            "description": "Identifer of the instrument of the order being cancelled.",
+            "datatype": "UInt32",
+            "length": 4
+          },
+          {
+            "offset": 60,
+            "name": "Reserved field1",
+            "description": "This will always be 0",
+            "datatype": "Int8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 0,
+                "description": "0"
+              }
+            ]
+          },
+          {
+            "offset": 61,
+            "name": "Reserved field2",
+            "description": "This will always be 0",
+            "datatype": "Int8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 0,
+                "description": "0"
+              }
+            ]
+          },
+          {
+            "offset": 62,
+            "name": "Side",
+            "description": "Side of the order",
+            "datatype": "Int8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 1,
+                "description": "Buy"
+              },
+              {
+                "enum": 2,
+                "description": "Sell"
+              }
+            ]
+          },
+          {
+            "offset": 63,
+            "name": "Reserved Field",
+            "description": "Reserved for future use",
+            "datatype": "String",
+            "length": 10
+          }
+        ]
+      },
+      {
+        "name": "Order Cancel/Replace Request",
+        "wireId": "0x47",
+        "direction": "in",
+        "description": "&lt;p&gt;Allows the client to cancel/replace a live order.&lt;/p&gt;\n\n&lt;h4&gt;&lt;br /&gt;\nAmending an order&lt;/h4&gt;\n\n&lt;p&gt;The following attributes of a live order may be amended via the Order Cancel/Replace Request message:&lt;/p&gt;\n\n&lt;ol&gt;\n\t&lt;li&gt;Order quantity&lt;/li&gt;\n\t&lt;li&gt;Disclosed quantity&lt;/li&gt;\n\t&lt;li&gt;Limit price&lt;/li&gt;\n\t&lt;li&gt;Stop price&lt;/li&gt;\n\t&lt;li&gt;Expiration date/time (GTD/GTT orders)&lt;/li&gt;\n\t&lt;li&gt;Client reference&lt;/li&gt;\n&lt;/ol&gt;\n\n&lt;p&gt; &lt;br /&gt;\nFor attributes the client wishes to update, the new values should be entered on the Order Cancel/Replace Request message. For attributes the client does not want to update, the Order Cancel/Replace Request message should contain the same value as the live version of the order.&lt;br /&gt;\n &lt;br /&gt;\nFor Market and Stop orders, the Limit Price field should be filled with a negative value.&lt;br /&gt;\nThe server will respond with an Execution Report or Order Cancel Reject to confirm or reject the amendment request respectively.&lt;br /&gt;\n &lt;br /&gt;\nIn a scenario where the Order Cancel/Replace Request message is submitted by a different user from the user who submitted the original order, the Execution Report will be sent to the modifying user. If the user amending the order does not have permissions to modify orders on behalf of the firm, the amend request will be rejected.&lt;br /&gt;\n&lt;br /&gt;\nThe client should identify the order being amended by either the Original Client Order ID or Order ID. If an Order Cancel/Replace Request contains values for both Original Client Order ID and Order ID, the server will only process the Order ID.&lt;br /&gt;\n &lt;br /&gt;\nClients may not amend orders that are fully filled.&lt;br /&gt;\n &lt;br /&gt;\nA Cross/BTF order cannot be amended.&lt;br /&gt;\nWhen an order receives one or more fills while an amendment request is in flight, the system will not reject the incoming amendment request. Even if the amendment request has a display quantity greater than the order leaves quantity after the partial fill. It will accept the said amendment request and set the display quantity equal to the leaves quantity.&lt;/p&gt;",
+        "fields": [
+          {
+            "offset": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Message header.",
+            "datatype": "block"
+          },
+          {
+            "offset": 4,
+            "name": "Client Order ID",
+            "description": "Client specified identifier of the request. It is optional to specify this.",
+            "datatype": "String",
+            "length": 20
+          },
+          {
+            "offset": 24,
+            "name": "Original Client Order ID",
+            "description": "Client Order ID of the order being amended. This field will be ignored if the Order ID is also specified.",
+            "datatype": "String",
+            "length": 20
+          },
+          {
+            "offset": 44,
+            "name": "OrderID",
+            "description": "Unique identifier of the order assigned by the matching system.",
+            "datatype": "String",
+            "length": 12
+          },
+          {
+            "offset": 56,
+            "name": "Instrument ID",
+            "description": "Identifier of the instrument of the order being amended.",
+            "datatype": "UInt32",
+            "length": 4
+          },
+          {
+            "offset": 60,
+            "name": "Reserved Field1",
+            "description": "This will always be 0.",
+            "datatype": "Int8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 0,
+                "description": "0"
+              }
+            ]
+          },
+          {
+            "offset": 61,
+            "name": "Reserved Field2",
+            "description": "This will always be 0.",
+            "datatype": "Int8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 0,
+                "description": "0"
+              }
+            ]
+          },
+          {
+            "offset": 62,
+            "name": "ExpireDateTime",
+            "description": "This field will indicate the date or the time the order expires on. It is mandatory to specify a valid value in this field for GTD/GTT orders. If 0 is specified for GTD/GTT orders, the request will be rejected. For non GTD/GTT orders, the value in this field will be ignored.",
+            "datatype": "UInt32",
+            "length": 4
+          },
+          {
+            "offset": 66,
+            "name": "Order Qty",
+            "description": "Total order quantity.",
+            "datatype": "UInt32",
+            "length": 4
+          },
+          {
+            "offset": 70,
+            "name": "Display Qty",
+            "description": "Maximum quantity that may be displayed. The intended display quantity has to be inserted as this is mandatory field.",
+            "datatype": "UInt32",
+            "length": 4
+          },
+          {
+            "offset": 74,
+            "name": "Limit Price",
+            "description": "Only for Market and Stop orders this field should be filled with a negative value",
+            "datatype": "Price",
+            "length": 8
+          },
+          {
+            "offset": 82,
+            "name": "Account",
+            "description": "The reference of the investor the order is submitted for. This field should be null if it is not being amended.",
+            "datatype": "String",
+            "length": 10
+          },
+          {
+            "offset": 92,
+            "name": "TIF",
+            "description": "Time qualifier of the order being amended.",
+            "datatype": "Int8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 0,
+                "description": "Day"
+              },
+              {
+                "enum": 3,
+                "description": "Immediate or Cancel (IOC)"
+              },
+              {
+                "enum": 4,
+                "description": "Fill or Kill (FOK)"
+              },
+              {
+                "enum": 5,
+                "description": "At the Opening (OPG)"
+              },
+              {
+                "enum": 6,
+                "description": "Good Till Date (GTD)"
+              },
+              {
+                "enum": 8,
+                "description": "Good Till Time (GTT)"
+              },
+              {
+                "enum": 10,
+                "description": "At the Close (ATC)"
+              },
+              {
+                "enum": 12,
+                "description": "Closing Price Cross (CPX)"
+              },
+              {
+                "enum": 50,
+                "description": "Good For Auction (GFA)"
+              },
+              {
+                "enum": 51,
+                "description": "Good For Intraday Auction (GFX)"
+              },
+              {
+                "enum": 52,
+                "description": "Good for Scheduled Action (GFS)"
+              }
+            ]
+          },
+          {
+            "offset": 93,
+            "name": "Side",
+            "description": "Side of the order",
+            "datatype": "Int8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 1,
+                "description": "Buy"
+              },
+              {
+                "enum": 2,
+                "description": "Sell"
+              }
+            ]
+          },
+          {
+            "offset": 94,
+            "name": "Stopped Price",
+            "description": "Stop Price.A negative value should be entered if this field is not being amended. This applies to all order types.",
+            "datatype": "Price",
+            "length": 8
+          },
+          {
+            "offset": 102,
+            "name": "PassiveOnlyOrder",
+            "description": "Order level parameter to allow clients to specify that they would like their order to rest prior to execution, with flexibility for visible orders to rest at a specified price level on the book. Passive Only Orders will execute against hidden orders sat within the BBO on order entry.Any fully hidden order will be rejected if it has enum 100, 1,2 or 3. No passive only order validation will be done if field is not stamped or has 0 stamped on it.The newly amended or old PassiveOnlyOrder indicator stamped on an order amend message will not be evaluated.",
+            "datatype": "Int8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 0,
+                "description": "No Constraints (Default)"
+              },
+              {
+                "enum": 1,
+                "description": "Only accept order if setting new BBO or joining existing BBO. Otherwise expire order."
+              },
+              {
+                "enum": 2,
+                "description": "Only accept order if will be at BBO or within one visible price-point. Otherwise expire order"
+              },
+              {
+                "enum": 3,
+                "description": "Only accept order if will be at BBO or within two visible price-points. Otherwise expire order"
+              },
+              {
+                "enum": 99,
+                "description": "Only accept order if it will not match with visible contra order. Otherwise expire order"
+              },
+              {
+                "enum": 100,
+                "description": "Only accept order if setting new visible BBO, otherwise expire order"
+              }
+            ]
+          },
+          {
+            "offset": 103,
+            "name": "Reserved Field",
+            "description": "Reserved for future use",
+            "datatype": "String",
+            "length": 9
+          },
+          {
+            "offset": 112,
+            "name": "Minimum Quantity",
+            "description": "Minimum Execution Size (MES) of an order. A value of 0 (zero) means no MES. MES is only valid for pegged orders. If a non zero value is specified for a non-pegged order type the message will be rejected.",
+            "datatype": "UInt32",
+            "length": 4
+          }
+        ]
+      },
+      {
+        "name": "Order Mass Cancel Request",
+        "wireId": "0x71",
+        "direction": "in",
+        "description": "&lt;p&gt;A client may mass cancel live orders via the Order Mass Cancel Request message with the OrdSubType set to Order (0). The server will respond with an Order Mass Cancel Report to indicate, via the MassCancelResponse field, whether the request is successful or not.&lt;br /&gt;\n &lt;br /&gt;\nIf the mass cancel request is accepted, the Order Mass Cancel Report will be sent first. The server will then immediately transmit Execution Reports for each order that is cancelled and Order Cancel Rejects for each order that could not be cancelled. The Client Order ID of all such messages will be the Client Order ID of the Order Mass Cancel Request.&lt;br /&gt;\n &lt;br /&gt;\nIf the mass cancel request is rejected, the reason will be specified in the MassCancelRejectReason field of the Order Mass Cancel Report.&lt;br /&gt;\n &lt;br /&gt;\nClients may use the Order Mass Cancel Request to mass cancel all orders or only those for a particular instrument or segment. A mass cancel request may apply to all the orders of the trading firm or only to those of a particular trading party. If the target party is not specified, the server will apply the request to the orders of the trading party that the Order Mass Cancel Request is submitted under.&lt;br /&gt;\n &lt;br /&gt;\nA mass cancel request sent in by the Native Trading Gateway or the FIX Gateway, may cancel orders submitted through both gateways. In such a case, the execution reports for the order cancellation will be sent to the gateway through which, each order was submitted.&lt;br /&gt;\n &lt;br /&gt;\nOpen Committed Cross/BTF Orders cannot be cancelled via a mass cancellation request.&lt;br /&gt;\n&lt;br /&gt;\nIn a scenario where the Order Mass Cancel Request message is submitted by a different user from the user who submitted the original orders, the Execution Reports will be sent to the submitted user whereas the Order Mass Cancel Report will be sent to the cancelling user. If the user mass cancelling orders does not have permissions to cancel orders on behalf of the firm, the mass cancel request will be rejected.&lt;br /&gt;\n &lt;/p&gt;",
+        "fields": [
+          {
+            "offset": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Message header.",
+            "datatype": "block"
+          },
+          {
+            "offset": 4,
+            "name": "Client Order ID",
+            "alwaysRequired": true,
+            "description": "Client specified identifier of mass cancel request. It is optional to specify it.",
+            "datatype": "String",
+            "length": 20
+          },
+          {
+            "offset": 24,
+            "name": "MassCancelRequestType",
+            "alwaysRequired": true,
+            "description": "Type of the Mass Cancellation",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 3,
+                "description": "All firm orders of an instrument"
+              },
+              {
+                "enum": 4,
+                "description": "All firm orders of a segment"
+              },
+              {
+                "enum": 7,
+                "description": "All orders submitted by the trader"
+              },
+              {
+                "enum": 8,
+                "description": "All firm orders"
+              },
+              {
+                "enum": 9,
+                "description": "All orders of an instrument, submitted by the trader"
+              },
+              {
+                "enum": 15,
+                "description": "All orders of a segment, submitted by the trader."
+              }
+            ]
+          },
+          {
+            "offset": 25,
+            "name": "Instrument ID",
+            "description": "Identifier of the instrument of the orders being cancelled. Required if MassCancelRequestType = 3 or 9. Else will be ignored.",
+            "datatype": "UInt32",
+            "length": 4
+          },
+          {
+            "offset": 29,
+            "name": "Reserved field1",
+            "description": "This will always be 0",
+            "datatype": "Int8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 0,
+                "description": "0"
+              }
+            ]
+          },
+          {
+            "offset": 30,
+            "name": "Reserved Field2",
+            "description": "This will always be 0",
+            "datatype": "Int8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 0,
+                "description": "0"
+              }
+            ]
+          },
+          {
+            "offset": 31,
+            "name": "Segment",
+            "description": "The segment for which the orders will be cancelled. Required of MassCancelRequestType = 4 or 15. Else this field will be ignored.",
+            "datatype": "String",
+            "length": 4
+          },
+          {
+            "offset": 35,
+            "name": "Order Sub Type",
+            "description": "Whether cancellation should be done an orders or quotes",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 0,
+                "description": "Order"
+              },
+              {
+                "enum": 3,
+                "description": "Quote"
+              }
+            ]
+          },
+          {
+            "offset": 36,
+            "name": "Reserved field",
+            "description": "Reserved for future use.",
+            "datatype": "String",
+            "length": 10
+          }
+        ]
+      },
+      {
+        "name": "New Order Cross",
+        "wireId": "0x43",
+        "direction": "in",
+        "description": "Allows the client to submit a Cross/BTF order.&lt;br /&gt;\n&lt;br /&gt;\nClients may submit the order types outlined below via the new Order Cross message.&lt;br /&gt;\n \n&lt;table border=\"1\" cellpadding=\"1\" cellspacing=\"1\" style=\"width:100%\"&gt;\n\t&lt;thead&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;th scope=\"col\"&gt;Order Type&lt;/th&gt;\n\t\t\t&lt;th scope=\"col\"&gt;Description&lt;/th&gt;\n\t\t&lt;/tr&gt;\n\t&lt;/thead&gt;\n\t&lt;tbody&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;Internal Cross&lt;/td&gt;\n\t\t\t&lt;td&gt;A dual sided order that will execute with each other side at a price between visible best bid &amp; visible best offer (including extremes)&lt;/td&gt;\n\t\t&lt;/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;Internal BTF&lt;/td&gt;\n\t\t\t&lt;td&gt;A dual sided order that will execute with each other side at a price between visible best bid -% &amp; visible best offer + % (including extremes)&lt;/td&gt;\n\t\t&lt;/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;Committed Cross&lt;/td&gt;\n\t\t\t&lt;td&gt;A single sided order that will execute with the other side of cross at a price between visible best bid &amp; visible best offer (including extremes)&lt;/td&gt;\n\t\t&lt;/tr&gt;\n\t\t&lt;tr&gt;\n\t\t\t&lt;td&gt;Committed BTF&lt;/td&gt;\n\t\t\t&lt;td&gt;A single sided order that will execute with the other side of BTF at a price between visible best bid - % &amp; visible best offer + % (including extremes)&lt;/td&gt;\n\t\t&lt;/tr&gt;\n\t&lt;/tbody&gt;\n&lt;/table&gt;",
+        "fields": [
+          {
+            "offset": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Message header.",
+            "datatype": "block"
+          },
+          {
+            "offset": 4,
+            "name": "CrossID",
+            "description": "An identifier of the Cross/BTF Order. Required for Cross/BTF Orders.&lt;br /&gt;\nMust be unique per day but note that the system only validates the uniqueness of the Cross ID with the currently open Committed cross Orders in the container.",
+            "datatype": "String",
+            "length": 20
+          },
+          {
+            "offset": 24,
+            "name": "CrossType",
+            "description": "The type of the Cross/BTF Order.&lt;br&gt;\nAny other value will be rejected.",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 5,
+                "description": "Internal Cross"
+              },
+              {
+                "enum": 6,
+                "description": "Internal BTF"
+              },
+              {
+                "enum": 7,
+                "description": "Committed Cross"
+              },
+              {
+                "enum": 8,
+                "description": "Committed BTF"
+              }
+            ]
+          },
+          {
+            "offset": 25,
+            "name": "BuySideClOrdID",
+            "description": "Client specified identifier of the buy side.",
+            "datatype": "String",
+            "length": 20
+          },
+          {
+            "offset": 45,
+            "name": "BuySideOrderCapacity",
+            "description": "Capacity of the buy side.",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 1,
+                "description": "Riskless Principal"
+              },
+              {
+                "enum": 2,
+                "description": "Principal"
+              },
+              {
+                "enum": 3,
+                "description": "Agency"
+              }
+            ]
+          },
+          {
+            "offset": 46,
+            "name": "BuySideClearingAccount",
+            "description": "Clearing Account Type.",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 1,
+                "description": "Client"
+              },
+              {
+                "enum": 3,
+                "description": "House"
+              }
+            ]
+          },
+          {
+            "offset": 47,
+            "name": "BuySideOrderQuantity",
+            "description": "Total order quantity of the Cross/BTF Order",
+            "datatype": "UInt64",
+            "length": 8
+          },
+          {
+            "offset": 55,
+            "name": "BuySideFirmID",
+            "description": "Identifier of the Buy Side Firm",
+            "datatype": "String",
+            "length": 11
+          },
+          {
+            "offset": 66,
+            "name": "BuySidePartyRole",
+            "description": "Role of the specified Firm",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 1,
+                "description": "Executing Firm"
+              },
+              {
+                "enum": 17,
+                "description": "Counterparty Firm"
+              }
+            ]
+          },
+          {
+            "offset": 67,
+            "name": "SellSideClOrdID",
+            "description": "Client specified identifier of the sell side.",
+            "datatype": "String",
+            "length": 20
+          },
+          {
+            "offset": 87,
+            "name": "SellSideOrderCapacity",
+            "description": "Capacity of the sell side.",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 3,
+                "description": "Agency"
+              },
+              {
+                "enum": 2,
+                "description": "Principal"
+              },
+              {
+                "enum": 1,
+                "description": "Riskless Principal"
+              }
+            ]
+          },
+          {
+            "offset": 88,
+            "name": "SellSideClearingAccount",
+            "description": "Clearing Account Type.",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 1,
+                "description": "Client"
+              },
+              {
+                "enum": 3,
+                "description": "House"
+              }
+            ]
+          },
+          {
+            "offset": 89,
+            "name": "SellSideOrderQuantity",
+            "description": "Total order quantity of the Cross/BTF Order",
+            "datatype": "UInt64",
+            "length": 8
+          },
+          {
+            "offset": 97,
+            "name": "SellSideFirmID",
+            "description": "Identifier of the Sell Side Firm",
+            "datatype": "String",
+            "length": 11
+          },
+          {
+            "offset": 108,
+            "name": "BuySidePartyRole",
+            "description": "Role of the specified Firm&lt;br /&gt;\n ",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 1,
+                "description": "Executing Firm"
+              },
+              {
+                "enum": 17,
+                "description": "Counterparty Firm"
+              }
+            ]
+          },
+          {
+            "offset": 109,
+            "name": "InstrumentID",
+            "description": "Identifier of the instrument for which the Cross/BTF Order is submitted.",
+            "datatype": "UInt8",
+            "length": 4
+          },
+          {
+            "offset": 113,
+            "name": "Price",
+            "description": "Price of the Cross/BTF Order",
+            "datatype": "Price",
+            "length": 8
+          },
+          {
+            "offset": 121,
+            "name": "OrderType",
+            "description": "Type of the Order.",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 2,
+                "description": "Limit"
+              }
+            ]
+          },
+          {
+            "offset": 122,
+            "name": "TIF",
+            "description": "Time qualifier of the order.&lt;br&gt;\nOnly DAY TIF is allowed for Committed and Internal Cross/BTF Orders. If not, it will be rejected via a session Reject with the reject code 9901 (Invalid value in field)&lt;br&gt;\nTIF is optional for Internal Cross Orders, unlike for Committed Cross orders.",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 0,
+                "description": "DAY"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Cross Order Cancel Request",
+        "wireId": "0x48",
+        "direction": "in",
+        "description": "Allows the client to cancel a Committed Cross/BTF order.&lt;br /&gt;\nAn open Committed Cross/BTF order may be cancelled by sending a Cross Order Cancel Request message. The server will respond with an Execution Report or Order Cancel Reject message to confirm or reject the cancellation request respectively. The Execution Report message returns the CrossID of the original Committed Cross/BTF order being cancelled.&lt;br /&gt;\nThe client should identify the order being cancelled by providing the Buy Side Original ClOrdID or Sell Side Original ClOrdID field.",
+        "fields": [
+          {
+            "offset": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Message header.",
+            "datatype": "block"
+          },
+          {
+            "offset": 4,
+            "name": "CrossID",
+            "alwaysRequired": true,
+            "description": "An identifier of the Cancel Request itself.&lt;br /&gt;\nThis field will not be used as the unique identifier of the order being cancelled nor will the value in this field be validated for uniqueness",
+            "datatype": "String",
+            "length": 20
+          },
+          {
+            "offset": 24,
+            "name": "OriginalCrossID",
+            "alwaysRequired": true,
+            "description": "Cross ID of the order being cancelled. This field is mandatory, but will not be used as the unique identifier of the order being cancelled.&lt;br&gt;\nThe value specified in this will not be validated against the value specified in the New Order Cross Message.",
+            "datatype": "String",
+            "length": 20
+          },
+          {
+            "offset": 44,
+            "name": "CrossType",
+            "description": "The value submitted with the Cross/BTF Order to be cancelled.&lt;br /&gt;\nThe value specified in this will not be validated against the value specified in the New Order Cross Message.",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 5,
+                "description": "Internal Cross"
+              },
+              {
+                "enum": 6,
+                "description": "Internal BTF"
+              },
+              {
+                "enum": 7,
+                "description": "Committed Cross"
+              },
+              {
+                "enum": 8,
+                "description": "Committed BTF"
+              }
+            ]
+          },
+          {
+            "offset": 45,
+            "name": "BuySideClOrdID",
+            "description": "The value submitted in the “Buy Side ClOrdID” (in the New Order Cross Message) of the Cross/BTF Order to be cancelled.&lt;br /&gt;\nThis will be a unique identifier of the order being cancelled.",
+            "datatype": "String",
+            "length": 20
+          },
+          {
+            "offset": 65,
+            "name": "BuySideOrderQuantity",
+            "description": "The value submitted with the Cross/BTF Order to be cancelled.&lt;br /&gt;\nThe value specified in this will not be validated against the value specified in the New Order Cross Message.",
+            "datatype": "UInt64",
+            "length": 8
+          },
+          {
+            "offset": 73,
+            "name": "SellSideClOrdID",
+            "description": "Client specified identifier of the sell side.",
+            "datatype": "String",
+            "length": 20
+          },
+          {
+            "offset": 93,
+            "name": "SellSideOrderQuantity",
+            "description": "Total order quantity of the Cross/BTF Order",
+            "datatype": "UInt64",
+            "length": 8
+          },
+          {
+            "offset": 101,
+            "name": "InstrumentID",
+            "description": "The value submitted with the Cross/BTF Order to be cancelled.&lt;br /&gt;\nAny other value will be rejected.",
+            "datatype": "UInt8",
+            "length": 4
+          },
+          {
+            "offset": 105,
+            "name": "ClientOrderID",
+            "description": "A unique identifier of the cancel request itself. But this field will not be used as the unique identifier of the order being cancelled.",
+            "datatype": "String",
+            "length": 20
+          }
+        ]
+      },
+      {
+        "name": "Execution Report",
+        "wireId": "0x38",
+        "direction": "out",
+        "description": "&lt;p&gt;Indicates one of the following:&lt;/p&gt;\n\n&lt;ol&gt;\n\t&lt;li&gt;Order accepted.&lt;/li&gt;\n\t&lt;li&gt;Order rejected.&lt;/li&gt;\n\t&lt;li&gt;Order executed.&lt;/li&gt;\n\t&lt;li&gt;Order expired.&lt;/li&gt;\n\t&lt;li&gt;Order cancelled.&lt;/li&gt;\n\t&lt;li&gt;Order cancel/replaced.&lt;/li&gt;\n\t&lt;li&gt;Trade cancel&lt;/li&gt;\n\t&lt;li&gt;Order restated&lt;/li&gt;\n\t&lt;li&gt;Order Suspended&lt;/li&gt;\n&lt;/ol&gt;",
+        "fields": [
+          {
+            "offset": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Message header.",
+            "datatype": "block"
+          },
+          {
+            "offset": 4,
+            "name": "AppID",
+            "description": "Partition ID",
+            "datatype": "UInt8",
+            "length": 1
+          },
+          {
+            "offset": 5,
+            "name": "Sequence No",
+            "description": "Sequence number of the message",
+            "datatype": "UInt32",
+            "length": 4
+          },
+          {
+            "offset": 9,
+            "name": "Execution ID",
+            "description": "Unique ID of the Execution Report. Unique across all partitions, all days. This will be a 62 base encoded value in ASCII format",
+            "datatype": "String",
+            "length": 12
+          },
+          {
+            "offset": 21,
+            "name": "Client Order ID",
+            "description": "Client specified identifier of the order.If the execution report is generated as a response to order cancel or order mass cancel request, this will be the client order id specified in the order cancel or order mass cancel request. If a client order id is not specified in the order cancel or order mass cancel request, this will be the original client order id of the order being cancelled.",
+            "datatype": "String",
+            "length": 20
+          },
+          {
+            "offset": 41,
+            "name": "Order ID",
+            "description": "Unique identifier of the order assigned by the matching system. This will be a 62 base encoded value in ASCII format. By converting this to binary, this can be mapped with ITCH Order ID.",
+            "datatype": "String",
+            "length": 12
+          },
+          {
+            "offset": 53,
+            "name": "Exec Type",
+            "description": "The reason the Execution Report is being sent.",
+            "datatype": "Alpha",
+            "length": 1,
+            "values": [
+              {
+                "enum": "0",
+                "description": "New"
+              },
+              {
+                "enum": "4",
+                "description": "Cancelled"
+              },
+              {
+                "enum": "5",
+                "description": "Replaced"
+              },
+              {
+                "enum": "8",
+                "description": "Rejected"
+              },
+              {
+                "enum": "C",
+                "description": "Expired"
+              },
+              {
+                "enum": "D",
+                "description": "Restated"
+              },
+              {
+                "enum": "F",
+                "description": "Trade"
+              },
+              {
+                "enum": "H",
+                "description": "Trade Cancel"
+              },
+              {
+                "enum": "9",
+                "description": "Suspended"
+              }
+            ]
+          },
+          {
+            "offset": 54,
+            "name": "Execution Report Ref ID",
+            "description": "Reference to the execution being cancelled or corrected. Required if Exec Type is Trade Cancel",
+            "datatype": "String",
+            "length": 12
+          },
+          {
+            "offset": 66,
+            "name": "Order Status",
+            "description": "The status of the order.",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 0,
+                "description": "New"
+              },
+              {
+                "enum": 1,
+                "description": "Partially Filled"
+              },
+              {
+                "enum": 2,
+                "description": "Filled"
+              },
+              {
+                "enum": 4,
+                "description": "Cancelled"
+              },
+              {
+                "enum": 6,
+                "description": "Expired"
+              },
+              {
+                "enum": 8,
+                "description": "Rejected"
+              },
+              {
+                "enum": 9,
+                "description": "Suspended"
+              }
+            ]
+          },
+          {
+            "offset": 67,
+            "name": "Order Reject Code",
+            "description": "Code specifying the reason for the reject or the expiry. Please refer to the Reject Code Specification for the list of reject codes and meanings specific to LSE. The value in this field should be disregarded if Exec Type is not Rejected (8) except for orders expired (6) due to Self-Execution Prevention validations.(I.e. if an order is expired due to SEP validations, reject code 119200 will be populated with Exec Type= C )",
+            "datatype": "UInt32",
+            "length": 4
+          },
+          {
+            "offset": 71,
+            "name": "Executed Price",
+            "description": "Value of the fill. Required if Exec Type is Trade",
+            "datatype": "Price",
+            "length": 8
+          },
+          {
+            "offset": 79,
+            "name": "Executed Qty",
+            "description": "Quantity that was executed in this fill.",
+            "datatype": "UInt32",
+            "length": 4
+          },
+          {
+            "offset": 83,
+            "name": "LeavesQty",
+            "description": "Quantity available for further execution. Will be '0' if Order Status is Filled, Cancelled, Rejected of Expired.",
+            "datatype": "UInt32",
+            "length": 4
+          },
+          {
+            "offset": 87,
+            "name": "Container",
+            "description": "The container which holds the order in the trading engine.",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 0,
+                "description": "None"
+              },
+              {
+                "enum": 1,
+                "description": "Order Book"
+              },
+              {
+                "enum": 3,
+                "description": "Market Order Container"
+              },
+              {
+                "enum": 5,
+                "description": "Parked Order Queue"
+              },
+              {
+                "enum": 6,
+                "description": "Stop Order Queue"
+              },
+              {
+                "enum": 7,
+                "description": "Pegged Order Container"
+              },
+              {
+                "enum": 11,
+                "description": "Cross Order"
+              }
+            ]
+          },
+          {
+            "offset": 88,
+            "name": "DisplayQty",
+            "description": "Current visible quantity",
+            "datatype": "UInt32",
+            "length": 4
+          },
+          {
+            "offset": 92,
+            "name": "Instrument ID",
+            "description": "Identifier of the instrument the Execution Report is sent for.",
+            "datatype": "UInt32",
+            "length": 4
+          },
+          {
+            "offset": 96,
+            "name": "Restatement Reason",
+            "description": "Reason order was restated or cancelled. Required if ExecType (53) is Restated (D) or if the execution report is sent for an unsolicited cancellation. It should be tagged with a new enum 3 (Order Re_Priced) upon order re-pricing at the start of CPX session Should be tagged with new enum 100 (Order Replenishment) when the order is replenished with the new Public Order ID during the auction call.",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 3,
+                "description": "Order re-priced"
+              },
+              {
+                "enum": 8,
+                "description": "Market Option"
+              },
+              {
+                "enum": 100,
+                "description": "Order Replenishment"
+              }
+            ]
+          },
+          {
+            "offset": 97,
+            "name": "Reserved field2",
+            "description": "This will always be 0.",
+            "datatype": "Int8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 0,
+                "description": "0"
+              }
+            ]
+          },
+          {
+            "offset": 98,
+            "name": "Side",
+            "description": "Side of the order",
+            "datatype": "Int8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 1,
+                "description": "Buy"
+              },
+              {
+                "enum": 2,
+                "description": "Sell"
+              }
+            ]
+          },
+          {
+            "offset": 99,
+            "name": "Reserved field",
+            "description": "Reserved for future use",
+            "datatype": "UInt64",
+            "length": 8
+          },
+          {
+            "offset": 107,
+            "name": "Counterparty",
+            "description": "Counterparty Firm. If the trade is internalized, the Counterparty Firm will be populated with the user's own Firm ID. If a trade is cleared, the Counterparty Firm will be populated with CCP. If an on book trade is not cleared, the Counterparty Firm (17) will be populated with Contra Party Firm ID.",
+            "datatype": "String",
+            "length": 11
+          },
+          {
+            "offset": 118,
+            "name": "Trade Liquidity Indicator",
+            "description": "Whether the order added or removed liquidity. The value in this field should only be considered if the Exec Type is Trade (F), or Trade Cancel (H), although it will not be populated for Cross Order trades. For the rest of exec types, the value in this field should be ignored.",
+            "datatype": "Alpha",
+            "length": 1,
+            "values": [
+              {
+                "enum": "A",
+                "description": "Added Liquidity"
+              },
+              {
+                "enum": "R",
+                "description": "Removed Liquidity"
+              },
+              {
+                "enum": "C",
+                "description": "Auction"
+              }
+            ]
+          },
+          {
+            "offset": 119,
+            "name": "TradeMatchID",
+            "description": "Identifier of the trade. This will be the binary format value of the base 36 encoded trade id in the system. This will be same as MITCH Trade ID.&lt;br /&gt;\nAlso the identifier sent to the clearer.",
+            "datatype": "UInt64",
+            "length": 8
+          },
+          {
+            "offset": 127,
+            "name": "Transact Time",
+            "description": "Time the Execution Report was generated.",
+            "datatype": "UInt64",
+            "length": 8
+          },
+          {
+            "offset": 135,
+            "name": "Reserved field",
+            "description": "Reserved for future use.",
+            "datatype": "String",
+            "length": 1
+          },
+          {
+            "offset": 136,
+            "name": "TypeOfTrade",
+            "description": "Indicates whether the executed portion is visible or hidden. Valid only if Exec Type (53) = F. Ignore value in all other cases.",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 0,
+                "description": "Visible"
+              },
+              {
+                "enum": 1,
+                "description": "Hidden"
+              },
+              {
+                "enum": 2,
+                "description": "Not Specified"
+              }
+            ]
+          },
+          {
+            "offset": 137,
+            "name": "Capacity",
+            "description": "Capacity of the order",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 1,
+                "description": "Riskless Principal"
+              },
+              {
+                "enum": 2,
+                "description": "Principal"
+              },
+              {
+                "enum": 3,
+                "description": "Agency"
+              }
+            ]
+          },
+          {
+            "offset": 138,
+            "name": "Reserved Field",
+            "description": "Reserved for future use.",
+            "datatype": "Alpha",
+            "length": 1
+          },
+          {
+            "offset": 139,
+            "name": "Public Order ID",
+            "description": "Maintained by matching engine, will be unique for each replenishment of a particular iceberg order. This will be a 62 base encoded value in ASCII format.",
+            "datatype": "String",
+            "length": 12
+          },
+          {
+            "offset": 151,
+            "name": "Minimum Quantity",
+            "description": "Minimum Execution Size (MES) specified on a pegged order.  Following an execution if the remaining quantity of order &lt; MES specified in the order, Minimum Quantity = Remaining Quantity.  For order types other than pegged this field will always contain 0 (zero).",
+            "datatype": "UInt32",
+            "length": 4
+          }
+        ]
+      },
+      {
+        "name": "Order Cancel Reject",
+        "wireId": "0x39",
+        "direction": "out",
+        "description": "Indicates that an order cancel request or order cancel/replace request has been rejected.",
+        "fields": [
+          {
+            "offset": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Message header.",
+            "datatype": "block"
+          },
+          {
+            "offset": 4,
+            "name": "AppID",
+            "description": "Partition ID",
+            "datatype": "UInt8",
+            "length": 1
+          },
+          {
+            "offset": 5,
+            "name": "Sequence No",
+            "description": "equence Number of the message",
+            "datatype": "UInt32",
+            "length": 4
+          },
+          {
+            "offset": 9,
+            "name": "Client Order ID",
+            "description": "Client Order ID that was submitted with the order cancel or cancel/replace request being rejected",
+            "datatype": "String",
+            "length": 20
+          },
+          {
+            "offset": 29,
+            "name": "Order ID",
+            "description": "Server specified identifier of the order for which the cancel or cancel/replace was submitted. Will be \"NONE\" if the order is unknown",
+            "datatype": "String",
+            "length": 12
+          },
+          {
+            "offset": 41,
+            "name": "Cancel Reject Reason",
+            "description": "Code specifying the reason for the reject. Please refer to the Reject Code Specification for the list of reject codes and meanings specific to LSE.",
+            "datatype": "UInt32",
+            "length": 4
+          },
+          {
+            "offset": 45,
+            "name": "Transact Time",
+            "description": "Time the Order Cancel Reject occured. The first 4 bytes of the Transact Time timestamp will represent the Unix (Posix) time while the next 4 bytes will specify the micro seconds. The Transac Time will be in UTC.",
+            "datatype": "UInt64",
+            "length": 8
+          },
+          {
+            "offset": 53,
+            "name": "Reserved Field",
+            "description": "Reserved for future use.",
+            "datatype": "String",
+            "length": 10
+          }
+        ]
+      },
+      {
+        "name": "Mass Cancel Report",
+        "wireId": "0x72",
+        "direction": "out",
+        "description": "&lt;div&gt;Indicates one of the following:&lt;/div&gt;\n\n&lt;ol&gt;\n\t&lt;li&gt;Mass order cancel request accepted.&lt;/li&gt;\n\t&lt;li&gt;Mass order cancel request rejected.&lt;/li&gt;\n&lt;/ol&gt;",
+        "fields": [
+          {
+            "offset": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Message header.",
+            "datatype": "block"
+          },
+          {
+            "offset": 4,
+            "name": "AppID",
+            "description": "Partition ID",
+            "datatype": "UInt8",
+            "length": 1
+          },
+          {
+            "offset": 5,
+            "name": "Sequence No",
+            "description": "Sequence Number of the message",
+            "datatype": "UInt32",
+            "length": 4
+          },
+          {
+            "offset": 9,
+            "name": "Client Order ID",
+            "description": "Client specified identifier of mass cancel request",
+            "datatype": "String",
+            "length": 20
+          },
+          {
+            "offset": 29,
+            "name": "MassCancelResponse",
+            "description": "Whether tne Mass Cancel Request was accepted or rejected",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 0,
+                "description": "Rejected"
+              },
+              {
+                "enum": 7,
+                "description": "Accepted"
+              }
+            ]
+          },
+          {
+            "offset": 30,
+            "name": "MassCancelRejectReason",
+            "description": "The code that identifies the reason the order mass cancel was rejected. Please refer to the Reject Code Specification for the list of reject codes and meanings specific to LSE.",
+            "datatype": "UInt32",
+            "length": 4
+          },
+          {
+            "offset": 34,
+            "name": "Reserved field",
+            "description": "Reserved field for future use.",
+            "datatype": "UInt32",
+            "length": 4
+          },
+          {
+            "offset": 38,
+            "name": "Transact Time",
+            "description": "Time the order mass cancel report was generated. The first 4 bytes of the TransacTime timestamps will represent the Unix (Posix) time while the next 4 bytes will specify the micro seconds. The Transact Time will be in UTC.",
+            "datatype": "UInt64",
+            "length": 8
+          },
+          {
+            "offset": 46,
+            "name": "Reserved filed",
+            "description": "Reserved for future use.",
+            "datatype": "String",
+            "length": 10
+          }
+        ]
+      },
+      {
+        "name": "Quote",
+        "wireId": "0x53",
+        "direction": "in",
+        "description": "Allows the client to submit and update a quote.",
+        "fields": [
+          {
+            "offset": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Message header.",
+            "datatype": "block"
+          },
+          {
+            "offset": 4,
+            "name": "Client Order ID",
+            "alwaysRequired": true,
+            "description": "Client specified identified identifier of the quote.",
+            "datatype": "String",
+            "length": 20
+          },
+          {
+            "offset": 24,
+            "name": "Trader ID",
+            "description": "Optional Trader ID that clients may submit.",
+            "datatype": "String",
+            "length": 11
+          },
+          {
+            "offset": 35,
+            "name": "ClearingAccount",
+            "description": "Clearing Account Type.",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 1,
+                "description": "Client"
+              },
+              {
+                "enum": 3,
+                "description": "House"
+              }
+            ]
+          },
+          {
+            "offset": 36,
+            "name": "Instrument ID",
+            "description": "Identifier of the instrument for which the quote is submitted",
+            "datatype": "UInt32",
+            "length": 4
+          },
+          {
+            "offset": 40,
+            "name": "BidPrice",
+            "description": "Bid Price.",
+            "datatype": "Price",
+            "length": 8
+          },
+          {
+            "offset": 48,
+            "name": "BidSize",
+            "description": "Bid Quantity.",
+            "datatype": "UInt32",
+            "length": 4
+          },
+          {
+            "offset": 52,
+            "name": "AskPrice",
+            "description": "Offer Price.",
+            "datatype": "Price",
+            "length": 8
+          },
+          {
+            "offset": 60,
+            "name": "AskSize",
+            "description": "Offer Quantity.",
+            "datatype": "UInt32",
+            "length": 4
+          },
+          {
+            "offset": 64,
+            "name": "Capacity",
+            "description": "Capacity of the quote.",
+            "datatype": "UInt8",
+            "length": 1
+          },
+          {
+            "offset": 65,
+            "name": "Auto Cancel",
+            "description": "Cancel orders on logout/disconnection of session.",
+            "datatype": "UInt8",
+            "length": 1,
+            "values": [
+              {
+                "enum": 0,
+                "description": "Do not cancel"
+              },
+              {
+                "enum": 1,
+                "description": "Cancel"
+              }
+            ]
+          },
+          {
+            "offset": 66,
+            "name": "Reserved Field",
+            "description": "Reserved for future use.",
+            "datatype": "String",
+            "length": 10
+          }
+        ]
+      },
+      {
+        "name": "Business Message Reject",
+        "wireId": "0x6a",
+        "direction": "out",
+        "description": "Indicates that an application message could not be processed",
+        "fields": [
+          {
+            "offset": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Message header.",
+            "datatype": "block"
+          },
+          {
+            "offset": 4,
+            "name": "AppID",
+            "description": "Partition ID",
+            "datatype": "UInt8",
+            "length": 1
+          },
+          {
+            "offset": 5,
+            "name": "Sequence No",
+            "description": "Sequence number of the message.",
+            "datatype": "UInt32",
+            "length": 4
+          },
+          {
+            "offset": 9,
+            "name": "RejectCode",
+            "description": "Code specifying the reason for the reject. Please refer to the Reject Code Specification for the list of reject codes and meanings specific to LSE.",
+            "datatype": "UInt32",
+            "length": 4
+          },
+          {
+            "offset": 13,
+            "name": "Client Order ID",
+            "description": "Client specified identifier of the order.",
+            "datatype": "String",
+            "length": 20
+          },
+          {
+            "offset": 33,
+            "name": "Order ID",
+            "description": "Unique identifier of the order assigned by the matching engine.",
+            "datatype": "String",
+            "length": 12
+          },
+          {
+            "offset": 45,
+            "name": "Transact Time",
+            "description": "Time the order mass cancel report was generated. The first 4 bytes of the TransactTime timestamp will represent the Unix (Posix) time while the next 4 bytes will specify the micro seconds. The Transact Time will be UTC.",
+            "datatype": "UInt64",
+            "length": 8
+          },
+          {
+            "offset": 53,
+            "name": "Reserved field",
+            "description": "Reserved for future use.",
+            "datatype": "String",
+            "length": 10
+          }
+        ]
+      }
+    ]
+  }
+}
