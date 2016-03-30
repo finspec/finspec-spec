@@ -10,6 +10,8 @@ Our hope is that the specification will allow both humans and computers to disco
 
 The current version of the FinSpec specification is 0.2 - and you can find it [here](docs/0.2.md).
 
+Summary of changes in this release can be found [here](https://github.com/finspec/finspec-spec/releases/tag/0.2)
+
 ## Schema Validation
 
 We *STRONGLY* recommend validating FinSpec schema validation prior to deployment or sharing with counterparties. You can find FinSpec Schema validator [here](https://github.com/finspec/finspec-validator).
