@@ -376,9 +376,13 @@
             ],
             "additionalProperties": false,
             "properties": {
+                "offset": {
+                    "type": "integer",
+                    "description": "Zero-based offset of the field within the message for binary APIs."
+                },
                 "position": {
                     "type": "integer",
-                    "description": "Zero-based position of the field within the message."
+                    "description": "Zero-based position of the field within the message for text/tag-value APIs."
                 },
                 "wireId": {
                     "type": "string",
@@ -519,7 +523,7 @@
             "additionalProperties": false,
             "properties": {
                 "enum": {
-                    "anyOf": [
+                    "oneOf": [
                         { "type": "string" },
                         { "type": "number" }
                     ],
