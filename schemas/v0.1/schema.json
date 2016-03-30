@@ -347,7 +347,10 @@
             "additionalProperties": false,
             "properties": {
                 "enum": {
-                    "type": "string",
+                    "anyOf": [
+                        { "type": "string" },
+                        { "type": "number" }
+                    ],
                     "description": "Enumeration as it appears on the wire."
                 },
                 "description": {

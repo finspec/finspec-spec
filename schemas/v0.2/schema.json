@@ -211,7 +211,7 @@
                     "type": "string",
                     "description": "Specifies the base/raw data type of the value.",
                     "enum" : [
-                        "boolean",
+                        "char",
                         "integer",
                         "number",
                         "string"
@@ -379,7 +379,7 @@
                     "description": "Zero-based position of the field within the message."
                 },
                 "wireId": {
-                    "type": { "enum": ["string", "integer"] },
+                    "type": { "anyOf": ["string", "integer"] },
                     "description": "Wire identifier for the message (eg tag 35 in FIX). Either of wireId or blockId should be present."
                 },
                 "blockId": {
