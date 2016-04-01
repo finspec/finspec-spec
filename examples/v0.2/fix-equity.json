@@ -57,12 +57,12 @@
     },
     {
       "name": "SeqNum",
-      "baseType": "string",
+      "baseType": "integer",
       "description": "Integer field representing a message sequence number. Value must be positive."
     },
     {
       "name": "NumInGroup",
-      "baseType": "string",
+      "baseType": "integer",
       "description": "Integer field representing the number of entries in a repeating group. Value must be positive."
     },
     {
