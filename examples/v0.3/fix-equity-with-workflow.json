@@ -1301,8 +1301,8 @@
   },
   "workflows": [
       {
-          "name": "Basic order workflow",
-          "description": "workflow of an order including replace and cancel ",
+          "name": "Standard life of an order",
+          "description": "The workflow modls the basic workflow of an order",
           "includeMessages" : [
               {
                   "messageType": ["D","F","G","8"],
@@ -1311,7 +1311,7 @@
             ],
           "states" : [
               {
-                  "ref": "Order.New",
+                  "ref": "Order.Submitted",
                   "name": "New",
                   "isInitial": true,
                   "description": "Unacknowledged, new order sent to target recipient"
@@ -1337,12 +1337,18 @@
                   "name": "Fully Filled",
                   "isFinal": true,
                   "description": "An order which has been fully filled (ie no further quantity to execute)"
+              },
+              {
+                  "ref": "Order.Closed",
+                  "name": "Closed",
+                  "isFinal": true,
+                  "description": "An order which is out of the market"
               }
           ],
           "transitions": [
               {
-                  "start": ["Order.New"],
-                  "description": "Response to new order entry",
+                  "description": "Responses to new order entry",
+                  "start": ["Order.Submitted"],
                   "triggerBy" : {
                       "messageWireId": "D"
                   },
@@ -1375,7 +1381,7 @@
                           "messageWireId": "8",
                           "where": {
                               "expressionType": "jsep",
-                              "expression": "($150 == F)&($39 == 1)&($32 > 0)&($31 > 0)"
+                              "expression": "($150 == F)&($39 == 1)&($32>0)&($31>0)"
                             },
                           "end": "Order.PartiallyFilled",
                           "isSuccess": true
@@ -1384,9 +1390,105 @@
                           "messageWireId": "8",
                           "where": {
                               "expressionType": "jsep",
-                              "expression": "($150 == F)&($39 == 2)&($32 > 0)&($31 > 0)"
+                              "expression": "($150 == F)&($39 == 2)&($32>0)&($31>0)"
                           },
                           "end": "Order.FullyFilled",
+                          "isSuccess": true
+                      }
+                  ]
+              },
+              {
+                  "description": "Modification of an open order",
+                  "start": ["Order.Acknowledged","Order.PartiallyFilled"],
+                  "triggerBy" : {
+                      "messageWireId": "G"
+                  },
+                  "responses": [
+                     {
+                        "messageWireId": "8",
+                        "where": {
+                            "expressionType": "jsep",
+                            "expression": "($150 == 8)&($39 == 0)"
+                          },
+                        "end": "Order.New",
+                        "isSuccess": false
+                      },
+                      {
+                         "messageWireId": "8",
+                         "where": {
+                             "expressionType": "jsep",
+                             "expression": "($150 == 8)&($39 == 1)"
+                           },
+                         "end": "Order.PartiallyFilled",
+                         "isSuccess": false
+                       },
+                      {
+                          "messageWireId": "8",
+                          "where": {
+                              "expressionType": "jsep",
+                              "expression": "($150 == 5)&($39 == 0)"
+                            },
+                          "end": "Order.PartiallyFilled",
+                          "isSuccess": true
+                      },
+                      {
+                          "messageWireId": "8",
+                          "where": {
+                              "expressionType": "jsep",
+                              "expression": "($150 == 5)&($39 == 1)"
+                            },
+                          "end": "Order.PartiallyFilled",
+                          "isSuccess": true
+                      }
+                  ]
+              },
+              {
+                  "description": "Cancellation of an open order",
+                  "start": ["Order.Acknowledged","Order.PartiallyFilled"],
+                  "triggerBy" : {
+                      "messageWireId": "F"
+                  },
+                  "responses": [
+                      {
+                          "messageWireId": "9",
+                          "where": {
+                              "expressionType": "jsep",
+                              "expression": "($150 == 4)&($39 == 0)"
+                            },
+                          "end": "Order.Acknowledged",
+                          "isSuccess": true
+                      },
+                      {
+                          "messageWireId": "9",
+                          "where": {
+                              "expressionType": "jsep",
+                              "expression": "($150 == 4)&($39 == 1)"
+                            },
+                          "end": "Order.PartiallyFilled",
+                          "isSuccess": true
+                      },
+                      {
+                          "messageWireId": "8",
+                          "where": {
+                              "expressionType": "jsep",
+                              "expression": "($150 == 4)&($39 == 4)"
+                            },
+                          "end": "Order.Closed",
+                          "isSuccess": true
+                      }
+                  ]
+              },
+              {
+                  "description": "Order done for day",
+                  "start": ["Order.Acknowledged","Order.PartiallyFilled"],
+                  "responses": [
+                      {
+                          "messageWireId": "8",
+                          "where": {
+                              "expressionType": "jsep",
+                              "expression": "($150 == 9)&($39 == 9)"
+                            },
+                          "end": "Order.Closed",
                           "isSuccess": true
                       }
                   ]
