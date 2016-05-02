@@ -1456,7 +1456,7 @@
                               "expression": "($150 == 4)&($39 == 0)"
                             },
                           "end": "Order.Acknowledged",
-                          "isSuccess": true
+                          "isSuccess": false
                       },
                       {
                           "messageWireId": "9",
@@ -1465,7 +1465,7 @@
                               "expression": "($150 == 4)&($39 == 1)"
                             },
                           "end": "Order.PartiallyFilled",
-                          "isSuccess": true
+                          "isSuccess": false
                       },
                       {
                           "messageWireId": "8",
