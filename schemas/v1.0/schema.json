@@ -520,7 +520,6 @@
             "type": "object",
             "description": "Single example.",
             "required": [
-                "example",
                 "description"
             ],
             "additionalProperties": false,
