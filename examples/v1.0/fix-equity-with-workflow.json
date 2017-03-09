@@ -101,7 +101,7 @@
           "datatype": "String",
           "values": [
             {
-              "wire_value": "FIX.4.3",
+              "wireValue": "FIX.4.3",
               "name": "FIX.4.3"
             }
           ]
@@ -155,12 +155,12 @@
           "description": "Populated for retransmitted messages",
           "values": [
             {
-              "wire_value": "N",
+              "wireValue": "N",
               "isDefault": true,
               "name": "Original transmission"
             },
             {
-              "wire_value": "Y",
+              "wireValue": "Y",
               "name": "Possible duplicate"
             }
           ]
@@ -174,12 +174,12 @@
           "name": "Populated when there is a chance that the message is a duplicate of a message sent under a different sequence number",
           "values": [
             {
-              "wire_value": "N",
+              "wireValue": "N",
               "isDefault": true,
               "name": "Original transmission"
             },
             {
-              "wire_value": "Y",
+              "wireValue": "Y",
               "name": "Possible resend"
             }
           ]
@@ -373,75 +373,75 @@
             "datatype": "int",
             "values": [
               {
-                "wire_value": "12",
+                "wireValue": "12",
                 "name": "XML Validation error"
               },
               {
-                "wire_value": "17",
+                "wireValue": "17",
                 "name": "Non data value includes field delimiter (SOH character)"
               },
               {
-                "wire_value": "16",
+                "wireValue": "16",
                 "name": "Incorrect NumInGroup count for repeating group"
               },
               {
-                "wire_value": "15",
+                "wireValue": "15",
                 "name": "Repeating group fields out of order"
               },
               {
-                "wire_value": "14",
+                "wireValue": "14",
                 "name": "Tag specified out of required order"
               },
               {
-                "wire_value": "11",
+                "wireValue": "11",
                 "name": "Invalid MsgType"
               },
               {
-                "wire_value": "0",
+                "wireValue": "0",
                 "name": "Invalid tag number"
               },
               {
-                "wire_value": "9",
+                "wireValue": "9",
                 "name": "CompID problem"
               },
               {
-                "wire_value": "8",
+                "wireValue": "8",
                 "name": "Signature problem"
               },
               {
-                "wire_value": "7",
+                "wireValue": "7",
                 "name": "Decryption problem"
               },
               {
-                "wire_value": "6",
+                "wireValue": "6",
                 "name": "Incorrect data format for value"
               },
               {
-                "wire_value": "5",
+                "wireValue": "5",
                 "name": "Value is incorrect (out of range) for this tag"
               },
               {
-                "wire_value": "4",
+                "wireValue": "4",
                 "name": "Tag specified without a value"
               },
               {
-                "wire_value": "3",
+                "wireValue": "3",
                 "name": "Undefined Tag"
               },
               {
-                "wire_value": "10",
+                "wireValue": "10",
                 "name": "SendingTime accuracy problem"
               },
               {
-                "wire_value": "13",
+                "wireValue": "13",
                 "name": "Tag appears more than once"
               },
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "Tag not defined for this message type"
               },
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "Required tag missing"
               }
             ]
@@ -487,11 +487,11 @@
             "datatype": "Boolean",
             "values": [
               {
-                "wire_value": "Y",
+                "wireValue": "Y",
                 "name": "Gap Fill message, MsgSeqNum field valid"
               },
               {
-                "wire_value": "N",
+                "wireValue": "N",
                 "name": "Sequence Reset, ignore MsgSeqNum"
               }
             ]
@@ -567,7 +567,7 @@
             "datatype": "int",
             "values": [
               {
-                "wire_value": "30",
+                "wireValue": "30",
                 "name": "30 seconds"
               }
             ]
@@ -581,11 +581,11 @@
             "datatype": "Boolean",
             "values": [
               {
-                "wire_value": "Y",
+                "wireValue": "Y",
                 "name": "Yes, reset sequence numbers"
               },
               {
-                "wire_value": "N",
+                "wireValue": "N",
                 "name": "No"
               }
             ]
@@ -649,7 +649,7 @@
                 "datatype": "char",
                 "values": [
                   {
-                    "wire_value": "D",
+                    "wireValue": "D",
                     "name": "Proprietary / Custom Code"
                   }
                 ]
@@ -663,11 +663,11 @@
                 "datatype": "int",
                 "values": [
                   {
-                    "wire_value": "11",
+                    "wireValue": "11",
                     "name": "Order Origination Trader (when trader id is given for field 448)"
                   },
                   {
-                    "wire_value": "13",
+                    "wireValue": "13",
                     "name": "Order Origination Firm (when counterparty id is given for field 448)"
                   }
                 ]
@@ -683,7 +683,7 @@
             "datatype": "char",
             "values": [
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "Automated execution order, private, no Broker intervention"
               }
             ]
@@ -705,11 +705,11 @@
             "datatype": "char",
             "values": [
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "Buy"
               },
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "Sell"
               }
             ]
@@ -739,11 +739,11 @@
             "datatype": "char",
             "values": [
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "Market"
               },
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "Limit"
               }
             ]
@@ -781,11 +781,11 @@
             "datatype": "char",
             "values": [
               {
-                "wire_value": "3",
+                "wireValue": "3",
                 "name": "Immediate or Cancel (“Fill and Kill”)"
               },
               {
-                "wire_value": "4",
+                "wireValue": "4",
                 "name": "Fill or Kill"
               }
             ]
@@ -839,27 +839,27 @@
             "datatype": "char",
             "values": [
               {
-                "wire_value": "B",
+                "wireValue": "B",
                 "name": "Wrong side"
               },
               {
-                "wire_value": "C",
+                "wireValue": "C",
                 "name": "Quantity exceeds order"
               },
               {
-                "wire_value": "D",
+                "wireValue": "D",
                 "name": "No matching order"
               },
               {
-                "wire_value": "E",
+                "wireValue": "E",
                 "name": "Price exceeds limit"
               },
               {
-                "wire_value": "Z",
+                "wireValue": "Z",
                 "name": "Other"
               },
               {
-                "wire_value": "A",
+                "wireValue": "A",
                 "name": "Unknown symbol"
               }
             ]
@@ -881,11 +881,11 @@
             "datatype": "char",
             "values": [
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "Buy"
               },
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "Sell"
               }
             ]
@@ -979,19 +979,19 @@
             "datatype": "char",
             "values": [
               {
-                "wire_value": "0",
+                "wireValue": "0",
                 "name": "New (order accepted)"
               },
               {
-                "wire_value": "F",
+                "wireValue": "F",
                 "name": "Trade"
               },
               {
-                "wire_value": "4",
+                "wireValue": "4",
                 "name": "Cancelled (order cancelled / failed)"
               },
               {
-                "wire_value": "8",
+                "wireValue": "8",
                 "name": "Rejected (order rejected)"
               }
             ]
@@ -1005,23 +1005,23 @@
             "datatype": "char",
             "values": [
               {
-                "wire_value": "0",
+                "wireValue": "0",
                 "name": "New ( order accepted)"
               },
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "Partially Filled"
               },
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "Filled"
               },
               {
-                "wire_value": "4",
+                "wireValue": "4",
                 "name": "Cancelled (order cancelled / failed)"
               },
               {
-                "wire_value": "8",
+                "wireValue": "8",
                 "name": "Rejected (order rejected)"
               }
             ]
@@ -1035,55 +1035,55 @@
             "datatype": "int",
             "values": [
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "Exchange closed"
               },
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "Unknown symbol"
               },
               {
-                "wire_value": "3",
+                "wireValue": "3",
                 "name": "Order exceeds limit"
               },
               {
-                "wire_value": "4",
+                "wireValue": "4",
                 "name": "Too late to enter"
               },
               {
-                "wire_value": "5",
+                "wireValue": "5",
                 "name": "Unknown Order"
               },
               {
-                "wire_value": "7",
+                "wireValue": "7",
                 "name": "Duplicate of a verbally communicated order"
               },
               {
-                "wire_value": "9",
+                "wireValue": "9",
                 "name": "Trade Along required"
               },
               {
-                "wire_value": "10",
+                "wireValue": "10",
                 "name": "Invalid Investor ID"
               },
               {
-                "wire_value": "6",
+                "wireValue": "6",
                 "name": "Duplicate Order (e.g. dupe ClOrdID)"
               },
               {
-                "wire_value": "11",
+                "wireValue": "11",
                 "name": "Unsupported order characteristic"
               },
               {
-                "wire_value": "12",
+                "wireValue": "12",
                 "name": "Surveillence Option"
               },
               {
-                "wire_value": "0",
+                "wireValue": "0",
                 "name": "Broker / Exchange option"
               },
               {
-                "wire_value": "8",
+                "wireValue": "8",
                 "name": "Stale Order"
               }
             ]
@@ -1105,11 +1105,11 @@
             "datatype": "char",
             "values": [
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "Buy"
               },
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "Sell"
               }
             ]
@@ -1131,11 +1131,11 @@
             "datatype": "char",
             "values": [
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "Market"
               },
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "Limit"
               }
             ]
@@ -1157,11 +1157,11 @@
             "datatype": "char",
             "values": [
               {
-                "wire_value": "3",
+                "wireValue": "3",
                 "name": "Immediate or Cancel (IOC)"
               },
               {
-                "wire_value": "4",
+                "wireValue": "4",
                 "name": "Fill or Kill (FOK)"
               }
             ]
@@ -1271,35 +1271,35 @@
             "datatype": "int",
             "values": [
               {
-                "wire_value": "3",
+                "wireValue": "3",
                 "name": "Unsupported Message Type"
               },
               {
-                "wire_value": "7",
+                "wireValue": "7",
                 "name": "DeliverTo firm not available at this time"
               },
               {
-                "wire_value": "4",
+                "wireValue": "4",
                 "name": "Application not available"
               },
               {
-                "wire_value": "6",
+                "wireValue": "6",
                 "name": "Not authorized"
               },
               {
-                "wire_value": "0",
+                "wireValue": "0",
                 "name": "Other"
               },
               {
-                "wire_value": "5",
+                "wireValue": "5",
                 "name": "Conditionally Required Field Missing"
               },
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "Unkown ID"
               },
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "Unknown Security"
               }
             ]

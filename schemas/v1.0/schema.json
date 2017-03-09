@@ -703,12 +703,12 @@
             "type": "object",
             "description": "Description of an enumerated, valid value.",
             "required": [
-                "wire_value",
+                "wireValue",
                 "name"
             ],
             "additionalProperties": false,
             "properties": {
-                "wire_value": {
+                "wireValue": {
                     "oneOf": [
                         { "type": "string" },
                         { "type": "number" }

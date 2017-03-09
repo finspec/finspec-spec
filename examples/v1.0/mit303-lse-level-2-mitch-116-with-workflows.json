@@ -188,19 +188,19 @@
             "length": 1,
             "values": [
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "Internal Cross"
               },
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "Internal BTF"
               },
               {
-                "wire_value": "3",
+                "wireValue": "3",
                 "name": "Committed Cross"
               },
               {
-                "wire_value": "4",
+                "wireValue": "4",
                 "name": "Committed BTF"
               }
             ]
@@ -246,27 +246,27 @@
             "length": 1,
             "values": [
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "Login Accepted"
               },
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "CompID Inactive/Locked"
               },
               {
-                "wire_value": "3",
+                "wireValue": "3",
                 "name": "Login Limit Reached"
               },
               {
-                "wire_value": "4",
+                "wireValue": "4",
                 "name": "Service Unavailable"
               },
               {
-                "wire_value": "5",
+                "wireValue": "5",
                 "name": "Concurrent Limit Reached "
               },
               {
-                "wire_value": "6",
+                "wireValue": "6",
                 "name": "Failed (Other)"
               }
             ]
@@ -402,27 +402,27 @@
             "length": 1,
             "values": [
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "Login Accepted"
               },
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "CompID Inactive/Locked"
               },
               {
-                "wire_value": "3",
+                "wireValue": "3",
                 "name": "Login Limit Reached"
               },
               {
-                "wire_value": "4",
+                "wireValue": "4",
                 "name": "Service Unavailable"
               },
               {
-                "wire_value": "5",
+                "wireValue": "5",
                 "name": "Concurrent Limit Reached "
               },
               {
-                "wire_value": "6",
+                "wireValue": "6",
                 "name": "Failed (Other)"
               }
             ]
@@ -524,27 +524,27 @@
             "length": 1,
             "values": [
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "Login Accepted"
               },
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "CompID Inactive/Locked"
               },
               {
-                "wire_value": "3",
+                "wireValue": "3",
                 "name": "Login Limit Reached"
               },
               {
-                "wire_value": "4",
+                "wireValue": "4",
                 "name": "Service Unavailable"
               },
               {
-                "wire_value": "5",
+                "wireValue": "5",
                 "name": "Concurrent Limit Reached "
               },
               {
-                "wire_value": "6",
+                "wireValue": "6",
                 "name": "Failed (Other)"
               }
             ]
@@ -670,79 +670,79 @@
             "length": 1,
             "values": [
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "Halt"
               },
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "Regular Trading/Start of Trade Reporting"
               },
               {
-                "wire_value": "3",
+                "wireValue": "3",
                 "name": "Opening/First  Auction Call"
               },
               {
-                "wire_value": "4",
+                "wireValue": "4",
                 "name": "Post-Close"
               },
               {
-                "wire_value": "5",
+                "wireValue": "5",
                 "name": "Market Close / System Shutdown"
               },
               {
-                "wire_value": "6",
+                "wireValue": "6",
                 "name": "Closing Auction Call"
               },
               {
-                "wire_value": "7",
+                "wireValue": "7",
                 "name": "AESP Auction Call"
               },
               {
-                "wire_value": "8",
+                "wireValue": "8",
                 "name": "Resume Auction Call"
               },
               {
-                "wire_value": "9",
+                "wireValue": "9",
                 "name": "Pause"
               },
               {
-                "wire_value": "10",
+                "wireValue": "10",
                 "name": "Pre-Mandatory"
               },
               {
-                "wire_value": "11",
+                "wireValue": "11",
                 "name": "Mandatory"
               },
               {
-                "wire_value": "12",
+                "wireValue": "12",
                 "name": "Post-Mandatory"
               },
               {
-                "wire_value": "13",
+                "wireValue": "13",
                 "name": "EDSP Auction Call"
               },
               {
-                "wire_value": "14",
+                "wireValue": "14",
                 "name": "Periodic Auction Call"
               },
               {
-                "wire_value": "15",
+                "wireValue": "15",
                 "name": "End Trade Reporting"
               },
               {
-                "wire_value": "16",
+                "wireValue": "16",
                 "name": "No Active Session"
               },
               {
-                "wire_value": "17",
+                "wireValue": "17",
                 "name": "End of Post Close"
               },
               {
-                "wire_value": "18",
+                "wireValue": "18",
                 "name": "Closing Price Publication"
               },
               {
-                "wire_value": "19",
+                "wireValue": "19",
                 "name": "Closing Price Crossing "
               }
             ]
@@ -772,27 +772,27 @@
             "length": 1,
             "values": [
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "Scheduled Transition"
               },
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "Extended by Market Ops"
               },
               {
-                "wire_value": "3",
+                "wireValue": "3",
                 "name": "Shortened by Market Ops"
               },
               {
-                "wire_value": "4",
+                "wireValue": "4",
                 "name": "Market Order Imbalance"
               },
               {
-                "wire_value": "5",
+                "wireValue": "5",
                 "name": "Price Outside Range"
               },
               {
-                "wire_value": "6",
+                "wireValue": "6",
                 "name": "Unavailable (recovery service only)"
               }
             ]
@@ -814,11 +814,11 @@
             "length": 1,
             "values": [
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "On-Book"
               },
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "Off-Book"
               }
             ]
@@ -888,79 +888,79 @@
             "length": 1,
             "values": [
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "Halt"
               },
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "Regular Trading/Start of Trade Reporting"
               },
               {
-                "wire_value": "3",
+                "wireValue": "3",
                 "name": "Opening/First  Auction Call"
               },
               {
-                "wire_value": "4",
+                "wireValue": "4",
                 "name": "Post-Close"
               },
               {
-                "wire_value": "5",
+                "wireValue": "5",
                 "name": "Market Close / System Shutdown"
               },
               {
-                "wire_value": "6",
+                "wireValue": "6",
                 "name": "Closing Auction Call"
               },
               {
-                "wire_value": "7",
+                "wireValue": "7",
                 "name": "AESP Auction Call"
               },
               {
-                "wire_value": "8",
+                "wireValue": "8",
                 "name": "Resume Auction Call"
               },
               {
-                "wire_value": "9",
+                "wireValue": "9",
                 "name": "Pause"
               },
               {
-                "wire_value": "10",
+                "wireValue": "10",
                 "name": "Pre-Mandatory"
               },
               {
-                "wire_value": "11",
+                "wireValue": "11",
                 "name": "Mandatory"
               },
               {
-                "wire_value": "12",
+                "wireValue": "12",
                 "name": "Post-Mandatory"
               },
               {
-                "wire_value": "13",
+                "wireValue": "13",
                 "name": "EDSP Auction Call"
               },
               {
-                "wire_value": "14",
+                "wireValue": "14",
                 "name": "Periodic Auction Call"
               },
               {
-                "wire_value": "15",
+                "wireValue": "15",
                 "name": "End Trade Reporting"
               },
               {
-                "wire_value": "16",
+                "wireValue": "16",
                 "name": "No Active Session"
               },
               {
-                "wire_value": "17",
+                "wireValue": "17",
                 "name": "End of Post Close"
               },
               {
-                "wire_value": "18",
+                "wireValue": "18",
                 "name": "Closing Price Publication"
               },
               {
-                "wire_value": "19",
+                "wireValue": "19",
                 "name": "Closing Price Crossing "
               }
             ]
@@ -990,27 +990,27 @@
             "length": 1,
             "values": [
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "Scheduled Transition"
               },
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "Extended by Market Ops"
               },
               {
-                "wire_value": "3",
+                "wireValue": "3",
                 "name": "Shortened by Market Ops"
               },
               {
-                "wire_value": "4",
+                "wireValue": "4",
                 "name": "Market Order Imbalance"
               },
               {
-                "wire_value": "5",
+                "wireValue": "5",
                 "name": "Price Outside Range"
               },
               {
-                "wire_value": "6",
+                "wireValue": "6",
                 "name": "Unavailable (recovery service only)"
               }
             ]
@@ -1032,11 +1032,11 @@
             "length": 1,
             "values": [
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "On-Book"
               },
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "Off-Book"
               }
             ]
@@ -1090,11 +1090,11 @@
             "length": 1,
             "values": [
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "Buy Order"
               },
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "Sell Order"
               }
             ]
@@ -1196,11 +1196,11 @@
             "length": 1,
             "values": [
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "Buy Order"
               },
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "Sell Order"
               }
             ]
@@ -1670,19 +1670,19 @@
             "length": 1,
             "values": [
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "Internal Cross"
               },
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "Internal BTF"
               },
               {
-                "wire_value": "3",
+                "wireValue": "3",
                 "name": "Committed Cross"
               },
               {
-                "wire_value": "4",
+                "wireValue": "4",
                 "name": "Committed BTF"
               }
             ]
@@ -1776,27 +1776,27 @@
             "length": 1,
             "values": [
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "Closing Auction"
               },
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "Opening Auction"
               },
               {
-                "wire_value": "3",
+                "wireValue": "3",
                 "name": "AESP"
               },
               {
-                "wire_value": "4",
+                "wireValue": "4",
                 "name": "EDSP"
               },
               {
-                "wire_value": "5",
+                "wireValue": "5",
                 "name": "Resume Auction"
               },
               {
-                "wire_value": "6",
+                "wireValue": "6",
                 "name": "Periodic Auction"
               }
             ]
@@ -1890,11 +1890,11 @@
             "length": 1,
             "values": [
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "On-Book Trade"
               },
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "Off-Book Trade"
               }
             ]
@@ -1940,15 +1940,15 @@
             "length": 1,
             "values": [
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "EXPA"
               },
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "SI"
               },
               {
-                "wire_value": "3",
+                "wireValue": "3",
                 "name": "XOFF"
               }
             ]
@@ -2010,11 +2010,11 @@
             "length": 1,
             "values": [
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "On-Book Trade"
               },
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "Off-Book Trade"
               }
             ]
@@ -2124,27 +2124,27 @@
             "length": 1,
             "values": [
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "Closing Auction"
               },
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "Opening Auction"
               },
               {
-                "wire_value": "3",
+                "wireValue": "3",
                 "name": "AESP"
               },
               {
-                "wire_value": "4",
+                "wireValue": "4",
                 "name": "EDSP"
               },
               {
-                "wire_value": "5",
+                "wireValue": "5",
                 "name": "Resume Auction"
               },
               {
-                "wire_value": "6",
+                "wireValue": "6",
                 "name": "Periodic Auction"
               }
             ]
@@ -2230,31 +2230,31 @@
             "length": 1,
             "values": [
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "UT"
               },
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "AT"
               },
               {
-                "wire_value": "3",
+                "wireValue": "3",
                 "name": "Mid of BBO"
               },
               {
-                "wire_value": "4",
+                "wireValue": "4",
                 "name": "Last AT"
               },
               {
-                "wire_value": "5",
+                "wireValue": "5",
                 "name": "Last UT"
               },
               {
-                "wire_value": "6",
+                "wireValue": "6",
                 "name": "Manual"
               },
               {
-                "wire_value": "7",
+                "wireValue": "7",
                 "name": "Derived from previous close"
               }
             ]
@@ -2340,11 +2340,11 @@
             "length": 1,
             "values": [
               {
-                "wire_value": "1",
+                "wireValue": "1",
                 "name": "End of Day"
               },
               {
-                "wire_value": "2",
+                "wireValue": "2",
                 "name": "Start of Day"
               }
             ]
