@@ -1,14 +1,18 @@
 # The FinSpec Specification
 
-## Welcome to the FinSpec Project! 
+## Welcome to the FinSpec Project!
 
 The goal of FinSpec is to define a standard, protocol-agnostic, machine-readable specification to describe and document pre- and post-trade interfaces and workflows in financial services including (but not limited to) order entry, execution, market data, allocations and settlement.
 
 Our hope is that the specification will allow both humans and computers to discover and understand the capabilities of an interface without needing to read through lengthy PDF documentation.  As well as creating interactive API documentation, correctly formatted FinSpec documents can be used by developers to validate and mock APIs, acclerating development and reducing errors.
 
-## Current Version - 1.2
+## Versioning
 
-The current version of the FinSpec specification is 1.2 - and you can find it [here](http://finspec.io) with a summary of changes in this release.
+The current version of the FinSpec specification is 2.0 - and you can find it [here](http://finspec.io) with a summary of changes in this release.
+
+As of 27th June 2018, versions in the 0.x series are no longer supported, and we recommend upgrading any 1.x versions to the revised 2.0 schema.
+
+Please contact us at happytohelp@fixspec.com for (free!) assistance to upgrade. 
 
 ## Schema Validation
 
@@ -16,7 +20,7 @@ We *STRONGLY* recommend validating FinSpec schema validation prior to deployment
 
 ## License
 
-Copyright 2016 FixSpec Limited
+Copyright 2018 FixSpec Limited
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
