@@ -8,11 +8,21 @@ Our hope is that the specification will allow both humans and computers to disco
 
 ## Versioning
 
-The current version of the FinSpec specification is 2.0 - and you can find it [here](http://finspec.io) with a summary of changes in this release.
+The current version of the FinSpec specification is 2.0: To read more about the schema definition: [[Get Started] (#schemaDefv20)].
 
-As of 27th June 2018, versions in the 0.x series are no longer supported, and we recommend upgrading any 1.x versions to the revised 2.0 schema.
+FinSpec schema versions in the 1.x series are still supported, but support for 0.x versions is now withdrawn. We would **strongly recommend** upgrading to 2.0 as soon as possible. Please contact happytohelp@fixspec.com for (free) assistance to upgrade schema version.
 
-Please contact us at happytohelp@fixspec.com for (free!) assistance to upgrade. 
+### Revision History
+
+Version | Date | Notes
+--- | --- | ---
+[[2.0] (#schemaDefv20)] | 2018-06-27 | Support for navigation and history keys. Extended block (component) support. Retire 0.x versions.
+[[1.2] | 2018-02-14 | Support for machine readable bit fields.
+[[1.1] | 2017-03-10 | Support for functional (context-specific) messages.
+[[1.0] | 2017-02-28 | Enhanced protocol metadata, informational messages and change history.
+[[0.3] | 2016-04-29 | Add support for finite state machine workflow.
+[[0.2] | 2016-03-16 | Datatypes related enhancements. Added conditions block to field.
+[[0.1] | 2016-01-06 | Initial release of FinSpec Specification.
 
 ## Schema Validation
 
