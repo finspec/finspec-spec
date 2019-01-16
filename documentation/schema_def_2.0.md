@@ -6,7 +6,7 @@ The major version has been incremented for this version of the FinSpec schema, i
 
 ### Move to JSON Schema 0.7
 
-Things move on, and so we are too. Version 2.0 of the FinSpec schema is now written to comply with JSON Schema 0.7. For more information on the JSNO Schema, please got to [http://json-schema.org/.] (http://json-schema.org/.)
+Things move on, and so we are too. Version 2.0 of the FinSpec schema is now written to comply with JSON Schema 0.7. For more information on the JSNO Schema, please got to http://json-schema.org/.
 
 ### General Tightening & Tuning
 
