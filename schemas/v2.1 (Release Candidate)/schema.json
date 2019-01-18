@@ -641,6 +641,10 @@
                     "type": "string",
                     "description": "Wire identifier for the field (eg tag 35 in FIX)."
                 },
+                "key": {
+                    "type": "string",
+                    "description": "The unique reference for the field."
+                },				
                 "blockKey": {
                     "type": "string",
                     "description": "The unique reference for the block from the `blocks` section."
