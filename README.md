@@ -8,15 +8,16 @@ Our hope is that the specification will allow both humans and computers to disco
 
 ## Versioning
 
-The current version of the FinSpec specification is 2.0: To read more about the schema definition: [Get Started](#schemaDefv20).
+The current version of the FinSpec specification is 2.0: To read more about the schema definition: [Get Started](https://github.com/finspec/finspec-spec/blob/master/schemas/v2.0/schema.json).
 
-FinSpec schema versions in the 1.x series are still supported, but support for 0.x versions is now withdrawn. We would **strongly recommend** upgrading to 2.0 as soon as possible. Please contact happytohelp@fixspec.com for (free) assistance to upgrade schema version.
+FinSpec schema versions in the 1.x series are still supported, but support for 0.x versions is now withdrawn. We would **strongly recommend** upgrading to 2.1 as soon as possible. Please contact happytohelp@fixspec.com for (free) assistance to upgrade schema version.
 
 ### Revision History
 
 Version | Date | Notes
 --- | --- | ---
-[2.0](#schemaDefv20)] | 2018-06-27 | Support for navigation and history keys. Extended block (component) support. Retire 0.x versions.
+[[2.1](https://github.com/finspec/finspec-spec/blob/master/schemas/v2.1/schema.json)] | 2019-01-18 | (Release candidate) Update to workflow schema.
+[[2.0](https://github.com/finspec/finspec-spec/blob/master/schemas/v2.0/schema.json)] | 2018-06-27 | Support for navigation and history keys. Extended block (component) support. Retire 0.x versions.
 [1.2] | 2018-02-14 | Support for machine readable bit fields.
 [1.1] | 2017-03-10 | Support for functional (context-specific) messages.
 [1.0] | 2017-02-28 | Enhanced protocol metadata, informational messages and change history.
