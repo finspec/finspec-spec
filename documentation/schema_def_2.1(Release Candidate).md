@@ -8,6 +8,7 @@ A few minor changes have been introduced to this version. In no particular order
 *  Add `key` as optional attribute for the fields block: [Field](#fieldObject)
 *  Various adjustments to the workflow schema 2.0: [Workflow](#workflowsArray) 
 
+---
 
 ## Format
 
@@ -16,6 +17,8 @@ The files describing the APIs in accordance with the FinSpec specification are r
 All identifiers in the specification are **case sensitive**.
 
 The schema exposes two types of fields. Fixed fields, which have a declared name, and Patterned fields, which declare a regex pattern for the field name. Patterned fields can have multiple occurrences as long as each has a unique name.
+
+---
 
 ## File Structure
 
@@ -40,7 +43,7 @@ The extensions properties are always prefixed by `"x-"` and can have any valid J
   </tbody>
 </table>
 
-
+---
 
 ## Objects
 
@@ -823,7 +826,7 @@ Field Name | Type | Description
 
 The ExampleArray object may contain [vendor extensions](#vendorExtensions).
 
-
+---
 
 ## <a name="workflowsArray"></a>WorkflowsArray
 
@@ -1012,4 +1015,3 @@ Field Name | Type | Description
 <a name="withChilden">withChilden</a> | [WithChilderArray](#withArrayObject) | **Optional**<br/>List of fields within a repeating group.
 
 The With object may **not** contain vendor extensions.
-
