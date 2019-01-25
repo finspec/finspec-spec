@@ -893,9 +893,10 @@ Field Name | Type | Description
 ---|:---:|---
 <a name="stateNav"></a>nav | `string` | **Required**<br/> worflow that this state belongs to. 
 <a name="stateName"></a>name | `string` | **Required**<br/>Name given to this specific state
+<a name="statedescription"></a>description | `string` | **Optional**<br/>Description of this specific state
 <a name="isInitial"></a>isInitial | `boolean` | **Required**<br/>Is this an initial state? can not transition from any other state.
 <a name="isFinal"></a>isFinal | `boolean` | **Required**<br/>Is this a final state? Can not transition to any further state.
-<a name="statedescription"></a>description | `string` | Description of this specific state
+<a name="stateisDefaultError"></a>isDefaultError | `boolean` | **Optional (default to `FALSE`)**<br/>Is this the default state/message for rejection [Added in 2.1]
 
 State ref object has been removed starting 2.1
 
