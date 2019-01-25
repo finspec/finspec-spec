@@ -1014,16 +1014,6 @@
             }
         },
         "workflows": {
-            "type": "array",
-            "minItems": 1,
-            "uniqueItems": true,
-            "items" : {
-                "$ref": "#/definitions/workflow"
-            },
-            "description": "List of workflows",
-            "additionalProperties": false
-        },
-        "workflow": {
             "type": "object",
             "description": "Description of the specific business case modelled in the workflow.",
             "required": [
