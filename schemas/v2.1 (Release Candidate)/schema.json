@@ -1,7 +1,7 @@
 {
     "title": "A JSON Schema for FinSpec v2.1.",
     "id": "https://fixspec.com/finspec/v2.1/schema.json#",
-    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$schema": "http://json-schema.org/draft-06/schema#",
     "type": "object",
     "required": [
         "finspec",
@@ -644,7 +644,7 @@
                 "key": {
                     "type": "string",
                     "description": "The unique reference for the field."
-                },				
+                },
                 "blockKey": {
                     "type": "string",
                     "description": "The unique reference for the block from the `blocks` section."
@@ -672,7 +672,7 @@
                 "defaultValue": {
                     "type": "string",
                     "description" : "default value in field."
-                },				
+                },
                 "exclusiveMinValue": {
                     "type": "boolean",
                     "description" : "Whether 'minValue' value is exclusive or not."
@@ -1028,10 +1028,10 @@
                     "minItems": 1,
                     "uniqueItems": true,
                     "items" : {
-                        "$ref": "#/definitions/workflownav"
+                        "$ref": "#/definitions/workflowNav"
                     },
                     "description": "List of messages included in the workflow",
-                    "additionalProperties": false			   
+                    "additionalProperties": false
 			   },
                 "states": {
                     "type": "array",
@@ -1052,7 +1052,7 @@
                     },
                     "description": "Set of events available in this workflow",
                     "additionalProperties": false
-                },				
+                },
                 "transitions": {
                     "type": "array",
                     "minItems": 1,
@@ -1065,7 +1065,7 @@
                 }
             }
         },
-        "workflownav": {
+        "workflowNav": {
             "type": "object",
             "description": "Organised list of workflow ",
             "required": [
@@ -1082,7 +1082,7 @@
                   "description": "Description of the workflow described"
                 }
             }
-        },		
+        },
         "state": {
             "type": "object",
             "description": "Individual state composing of the workflow",
@@ -1131,7 +1131,7 @@
                     "description": "Time in UTC when event is triggered HH:MM:SS"
                 }
             }
-        },		
+        },
         "transition": {
             "type": "object",
             "description": "details of the transition phase with triggering action and end state",
@@ -1144,7 +1144,7 @@
                 "nav": {
                    "type": "string",
                    "description": "Unique reference of related workflow"
-                },			
+                },
                 "description": {
                     "type": "string",
                     "description": "Human-readable description of the state."
@@ -1186,9 +1186,9 @@
                     "description": "type of the key element",
 	                "enum" : [
                         "technical",
-                        "event",						
+                        "event",
                         "functional"
-                    ]				
+                    ]
                 },
                 "key": {
                     "type": "string",
@@ -1201,7 +1201,7 @@
                         "in",
                         "out"
                     ]
-                },				
+                },
                 "where": {
                     "type": "string",
                     "description": "Condition expression field (type groovy)."
@@ -1212,8 +1212,8 @@
             "type": "object",
             "description": "Possible message response",
             "required": [
-                "messageWireId",
-                "end"
+                "type",
+                "messageKey"
             ],
             "additionalProperties": false,
             "properties": {
@@ -1222,18 +1222,17 @@
                     "description": "type of the key element",
 	                "enum" : [
                         "technical",
-                        "event",						
                         "functional"
-                    ]				
+                    ]
                 },
                 "messageKey": {
                     "type": "string",
                     "description": "key of the message or event"
-                },			
+                },
                 "description": {
                     "type": "string",
                     "description": "Human-readable description of the response."
-                },				
+                },
                 "with": {
                     "type": "array",
                     "minItems": 1,
@@ -1252,200 +1251,159 @@
                 }
            }
         },
+
         "with": {
             "type": "object",
-            "description": "Field with specific condition",
-            "additionalProperties": false,	
+            "description": "Conditions to determine the value of the field",
+            "additionalProperties": false,
+            "oneOf" : [
+                { "$ref": "#/definitions/withSimpleValue" },
+                { "$ref": "#/definitions/withReferencedValue" },
+                { "$ref": "#/definitions/withRange" },
+                { "$ref": "#/definitions/withMath" },
+                { "$ref": "#/definitions/withIf" }
+            ]
+        },
+
+        "withSimpleValue": {
+            "type": "object",
+            "additionalProperties": false,
             "properties": {
-                "description": {
-                    "type": "string",
-                    "description": "Human-readable description of the event."
-                },
-                "this": {
-                    "type": "integer",
-                    "description": "tag of the field from which the value is copied - in this message"
-                },				
-                "last": {
-                    "type": "integer",
-                    "description": "tag of the field from which the value is copied - in previous linked message"
-                },	
                 "fixed": {
-                    "type": "String",
+                    "type": "string",
                     "description": "Fixed value input in field"
-                },				
+                },
                 "date": {
-                    "type": "String",
+                    "type": "string",
                     "description": "date to be computed in the following format YYYYMMDD. Can also be a compute instruction like TODAY, YESTERDAY"
                 },
                 "time": {
-                    "type": "String",
+                    "type": "string",
                     "description": "Time in timestampUTC. Can also be a compute instruction like NOW"
+                }
+            },
+            "oneOf":[
+                { "required": [ "fixed" ] },
+                { "required": [ "date" ] },
+                { "required": [ "time" ] }
+            ]
+        },
+
+        "withReferencedValue": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "this": {
+                    "type": "integer",
+                    "description": "tag of the field from which the value is copied - in this message"
+                },
+                "last": {
+                    "type": "integer",
+                    "description": "tag of the field from which the value is copied - in previous linked message"
                 },
                 "default": {
                     "type": "string",
                     "description": "Default value if not compute from another field"
-                },				
+                }
+            },
+            "oneOf":[
+                { "required": [ "this" ] },
+                { "required": [ "last", "default" ] }
+            ]
+        },
+
+        "withRange" : {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
                 "min": {
                     "type": "object",
                     "description": "Min value of this field - used for integer fields",
-					"$ref": "#/definitions/withminmax"					
+					"$ref": "#/definitions/with"
                 },
                 "max": {
                     "type": "object",
                     "description": "Max value of this field - used for integer fields",
-					"$ref": "#/definitions/withminmax"					
-                },
+					"$ref": "#/definitions/with"
+                }
+            }
+        },
+
+        "withMath" : {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
                 "sum": {
                     "type": "array",
                     "description": "sum operator",
-                    "items" : {
-                        "ref": "#/definitions/withsum"
-                    }
-					
-                },
-                "substract": {
-                    "type": "array",
-                    "description": "substraction operator",
-                    "items" : {
-                        "ref": "#/definitions/withsum"
-                    }
-                },					
-                "divide": {
-                    "type": "array",
-                    "description": "divide operator",
-                    "items" : {
-                        "ref": "#/definitions/withdivide"
-                    }
-                },
-                "if": {
-                    "type": "array",
-                    "description": "Condition operator",
-                    "items" : {
-                        "ref": "#/definitions/withif"
-                    }
-                },									
-                "children": {
-                    "type": "array",
-                    "minItems": 1,
-                    "uniqueItems": true,
                     "items" : {
                         "ref": "#/definitions/with"
                     }
-                }
-            }
-        },		
-        "withminmax": {
-            "type": "object",
-            "description": "condition on minimum/maximum quantity",
-            "additionalProperties": false,	
-            "properties": {
-                "this": {
-                    "type": "integer",
-                    "description": "tag of the field from which the value is copied - in this message"
-                },				
-                "last": {
-                    "type": "integer",
-                    "description": "tag of the field from which the value is copied - in previous linked message"
-                },	
-                "fixed": {
-                    "type": "string",
-                    "description": "Fixed value input in field"
-                },
-                "sum": {
-                    "type": "array",
-                    "description": "sum operator",
-                    "items" : {
-                        "ref": "#/definitions/withsum"
-                    }
-					
                 },
                 "substract": {
                     "type": "array",
                     "description": "substraction operator",
                     "items" : {
-                        "ref": "#/definitions/withsum"
+                        "ref": "#/definitions/with"
                     }
-                },					
-                "divide": {
+                },
+                "multiply": {
                     "type": "array",
                     "description": "divide operator",
                     "items" : {
-                        "ref": "#/definitions/withdivide"
+                        "ref": "#/definitions/with"
                     }
                 },
-                "default": {
-                    "type": "string",
-                    "description": "Default value if not compute from another field"
+                "divide": {
+                    "type": "array",
+                    "description": "divide operator",
+                    "properties" : {
+                        "numerator" : {
+                            "$ref": "#/definitions/with"
+                        },
+                        "denominator" : {
+                            "$ref": "#/definitions/with"
+                        }
+                    }
                 }
             }
         },
-        "withsum": {
+        "withIf": {
             "type": "object",
-            "description": "List of tags which value need to be added/substracted",
-            "additionalProperties": false,	
+            "description": "Signifying the block with different set of conditions",
+            "additionalProperties": false,
             "properties": {
-                "this": {
-                    "type": "integer",
-                    "description": "tag of the field from which the value is copied - in this message"
-                },				
-                "last": {
-                    "type": "integer",
-                    "description": "tag of the field from which the value is copied - in previous linked message"
-                }
-            }
-        },	
-        "withdivide": {
-            "type": "object",
-            "description": "List of tags which value need to be added",
-            "additionalProperties": false,	
-            "properties": {
-                "numerator": {
-                    "type": "object",
-                    "description": "tag used to extract value numerator of the division"
-                },				
-                "denominator": {
-                    "type": "object",
-                    "description": "tag used to extract value denominator of the division"
+                "if": {
+                    "type": "array",
+                    "description": "Contains blocks with different conditions",
+                    "items" : [
+                        { "$ref": "#/definitions/withCondition" }
+                    ]
                 }
             }
         },
-		
-        "withif": {
+        "withCondition": {
             "type": "object",
-            "description": "Conditions to determine the value of the field",
-            "additionalProperties": false,	
-            "properties": {
-                "condition": {
-                    "type": "String",
-                    "description": "tag condition expressed in groovy expression"
+            "description": "Conditional with block for specify the conditional values",
+            "additionalProperties": false,
+            "allOf": [
+                {
+                    "properties": {
+                        "condition": {
+                            "type": "string",
+                            "description": "tag condition expressed in groovy expression"
+                        }
+                    }
                 },
-                "this": {
-                    "type": "integer",
-                    "description": "tag of the field from which the value is copied - in this message"
-                },				
-                "last": {
-                    "type": "integer",
-                    "description": "tag of the field from which the value is copied - in previous linked message"
-                },	
-                "fixed": {
-                    "type": "String",
-                    "description": "Fixed value input in field"
-                },				
-                "default": {
-                    "type": "string",
-                    "description": "Default value if not compute from another field"
-                },				
-                "min": {
-                    "type": "object",
-                    "description": "Min value of this field - used for integer fields",
-					"$ref": "#/definitions/withminmax"					
-                },
-                "max": {
-                    "type": "object",
-                    "description": "Max value of this field - used for integer fields",
-					"$ref": "#/definitions/withminmax"					
+                {
+                    "$ref": "#/definitions/with"
                 }
-            }
-        }		
+            ]
+        },
+        "vendorExtension": {
+            "description": "Any property starting with x- is valid.",
+            "additionalProperties": true,
+            "additionalItems": true
+        }
     }
 }
