@@ -1,7 +1,7 @@
 {
     "title": "A JSON Schema for FinSpec v2.1.",
     "id": "https://fixspec.com/finspec/v2.1/schema.json#",
-    "$schema": "http://json-schema.org/draft-06/schema#",
+    "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "required": [
         "finspec",
@@ -45,6 +45,9 @@
         },
         "nav": {
             "$ref": "#/definitions/nav"
+        },
+        "notes": {
+            "$ref": "#/definitions/notes"
         },
         "workflows": {
             "$ref": "#/definitions/workflows"
@@ -470,6 +473,9 @@
                 "historyKey": {
                     "type": "string",
                     "description": "Linking identifier that is persisted across spec versions for this object, facilitating cross-version comparison."
+                },
+                "notes": {
+                    "$ref": "#/definitions/notes"
                 }
             },
             "patternProperties": {
@@ -534,6 +540,9 @@
                 },
                 "examples" : {
                     "$ref": "#/definitions/exampleArray"
+                },
+                "notes": {
+                    "$ref": "#/definitions/notes"
                 }
             },
             "patternProperties": {
@@ -595,6 +604,9 @@
                 },
                 "examples" : {
                     "$ref": "#/definitions/exampleArray"
+                },
+                "notes": {
+                    "$ref": "#/definitions/notes"
                 }
             },
             "patternProperties": {
@@ -721,6 +733,9 @@
                         "$ref": "#/definitions/bit"
                     },
                     "additionalProperties": false
+                },
+                "notes": {
+                    "$ref": "#/definitions/notes"
                 }
             },
             "dependencies": {
@@ -1159,7 +1174,7 @@
                     }
                 },
                 "trigger": {
-                    "ref": "#/definitions/trigger",
+                    "$ref": "#/definitions/trigger",
                     "description": "Event that triggers the transition"
                 },
                 "responses": {
@@ -1167,7 +1182,7 @@
                     "minItems": 1,
                     "uniqueItems": true,
                     "items" : {
-                        "ref": "#/definitions/response"
+                        "$ref": "#/definitions/response"
                     }
                 }
             }
@@ -1238,7 +1253,7 @@
                     "minItems": 1,
                     "uniqueItems": true,
                     "items" : {
-                        "ref": "#/definitions/with"
+                        "$ref": "#/definitions/with"
                     }
                 },
                 "end": {
@@ -1337,21 +1352,21 @@
                     "type": "array",
                     "description": "sum operator",
                     "items" : {
-                        "ref": "#/definitions/with"
+                        "$ref": "#/definitions/with"
                     }
                 },
                 "substract": {
                     "type": "array",
                     "description": "substraction operator",
                     "items" : {
-                        "ref": "#/definitions/with"
+                        "$ref": "#/definitions/with"
                     }
                 },
                 "multiply": {
                     "type": "array",
                     "description": "divide operator",
                     "items" : {
-                        "ref": "#/definitions/with"
+                        "$ref": "#/definitions/with"
                     }
                 },
                 "divide": {
@@ -1404,6 +1419,31 @@
             "description": "Any property starting with x- is valid.",
             "additionalProperties": true,
             "additionalItems": true
+        },
+        "notes": {
+            "description": "Public notes at different levels: Spec, Message, Block or Field",
+            "additionalProperties": false,
+            "type": "array",
+            "items": [
+                {
+                    "type" : "object",
+                    "required": [ "note" ],
+                    "properties": {
+                        "note" : {
+                            "type" : "string",
+                            "description": "A HTML or text note content."
+                        },
+                        "created_by_text" : {
+                            "type" : "string",
+                            "description": "User who created the note"
+                        },
+                        "updated_at" : {
+                            "type" : "string",
+                            "description": "Time the note was last updated in YYYY-MM-DD HH:mm:SS format"
+                        }
+                    }
+                }
+            ]
         }
     }
 }
