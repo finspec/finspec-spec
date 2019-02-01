@@ -798,7 +798,7 @@ Tokens that can be used in condition expression are:
 2. Logical operators e.g. &&, ||, etc.
 3. Brackets
 4. Use of ! to indicate 'not'
-5. In the case of Groovy, the comparison operator of ==~ may be used to indicate a regular expression.
+5. In the case of `groovy`, the comparison operator of ==~ may be used to indicate a regular expression.
 
 
 ### <a name="exampleArray"></a>ExamplesArray
@@ -852,7 +852,7 @@ Field Name | Type | Description
 ---|:---:|---
 <a name="workflowNav"></a>nav | [WorkflowNav](#workflowNavObject) | **Required**<br/>[Added in 2.1] List of individual workflow described in this specifications. Must contain at least 1 workflow.
 <a name="workflowStates"></a>states | [State](#stateObject) | **Required**<br/>list of possible individual states the object (e.g. Orders, Quote) can take in the workflow
-<a name="workflowEvent"></a>event | [Event](#eventMessageObject | **optional**<br/>[Added in 2.1] List of market related events that trigger or result from a transition.
+<a name="workflowEvent"></a>event | [Event](#eventMessageObject) | **optional**<br/>[Added in 2.1] List of market related events that trigger or result from a transition.
 <a name="workflowTransitions"></a>transitions | [Transition](#transitionObject) | **Required**<br/> Description of transitions (including triggering event - FIX msg - and resulting state)
 
 The IncludeMessageArray have been decommissioned in 2.1.
@@ -982,7 +982,7 @@ Field Name | Type | Description
 <a name="transitionType"></a>Type | `string` | **Required**<br/>Type of the message serving as a transition. Possible values: "technical", "functional", "event".
 <a name="transitionKey"></a>Key | `string` | **Required**<br/> Reference of the message.
 <a name="transitionDirection"></a>Direction | `string` | **Required**<br/>Direction of the message. Possible values: "In" or "Out"
-<a name="transitionWhere"></a>Where | `string` | **Optional**<br/>Specific field condition in the message, expressed as a groovy expression.
+<a name="transitionWhere"></a>Where | `string` | **Optional**<br/>Specific field condition in the message, expressed as a `groovy` expression.
 
 
 #### <a name="responseObject"></a>Response [Updated in 2.1]
@@ -1186,5 +1186,5 @@ The <a name="withIfArray"></a>'If' is a series of 'Ifcondition' objects defined 
 
 Field Name | Type | Description
 ---|:---:|---
-<a name="withIfArrayCondition">Condition</a> |  | **Required**<br/>Tag value condition expressed in groovy expression.
+<a name="withIfArrayCondition">Condition</a> |  | **Required**<br/>Tag value condition expressed in `groovy` expression.
 <a name="withIfArrayRef">#withObject</a> | [with](#withObject) | **Required**<br/>Resulting value of the tag.
