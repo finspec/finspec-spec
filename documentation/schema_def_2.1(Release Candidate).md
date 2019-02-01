@@ -1145,7 +1145,7 @@ Field Name | Type | Description
 <a name="withMathMultiply">Multiply</a> | [with](#withObject) | **Optional**<br/>Multiply operation.
 <a name="withMathDivide">Divide</a> | [divide](#divideObject) | **Optional**<br/>Divide opeartion.
 
-The 'Divide' object will contain the following 2 objects:
+The <a name="divideObject"></a>'Divide' object will contain the following 2 objects:
 
 Field Name | Type | Description
 ---|:---:|---
@@ -1182,9 +1182,9 @@ Field Name | Type | Description
 ---|:---:|---
 <a name="withIfArray">if</a> | [withIfArray](#withIfArray) | **Required**<br/>Array of conditions used to define the value of a tag - It contains at least 1 object.
 
-The <a name="withIfArray"></a>'If' is a series of 'Ifcondition' objects defined by the following mandatory 2 objects:
+The <a name="withIfArray"></a>If is a series of 'Ifcondition' objects defined by the following mandatory 2 objects:
 
 Field Name | Type | Description
 ---|:---:|---
-<a name="withIfArrayCondition">Condition</a> |  | **Required**<br/>Tag value condition expressed in `groovy` expression.
+<a name="withIfArrayCondition">Condition</a> | `string` | **Required**<br/>Tag value condition expressed in `groovy` expression.
 <a name="withIfArrayRef">#withObject</a> | [with](#withObject) | **Required**<br/>Resulting value of the tag.
