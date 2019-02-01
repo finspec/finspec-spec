@@ -6,7 +6,7 @@ A few minor changes have been introduced to this version. In no particular order
 
 * `nav` section becomes a mandatory element of the schema: [Nav](#navObject)
 *  Add `key` as optional attribute for the fields block: [Field](#fieldObject)
-*  Various adjustments to the workflow schema 2.0: [Workflow](#workflowsArray) 
+*  Various adjustments to the workflow schema 2.0: [Workflow](#workflowsObject) 
 
 ---
 
@@ -64,7 +64,7 @@ datatypes    | [Datatype](#datatypeObject)         | **Required**<br/>A list of 
 nav     | [Nav](#navObject)         | **Required**<br/>A proposed UI navigation structure for the API specification.
 blocks | [Blocks](#blocksObject) | **Required if supported by protocol**<br/>A list of common blocks used by the messages in the API specification. e.g. Header, footer, etc.
 messages     | [Messages](#messagesObject)         | **Required**<br/>A list of messages used in the API specification.
-workflows    | [WorkflowsArray](#workflowsArray)           | **Optional**<br/>A list of finite state machine style workflow (optional)
+workflows    | [Workflows](#workflowsObject)           | **Optional**<br/>A list of finite state machine style workflow (optional)
 
 The Root object may contain [vendor extensions](#vendorExtensions).
 
@@ -828,7 +828,7 @@ The ExampleArray object may contain [vendor extensions](#vendorExtensions).
 
 ---
 
-## <a name="workflowsArray"></a>WorkflowsArray
+## <a name="workflows"></a>WorkflowsObject
 
 **NOTE** Structure has changed under v2.1.
 
@@ -836,31 +836,29 @@ The ExampleArray object may contain [vendor extensions](#vendorExtensions).
 {
     "workflows": [
         {
-            "nav": [...],
-            "includeMessages": [...],
-            "states": [...],
-            "transitions": [...]
+            "nav": {...},
+            "event": {...},
+            "states": {...},
+            "transitions": {...}
         },
         ...
     ]
 }
 ```
 
-The workflows array section is a simple array of workflow objects, each defined as follows:
+The workflows object section is a simple list of workflow objects, each defined as follows:
 
 Field Name | Type | Description
 ---|:---:|---
-<a name="workflowNav"></a>nav | [WorkflowNavArray](#workflowNavArray) | **Required**<br/>[Added in 2.1] List of individual workflow described in this specifications. Must contain at least 1 workflow.
-<a name="workflowStates"></a>states | [StateArray](#stateArray) | **Required**<br/>list of possible individual states the object (e.g. Orders, Quote) can take in the workflow
-<a name="workflowEvent"></a>event | [EventArray](#eventMessageArray) | **optional**<br/>[Added in 2.1] List of market related events that trigger or result from a transition.
-<a name="workflowTransitions"></a>transitions | [TransitionArray](#transitonArray) | **Required**<br/> Description of transitions (including triggering event - FIX msg - and resulting state)
+<a name="workflowNav"></a>nav | [WorkflowNav](#workflowNavObject) | **Required**<br/>[Added in 2.1] List of individual workflow described in this specifications. Must contain at least 1 workflow.
+<a name="workflowStates"></a>states | [State](#stateObject) | **Required**<br/>list of possible individual states the object (e.g. Orders, Quote) can take in the workflow
+<a name="workflowEvent"></a>event | [Event](#eventMessageObject | **optional**<br/>[Added in 2.1] List of market related events that trigger or result from a transition.
+<a name="workflowTransitions"></a>transitions | [Transition](#transitionObject) | **Required**<br/> Description of transitions (including triggering event - FIX msg - and resulting state)
 
 The IncludeMessageArray have been decommissioned in 2.1.
 
-The WorkflowsArray object may **not** contain vendor extensions.
 
-
-### <a name="workflowNavArray"></a>WorkflowNavArray [Added in 2.1]
+### <a name="workflowNavObject"></a>workflowNav [Added in 2.1]
 
 ```json
  "nav": {
@@ -878,9 +876,8 @@ Field Name | Type | Description
 <a name="workflowName"></a>name | `string` | **Required**<br/>Name of the workflow.
 <a name="workflowDescription"></a>description | `string` | **Required**<br/>Description of the specific workflow being modeled.
 
-The WorkflowNavArray object may **not** contain vendor extensions.
 
-### <a name="stateArray"></a>StateArray  [Updated in 2.1]
+### <a name="stateObject"></a>State  [Updated in 2.1]
 
 ```json
 {
@@ -890,7 +887,7 @@ The WorkflowNavArray object may **not** contain vendor extensions.
       "description": "Request for Quote for Streaming price subscription"
 },
 ```
-The 'states' array is a list of state objects which are defined by the fields below:
+The 'states' object is a list of state attributes which are defined by the fields below:
 
 Field Name | Type | Description
 ---|:---:|---
@@ -903,11 +900,10 @@ Field Name | Type | Description
 
 State ref object has been removed starting 2.1
 
-**NOTE:** Within an array of States, it is expected that exactly one state is marked as `isInitial`, and a second state is marked as `isFinal`.
+**NOTE:** Within a state objects, it is expected that exactly one state is marked as `isInitial`, and a second state is marked as `isFinal`.
 
-The State object may **not** contain vendor extensions.
 
-### <a name="eventArray"></a>eventArray [Added in 2.1]
+### <a name="eventObject"></a>event [Added in 2.1]
 
 ```json
 "MARKET_OPEN": {
@@ -915,16 +911,15 @@ The State object may **not** contain vendor extensions.
                 "time": "09:00:00"
             },
 ```
-The 'event' array is a list of event objects which are defined by the fields below:
+The 'event' object is  defined by the fields below:
 
 Field Name | Type | Description
 ---|:---:|---
 <a name="eventDescription"></a>description | `string` | **Required**<br/>Description of this specific event.
 <a name="eventTime"></a>time | `string` | **Optional**<br/> Time in UTC at which the event is triggered.
 
-The eventArray object may **not** contain vendor extensions.
 
-### <a name="transitionArray"></a>TransitionArray 
+### <a name="transitionObject"></a>Transition
 
 ```json
 {
@@ -966,21 +961,20 @@ The eventArray object may **not** contain vendor extensions.
     ]
 }
 ```
-The 'transitions' array is composed of 'transition' objects which are defined by the fields below:
+The 'transition' object is defined by the fields below:
 
 Field Name | Type | Description
 ---|:---:|---
 <a name="transitionDescription"></a>description | `string` | **Required**<br/>Description of this transition
-<a name="">transitionStart</a>start | `Array` | **Required**<br/>List of states the transition can iniate from.
-<a name="">trigger</a>trigger | [Trigger](#triggerObject) | **Optional**Solicited message (Action) required to trigger the transition.[Renamed and Updated in 2.1]
+<a name="transitionStart">transitionStart</a>start | `Array` | **Required**<br/>List of states the transition can iniate from.
+<a name="transitionTrigger">trigger</a>trigger | [Trigger](#triggerObject) | **Optional**Solicited message (Action) required to trigger the transition.[Renamed and Updated in 2.1]
 <a name="responses"></a>responses | [Array](#responseObject) | **Required**<br/>List of possible responses: messages with field conditions.
 
-The Transition object may **not** contain vendor extensions.
 
 #### <a name="triggerObject"></a>Trigger [Renamed and Updated in 2.1]
 
 
-The 'trigger' array is composed of 'trigger' objects which are defined by the fields below:
+The 'trigger' object is defined by the fields below:
 
 
 Field Name | Type | Description
@@ -990,29 +984,189 @@ Field Name | Type | Description
 <a name="transitionDirection"></a>Direction | `string` | **Required**<br/>Direction of the message. Possible values: "In" or "Out"
 <a name="transitionWhere"></a>Where | `string` | **Optional**<br/>Specific field condition in the message, expressed as a groovy expression.
 
-The Trigger object may **not** contain vendor extensions.
 
 #### <a name="responseObject"></a>Response [Updated in 2.1]
 
+The 'response' object is defined by the fields below:
 
 Field Name | Type | Description
 ---|:---:|---
 <a name="responseMsgType"></a>MessageType | `string` | **Required**<br/>Type of the message serving as a response. Possible values: "technical", "functional", "event".
 <a name="responseMsgKey"></a>MessageKey | `string` | **Required**<br/>Reference of the message.
-<a name="responseWith"></a>WithArray | [WithArray](#withArrayObject) | **Required**<br/>List of fields with specific expected values.
+<a name="responseWith"></a>With | [With](#withObject) | **Required**<br/>List of fields with specific expected values.
 <a name="responseEnd"></a>End | `string` | **Required**<br/>Resulting state at the end of the transition
 <a name="responseIsSuccess"></a>IsSuccess | `boolean` | **Required**<br/>Did the transition successfully complete?
 <a name="responseDescription"></a>Description | `string` | **Optional**<br/>Description of the response.
 
-The Response object may **not** contain vendor extensions.
 
-#### <a name="withArrayObject"></a>WithArray
+#### <a name="withObject"></a>With [Added in 2.1]
 
+The 'with' object contains a series of 'withtag' objects which are defined by one (and only one) of the objects listed below:
 
 Field Name | Type | Description
 ---|:---:|---
-<a name="withFixed">withFixed</a> | `string` | **Optional**<br/>Fixed value of the tag.
-<a name="withLast">withLast</a> | `string` | **Optional**<br/>value echoed from this tag in last message.
-<a name="withChilden">withChilden</a> | [WithChilderArray](#withArrayObject) | **Optional**<br/>List of fields within a repeating group.
+<a name="withSimpleValue">withSimpleValue</a> | [withSimpleValue](#withSimpleValueObject) | **Optional**<br/>Simple fixed value of the tag.
+<a name="withReferencedValue">withReferencedValue</a> | [withReferencedValue](#withReferencedValueObject) | **Optional**<br/> Defines where to get the value of the tag from.
+<a name="withRange">withRange</a> | [withRange](#withRangeObject) | **Optional**<br/>Defines where to get the value of the tag from.
+<a name="withMath">withMath</a> | [withMath](#withMathObject) | **Optional**<br/>Defines the operators to compute the value of the tag.
+<a name="withIf">withIf</a> | [withIf](#withIfObject) | **Optional**<br/>Defines the conditions to compute the value of the tag.
 
-The With object may **not** contain vendor extensions.
+
+#### <a name="withSimpleValueObject"></a>withSimpleValue [Added in 2.1]
+
+```json
+
+"with": {
+    	"150": {
+			"fixed": "2"
+		},
+        "64": {
+			"date": "20190131"
+		},   
+        "60": {
+			"time": "NOW"
+		}             
+    }    
+
+```
+The 'withSimpleValue' object will contain one of the following fields:
+
+Field Name | Type | Description
+---|:---:|---
+<a name="withSimpleValueFixed">Fixed</a> | `string` | **Optional**<br/>Fixed value input in field.
+<a name="withSimpleValueDate">Date</a> | `string` | **Optional**<br/>date to be computed in the following format YYYYMMDD. Can also be a compute instruction like TODAY, YESTERDAY.
+<a name="withSimpleValueTime">Time</a> | `string` | **Optional**<br/>Time in timestampUTC. Can also be a compute instruction like NOW.
+
+#### <a name="withReferencedValueObject"></a>withReferencedValue [Added in 2.1]
+
+```json
+"with": {
+    	"37": {
+			"last": "37"
+		},
+    	"58": {
+			"last": "58",
+            "default": "Trade"
+		},        
+        "194": {
+			"this": "31"
+		}           
+    } 
+```
+
+The 'withReferencedValue' object will contain one of the following fields: 
+
+Field Name | Type | Description
+---|:---:|---
+<a name="withReferencedValueThis">This</a> | `integer` | **Optional**<br/>tag of the field from which the value is copied - in this message. 
+<a name="withReferencedValueLast">Last</a> | `integer` | **Optional**<br/>tag of the field from which the value is copied - in previous linked message.
+<a name="withReferencedValueDefault">Default</a> | `string` | **Optional**<br/>Default value if reference "this" or "last" tag is not found.
+
+Note that This and Last are mutually exclusive.
+
+#### <a name="withRangeObject"></a>withRange [Added in 2.1]
+
+```json
+"32": {
+		"min": {
+			"fixed": 1
+		},
+		"max": {
+			"last": "38"
+		}
+```
+
+The 'withRange' object will contain one of the following objects:
+
+Field Name | Type | Description
+---|:---:|---
+<a name="withRangeMin">Min</a> | [with](#withObject) | **Optional**<br/>Min value of this field - used for integer fields.
+<a name="withRangeMax">Max</a> | [with](#withObject) | **Optional**<br/>Max value of this field - used for integer fields.
+
+#### <a name="withMathObject"></a>withMath [Added in 2.1]
+
+```json
+"6": {
+	"divide": {
+		"numerator": {
+			"sum": [
+				{
+					"multiply": [
+						{
+                        "last": "14"
+						},
+						{
+                        "last": "6"
+						}
+					]
+				},
+				{
+					"multiply": [
+						{
+                        "this": "31"
+						},
+						{
+                        "this": "32"
+						}
+					]
+				}
+			]
+		},
+		"denominator": {
+			"last": "38"
+		}
+	}
+},
+```
+The 'withMath' object will contain one of the following objects:
+
+Field Name | Type | Description
+---|:---:|---
+<a name="withMathSum">Sum</a> | [with](#withObject) | **Optional**<br/>Sum operation.
+<a name="withMathSubstract">Substract</a> | [with](#withObject) | **Optional**<br/>Substraction operation.
+<a name="withMathMultiply">Multiply</a> | [with](#withObject) | **Optional**<br/>Multiply operation.
+<a name="withMathDivide">Divide</a> | [divide](#divideObject) | **Optional**<br/>Divide opeartion.
+
+The 'Divide' object will contain the following 2 objects:
+
+Field Name | Type | Description
+---|:---:|---
+<a name="withMathDivideNumerator">Numerator</a> | [with](#withObject) | **Required**<br/>Numerator of the divide operation.
+<a name="withMathDivideNumerator">Denominator</a> | [with](#withObject) | **Required**<br/>Denumerator of the divide operation.
+
+
+#### <a name="withIfObject"></a>withIf [Added in 2.1]
+
+```json
+"31": {
+	"if": [
+		{
+			"condition": "$54 == 1",
+			"max": {
+				"last": "44",
+				"default": 99999
+			}
+		},
+		{
+			"condition": "$54 != 1",
+			"min": {
+				"last": "44",
+				"default": 0.001
+			}
+		}
+	]
+},
+```
+
+The 'withIf' object is used to set the conditions to define the value of a tag
+
+Field Name | Type | Description
+---|:---:|---
+<a name="withIfArray">if</a> | [withIfArray](#withIfArray) | **Required**<br/>Array of conditions used to define the value of a tag - It contains at least 1 object.
+
+The <a name="withIfArray"></a>'If' is a series of 'Ifcondition' objects defined by the following mandatory 2 objects:
+
+Field Name | Type | Description
+---|:---:|---
+<a name="withIfArrayCondition">Condition</a> |  | **Required**<br/>Tag value condition expressed in groovy expression.
+<a name="withIfArrayRef">#withObject</a> | [with](#withObject) | **Required**<br/>Resulting value of the tag.
