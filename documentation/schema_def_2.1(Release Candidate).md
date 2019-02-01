@@ -987,11 +987,29 @@ Field Name | Type | Description
 
 #### <a name="responseObject"></a>Response [Updated in 2.1]
 
+```json
+"bbbb2266": {
+    "type": "technical",
+    "messageKey": "qdmCfuBx",
+    "with": {
+        "45": {
+            "last": "34"
+        },
+        "372": {
+            "last": "35"
+        }
+    },
+    "description": "Cancel RFQ reject(j)",
+    "end": "QuoteRequest.Active",
+    "isSuccess": false
+}
+```
+
 The 'response' object is defined by the fields below:
 
 Field Name | Type | Description
 ---|:---:|---
-<a name="responseMsgType"></a>MessageType | `string` | **Required**<br/>Type of the message serving as a response. Possible values: "technical", "functional", "event".
+<a name="responseMsgType"></a>Type | `string` | **Required**<br/>Type of the message serving as a response. Possible values: "technical", "functional", "event".
 <a name="responseMsgKey"></a>MessageKey | `string` | **Required**<br/>Reference of the message.
 <a name="responseWith"></a>With | [With](#withObject) | **Required**<br/>List of fields with specific expected values.
 <a name="responseEnd"></a>End | `string` | **Required**<br/>Resulting state at the end of the transition
@@ -1001,9 +1019,9 @@ Field Name | Type | Description
 
 #### <a name="withObject"></a>With [Added in 2.1]
 
-The 'with' object contains a series of 'withtag' objects which are defined by one (and only one) of the objects listed below:
+The 'with' object contains a series of 'withtag' objects which are defined by one (and only one) of the blocks listed below:
 
-Field Name | Type | Description
+Block Name | Type | Description
 ---|:---:|---
 <a name="withSimpleValue">withSimpleValue</a> | [withSimpleValue](#withSimpleValueObject) | **Optional**<br/>Simple fixed value of the tag.
 <a name="withReferencedValue">withReferencedValue</a> | [withReferencedValue](#withReferencedValueObject) | **Optional**<br/> Defines where to get the value of the tag from.
