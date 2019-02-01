@@ -1019,16 +1019,17 @@ Field Name | Type | Description
 
 #### <a name="withObject"></a>With [Added in 2.1]
 
-The 'with' object contains a series of 'withtag' objects which are defined by one (and only one) of the blocks listed below:
+The 'with' object contains a series of objects. For sake of clarity, we have organised those objects under 5 different blocks:
 
-Block Name | Type | Description
+Block Name |  Description
 ---|:---:|---
-<a name="withSimpleValue">withSimpleValue</a> | [withSimpleValue](#withSimpleValueObject) | **Optional**<br/>Simple fixed value of the tag.
-<a name="withReferencedValue">withReferencedValue</a> | [withReferencedValue](#withReferencedValueObject) | **Optional**<br/> Defines where to get the value of the tag from.
-<a name="withRange">withRange</a> | [withRange](#withRangeObject) | **Optional**<br/>Defines where to get the value of the tag from.
-<a name="withMath">withMath</a> | [withMath](#withMathObject) | **Optional**<br/>Defines the operators to compute the value of the tag.
-<a name="withIf">withIf</a> | [withIf](#withIfObject) | **Optional**<br/>Defines the conditions to compute the value of the tag.
+[withSimpleValue](#withSimpleValueObject) | Objects used for simple fixed value of the tag.
+[withReferencedValue](#withReferencedValueObject) | Objects used to define where to get the value of the tag from.
+[withRange](#withRangeObject) | Objects used to define here to get the value of the tag from.
+[withMath](#withMathObject) | Objects used to define the operators to compute the value of the tag.
+[withIf](#withIfObject) | Objects used to define the conditions to compute the value of the tag.
 
+Please read following sections for details on the content of each blocks of objects.
 
 #### <a name="withSimpleValueObject"></a>withSimpleValue [Added in 2.1]
 
