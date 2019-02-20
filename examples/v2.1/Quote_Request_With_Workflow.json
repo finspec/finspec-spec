@@ -419,7 +419,7 @@
                     "name": "SenderCompID",
                     "alwaysRequired": true,
                     "datatype": "String",
-                    "description": "Used to identify the message sender. Determined in agreement between client and UBS.",
+                    "description": "Used to identify the message sender.",
                     "wireId": "49"
                 },
                 {
@@ -451,7 +451,7 @@
                     "name": "TargetCompID",
                     "alwaysRequired": true,
                     "datatype": "String",
-                    "description": "Used to identify the message recipient. Determined in agreement between client and UBS.",
+                    "description": "Used to identify the message recipient.",
                     "wireId": "56"
                 },
                 {
@@ -828,7 +828,7 @@
                         "name": "Text",
                         "alwaysRequired": false,
                         "datatype": "String",
-                        "description": "Will be populated in the event of a UBS-initiated disconnection to provide a reason for the disconnection.",
+                        "description": "Will be populated in the event of an exchange-initiated disconnection to provide a reason for the disconnection.",
                         "wireId": "58"
                     },
                     {
@@ -845,7 +845,7 @@
             "PKne5tBh": {
                 "name": "Logon",
                 "direction": "both",
-                "description": "Establish connection, trigger message sequence number reset.Connection to the system is initiated by the client issuing a FIX Logon message. The message must contain the password that has been issued to the client by us. In the event of an incorrect password being specified, a Logout message containing an error message will be sent in response, and then the connection will be terminated immediately by UBS.",
+                "description": "Establish connection, trigger message sequence number reset.Connection to the system is initiated by the client issuing a FIX Logon message. The message must contain the password that has been issued to the client by us. In the event of an incorrect password being specified, a Logout message containing an error message will be sent in response, and then the connection will be terminated immediately.",
                 "fields": [
                     {
                         "position": 0,
@@ -872,7 +872,7 @@
                         "name": "HeartBtInt",
                         "alwaysRequired": true,
                         "datatype": "int",
-                        "description": "The heartbeat interval. This will be set by agreement between the client and UBS.",
+                        "description": "The heartbeat interval.",
                         "wireId": "108"
                     },
                     {
@@ -898,7 +898,7 @@
                         "name": "Username",
                         "alwaysRequired": false,
                         "datatype": "String",
-                        "description": "This should be set for messages sent by the client, to initiate a connection.This field should be populated with the username that has been allocated in agreement with UBS.Not needed for messages used only to reset sequence numbers for an existing connection.",
+                        "description": "This should be set for messages sent by the client, to initiate a connection. Not needed for messages used only to reset sequence numbers for an existing connection.",
                         "wireId": "553"
                     },
                     {
@@ -906,7 +906,7 @@
                         "name": "Password",
                         "alwaysRequired": false,
                         "datatype": "String",
-                        "description": "This should be set for messages sent by the client, to initiate a connection.This field should be populated with the password that has been allocated in agreement with UBS.Not needed for messages used only to reset sequence numbers for an existing connection.",
+                        "description": "This should be set for messages sent by the client, to initiate a connection. Not needed for messages used only to reset sequence numbers for an existing connection.",
                         "wireId": "554"
                     },
                     {

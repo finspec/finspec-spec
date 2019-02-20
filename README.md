@@ -16,7 +16,7 @@ FinSpec schema versions in the 1.x series are still supported, but support for 0
 
 Version | Date | Notes
 --- | --- | ---
-[[2.1](https://github.com/finspec/finspec-spec/blob/master/schemas/v2.1/schema.json)] | 2019-01-18 | (Release candidate) Update to workflow schema.
+[[2.1](https://github.com/finspec/finspec-spec/blob/master/schemas/v2.1/schema.json)] | 2019-01-18 | Update to workflow schema.
 [[2.0](https://github.com/finspec/finspec-spec/blob/master/schemas/v2.0/schema.json)] | 2018-06-27 | Support for navigation and history keys. Extended block (component) support. Retire 0.x versions.
 [1.2] | 2018-02-14 | Support for machine readable bit fields.
 [1.1] | 2017-03-10 | Support for functional (context-specific) messages.

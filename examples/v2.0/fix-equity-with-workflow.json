@@ -615,7 +615,7 @@
             "logout": {
                 "name": "Logout",
                 "wireId": "5",
-                "description": "Closing of a connection to the system is initiated by sending a Logout message to the other party. This should then be acknowledged by the other party by replying with a Logout message.Either the client or UBS may initiate disconnection.",
+                "description": "Closing of a connection to the system is initiated by sending a Logout message to the other party. This should then be acknowledged by the other party by replying with a Logout message.Either the client or broker may initiate disconnection.",
                 "fields": [
                     {
                         "position": 0,
@@ -1042,7 +1042,7 @@
                         "position": 1,
                         "name": "Ord QtyOrderID",
                         "alwaysRequired": true,
-                        "description": "Unique identifier of the order as assigned by UBS.",
+                        "description": "Unique identifier of the order as assigned by the broker.",
                         "wireId": "37",
                         "datatype": "String"
                     },
@@ -1058,7 +1058,7 @@
                         "position": 3,
                         "name": "ExecID",
                         "alwaysRequired": true,
-                        "description": "Unique identifier of the execution report, as assigned by UBS.",
+                        "description": "Unique identifier of the execution report, as assigned by the broker.",
                         "wireId": "17",
                         "datatype": "String"
                     },
