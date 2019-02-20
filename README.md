@@ -8,9 +8,11 @@ Our hope is that the specification will allow both humans and computers to disco
 
 ## Versioning
 
-The current version of the FinSpec specification is 2.0: To read more about the schema definition: [Get Started](https://github.com/finspec/finspec-spec/blob/master/schemas/v2.0/schema.json).
+The current version of the FinSpec specification is 2.1: To read more about the schema definition: [Get Started](https://github.com/finspec/finspec-spec/blob/master/schemas/v2.1/schema.json).
 
-FinSpec schema versions in the 1.x series are still supported, but support for 0.x versions is now withdrawn. We would **strongly recommend** upgrading to 2.1 as soon as possible. Please contact happytohelp@fixspec.com for (free) assistance to upgrade schema version.
+FinSpec schema versions in the 2.x series are actively supported. 1.x versions are now deprecated, while support for 0.x versions is now withdrawn.
+
+We would **strongly recommend** upgrading to 2.1 as soon as possible. Please contact happytohelp@fixspec.com for (free) assistance to upgrade schema version.
 
 ### Revision History
 
@@ -31,7 +33,7 @@ We *STRONGLY* recommend validating FinSpec schema validation prior to deployment
 
 ## License
 
-Copyright 2018 FixSpec Limited
+Copyright 2019 FixSpec Limited
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
