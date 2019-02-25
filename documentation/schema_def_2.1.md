@@ -6,7 +6,8 @@ A few minor changes have been introduced to this version. In no particular order
 
 * `nav` section becomes a mandatory element of the schema: [Nav](#navObject)
 *  Add `key` as optional attribute for the fields block: [Field](#fieldObject)
-*  Various adjustments to the workflow schema 2.0: [Workflow](#workflowsObject) 
+*  Various adjustments to the workflow schema 2.0: [Workflow](#workflowsObject)
+*  Support for document, message and field-level notes [NotesArray](#notesArray)
 
 ---
 
@@ -64,6 +65,7 @@ datatypes    | [Datatype](#datatypeObject)         | **Required**<br/>A list of 
 nav     | [Nav](#navObject)         | **Required**<br/>A proposed UI navigation structure for the API specification.
 blocks | [Blocks](#blocksObject) | **Required if supported by protocol**<br/>A list of common blocks used by the messages in the API specification. e.g. Header, footer, etc.
 messages     | [Messages](#messagesObject)         | **Required**<br/>A list of messages used in the API specification.
+notes     | [Notes](#notesArray)         | **Optional**<br/>An list of notes about the specification as a whole.
 workflows    | [Workflows](#workflowsObject)           | **Optional**<br/>A list of finite state machine style workflow (optional)
 
 The Root object may contain [vendor extensions](#vendorExtensions).
@@ -121,7 +123,7 @@ An array of contact information for the specification. Each specification must c
 Field Name | Type | Description
 ---|:---:|---
 <a name="contactName"></a>name | `string` | **Required**<br/>The identifying name of the contact person/organization.
-<a name="contactPhone"></a>phone | `string` | **See note below**<br/>The phone number (including international dialing code) for the contact.
+<a name="contactPhone"></a>phone | `string` | **See note below**<br/>The phone number (including international dialling code) for the contact.
 <a name="contactUrl"></a>url | `string` | **See note below**<br/>The URL pointing to the contact information. MUST be in the format of a URL.
 <a name="contactEmail"></a>email | `string` | **See note below**<br/>The email address of the contact person/organization. MUST be in the format of an email address.
 
@@ -269,7 +271,7 @@ Describes type of data stored in the field value of the API.
 Field Name | Type | Description
 ---|:---:|---
 <a name="name"></a>name | `string` | **Required**<br/>Name of the type. e.g. int, uint8e, Price, Boolean, etc.
-<a name="baseType"></a>baseType | `string` | **Required**<br/>Specifies the base type of the value. Value MUST be fron the list: `"char"`, `"integer"`, `"number"`, `"string"`, `"ascii"`, `"uint8"`, `"int8"`, `"uint16"`, `"int16"`, `"uint32"`, `"int32"`, `"uint64"`, `"int64"`, `"float"`, `"double"`                    
+<a name="baseType"></a>baseType | `string` | **Required**<br/>Specifies the base type of the value. Value MUST be from the list: `"char"`, `"integer"`, `"number"`, `"string"`, `"ascii"`, `"uint8"`, `"int8"`, `"uint16"`, `"int16"`, `"uint32"`, `"int32"`, `"uint64"`, `"int64"`, `"float"`, `"double"`                    
 <a name="description"></a>description | `string` | **Required**<br/>Description/remark for this type.
 <a name="length"></a>length | `integer` | **Optional**<br/>Length of value for this type in number of bytes (binary) or characters (text).
 <a name="precision"></a>precision | `integer` | **Optional**<br/>Implied number of decimal places for floating numbers represented as integers.
@@ -421,7 +423,7 @@ The Blocks object may **not** contain vendor extensions.
 ```
 A list of all messages used in the API specification.
 
-The section can be used to carry up to three types of message - `info` sections, `technical` messages, and `functional` views, where a functional view is a techncial message within a specific business context.
+The section can be used to carry up to three types of message - `info` sections, `technical` messages, and `functional` views, where a functional view is a technical message within a specific business context.
 
 Field Name | Type | Description
 ---|:---:|---
@@ -486,6 +488,7 @@ Field Name | Type | Description
 <a name="fieldsetIsTrailer"></a>isTrailer | `boolean` | **Optional** <br/>Boolean to indicate whether this fieldset represents a common trailer block. Default is `false`.
 <a name="fieldsetFields"></a>fields | [Field](#fieldObject) | **Required**<br/> List of fields available within a message.
 <a name="fieldsetExamples"></a>examples | [ExamplesArray](#exampleArray) | **Optional**<br/>List of message examples.
+<a name="fieldsetNotes"></a>notes     | [Notes](#notesArray)         | **Optional**<br/>An list of notes about this fieldset.
 
 The Fieldset object may contain [vendor extensions](#vendorExtensions).
 
@@ -527,6 +530,7 @@ Field Name | Type | Description
 <a name="fieldsetWithContextContext"></a>context | [Context](#contextObject) | **Required**<br/> Digital description of the intended message context.
 <a name="fieldsetWithContextFields"></a>fields | [Field](#fieldObject) | **Required**<br/> List of fields available within a message.
 <a name="fieldsetWithContextExamples"></a>examples | [ExamplesArray](#exampleArray) | **Optional**<br/>List of message examples.
+<a name="fieldsetWithContextNotes"></a>notes     | [Notes](#notesArray)         | **Optional**<br/>An list of notes about this message.
 
 The FieldsetWithContext object may contain [vendor extensions](#vendorExtensions).
 
@@ -658,6 +662,7 @@ Field Name | Type | Description
 <a name="fieldConditions"></a>conditions | [ConditionArray](#conditionArray) | **Optional**<br/>Field conditional requirements.
 <a name="fieldFields"></a>fields | [Field](#fieldObject) | **Optional**<br/>List of nested fields, indicating a repeating group under the current field.
 <a name="fieldBits"></a>bits | [BitArray](#bitArray) | **Optional**<br/>Details about how bits are organized if this is a bit field.
+<a name="fieldNotes"></a>notes     | [Notes](#notesArray)         | **Optional**<br/>An list of notes about this particular field.
 
 The Field object may contain [vendor extensions](#vendorExtensions).
 
@@ -719,7 +724,7 @@ A simple array of bits within a field.
 Field Name | Type | Description
 ---|:---:|---
 <a name="bitOffset"></a>offset | `integer` | **Required**<br/>Bit offset within a bit field indicating start of bits group.
-<a name="bitWidth"></a>width | `integer` | **Required**<br/>Width of bits group in terms of numer of bits.
+<a name="bitWidth"></a>width | `integer` | **Required**<br/>Width of bits group in terms of number of bits.
 <a name="bitName"></a>name | `string`| **Required**<br/>Name of the bits group.
 <a name="bitDescription"></a>description | `string` | **Optional**<br/>Description of the purpose and use of the bits group.
 <a name="bitValues"></a>values | [EnumArray](#enumArray) | **Optional**<br/>List of possible values for this bits group.
@@ -751,7 +756,7 @@ The BitsArray object may contain [vendor extensions](#vendorExtensions).
 }
 ```
 
-A simple array of conditions, **each of which should be evaluated in turn and the loop exited when the first evaluates to true**. See below for a description of condition grammer.
+A simple array of conditions, **each of which should be evaluated in turn and the loop exited when the first evaluates to true**. See below for a description of condition grammar.
 
 **NOTE** In order for conditions to be examined, `alwaysRequired` should be set to `false` on the parent field, to avoid the parent field always being considered mandatory.
 
@@ -828,6 +833,34 @@ The ExampleArray object may contain [vendor extensions](#vendorExtensions).
 
 ---
 
+### <a name="notesArray"></a>NotesArray
+
+```json
+{
+    "notes": [
+        {
+            "note": "One really interesting fact about this field is...",
+            "created_by_text": "Joe Bloggs",
+            "updated_at": "2019-02-25 14:07:07"
+        },
+        ...
+    ]
+}
+```
+
+A simple array of noted associated with a document / fieldset / field (depending on where the array appears).
+
+Field Name | Type | Description
+---|:---:|---
+<a name="noteNote"></a>note | `string` | **Required**<br/>The text of the note (may contain HTML).
+<a name="noteCreatedByText"></a>created_by_text | `string` | **Required**<br/>Full name of the person (or process) that created the note.
+<a name="noteUpdatedAt"></a>updated_at | `string` | **Required**<br/>Timestamp of the late update to this note in YYYY-MM-DD HH:mm:ss format.
+
+The NotesArray object may contain [vendor extensions](#vendorExtensions).
+
+---
+
+
 ## <a name="workflows"></a>WorkflowsObject
 
 **NOTE** Structure has changed under v2.1.
@@ -874,7 +907,7 @@ The array consists of workflow nav objects defined by the following fields:
 Field Name | Type | Description
 ---|:---:|---
 <a name="workflowName"></a>name | `string` | **Required**<br/>Name of the workflow.
-<a name="workflowDescription"></a>description | `string` | **Required**<br/>Description of the specific workflow being modeled.
+<a name="workflowDescription"></a>description | `string` | **Required**<br/>Description of the specific workflow being modelled.
 
 
 ### <a name="stateObject"></a>State  [Updated in 2.1]
@@ -891,7 +924,7 @@ The 'states' object is a list of state attributes which are defined by the field
 
 Field Name | Type | Description
 ---|:---:|---
-<a name="stateNav"></a>nav | `string` | **Required**<br/> worflow that this state belongs to. 
+<a name="stateNav"></a>nav | `string` | **Required**<br/> The workflow to which this state belongs.
 <a name="stateName"></a>name | `string` | **Required**<br/>Name given to this specific state
 <a name="statedescription"></a>description | `string` | **Optional**<br/>Description of this specific state
 <a name="isInitial"></a>isInitial | `boolean` | **Required**<br/>Is this an initial state? can not transition from any other state.
@@ -966,8 +999,8 @@ The 'transition' object is defined by the fields below:
 Field Name | Type | Description
 ---|:---:|---
 <a name="transitionDescription"></a>description | `string` | **Required**<br/>Description of this transition
-<a name="transitionStart">transitionStart</a>start | `Array` | **Required**<br/>List of states the transition can iniate from.
-<a name="transitionTrigger">trigger</a>trigger | [Trigger](#triggerObject) | **Optional**Solicited message (Action) required to trigger the transition.[Renamed and Updated in 2.1]
+<a name="transitionStart">transitionStart</a>start | `Array` | **Required**<br/>List of states the transition can initiate from.
+<a name="transitionTrigger">trigger</a>trigger | [Trigger](#triggerObject) | **Optional**<br/> Solicited message (Action) required to trigger the transition.[Renamed and Updated in 2.1]
 <a name="responses"></a>responses | [Array](#responseObject) | **Required**<br/>List of possible responses: messages with field conditions.
 
 
@@ -1070,14 +1103,14 @@ Field Name | Type | Description
         "194": {
 			"this": "31"
 		}           
-    } 
+    }
 ```
 
-The 'withReferencedValue' object will contain one of the following fields: 
+The 'withReferencedValue' object will contain one of the following fields:
 
 Field Name | Type | Description
 ---|:---:|---
-<a name="withReferencedValueThis">This</a> | `integer` | **Optional**<br/>tag of the field from which the value is copied - in this message. 
+<a name="withReferencedValueThis">This</a> | `integer` | **Optional**<br/>tag of the field from which the value is copied - in this message.
 <a name="withReferencedValueLast">Last</a> | `integer` | **Optional**<br/>tag of the field from which the value is copied - in previous linked message.
 <a name="withReferencedValueDefault">Default</a> | `string` | **Optional**<br/>Default value if reference "this" or "last" tag is not found.
 
@@ -1093,6 +1126,7 @@ Note that This and Last are mutually exclusive.
 		"max": {
 			"last": "38"
 		}
+    }
 ```
 
 The 'withRange' object will contain one of the following objects:
@@ -1142,16 +1176,16 @@ The 'withMath' object will contain one of the following objects:
 Field Name | Type | Description
 ---|:---:|---
 <a name="withMathSum">Sum</a> | [with](#withObject) | **Optional**<br/>Sum operation.
-<a name="withMathSubstract">Substract</a> | [with](#withObject) | **Optional**<br/>Substraction operation.
+<a name="withMathSubstract">Substract</a> | [with](#withObject) | **Optional**<br/>Subtraction operation.
 <a name="withMathMultiply">Multiply</a> | [with](#withObject) | **Optional**<br/>Multiply operation.
-<a name="withMathDivide">Divide</a> | [divide](#divideObject) | **Optional**<br/>Divide opeartion.
+<a name="withMathDivide">Divide</a> | [divide](#divideObject) | **Optional**<br/>Divide operation.
 
 The <a name="divideObject"></a>'Divide' object will contain the following 2 objects:
 
 Field Name | Type | Description
 ---|:---:|---
 <a name="withMathDivideNumerator">Numerator</a> | [with](#withObject) | **Required**<br/>Numerator of the divide operation.
-<a name="withMathDivideNumerator">Denominator</a> | [with](#withObject) | **Required**<br/>Denumerator of the divide operation.
+<a name="withMathDivideDenominator">Denominator</a> | [with](#withObject) | **Required**<br/>Denominator of the divide operation.
 
 
 #### <a name="withIfObject"></a>withIf [Added in 2.1]

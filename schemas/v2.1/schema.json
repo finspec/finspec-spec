@@ -47,7 +47,7 @@
             "$ref": "#/definitions/nav"
         },
         "notes": {
-            "$ref": "#/definitions/notes"
+            "$ref": "#/definitions/notesArray"
         },
         "workflows": {
             "$ref": "#/definitions/workflows"
@@ -475,7 +475,7 @@
                     "description": "Linking identifier that is persisted across spec versions for this object, facilitating cross-version comparison."
                 },
                 "notes": {
-                    "$ref": "#/definitions/notes"
+                    "$ref": "#/definitions/notesArray"
                 }
             },
             "patternProperties": {
@@ -542,7 +542,7 @@
                     "$ref": "#/definitions/exampleArray"
                 },
                 "notes": {
-                    "$ref": "#/definitions/notes"
+                    "$ref": "#/definitions/notesArray"
                 }
             },
             "patternProperties": {
@@ -606,7 +606,7 @@
                     "$ref": "#/definitions/exampleArray"
                 },
                 "notes": {
-                    "$ref": "#/definitions/notes"
+                    "$ref": "#/definitions/notesArray"
                 }
             },
             "patternProperties": {
@@ -735,7 +735,7 @@
                     "additionalProperties": false
                 },
                 "notes": {
-                    "$ref": "#/definitions/notes"
+                    "$ref": "#/definitions/notesArray"
                 }
             },
             "dependencies": {
@@ -1422,12 +1422,11 @@
         },
         "notes": {
             "description": "Public notes at different levels: Spec, Message, Block or Field",
-            "additionalProperties": false,
             "type": "array",
             "items": [
                 {
                     "type" : "object",
-                    "required": [ "note" ],
+                    "required": [ "note", "created_by_text", "updated_at"],
                     "properties": {
                         "note" : {
                             "type" : "string",
@@ -1441,7 +1440,8 @@
                             "type" : "string",
                             "description": "Time the note was last updated in YYYY-MM-DD HH:mm:SS format"
                         }
-                    }
+                    },
+                    "additionalProperties": true
                 }
             ]
         }
