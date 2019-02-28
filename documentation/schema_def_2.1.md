@@ -429,7 +429,7 @@ Field Name | Type | Description
 ---|:---:|---
 <a name="messagesInfo"></a>info | [InfoSection](#infoSectionObject) | **See note below**<br/>Series of free-text, descriptive sections which do not directly relate to messaging e.g. Symbology, Market Phases etc.
 <a name="messagesTechnical"></a>technical | [Fieldset](#fieldsetObject) | **See note below**<br/>List of session and application-level e.g. Logon, Heartbeat, etc.
-<a name="messagesFunctional"></a>functional | [FieldsetWithContext](#fielsetWithContextObject) | **Optional**<br/>List of functional messages, describing technical messages within a given context.
+<a name="messagesFunctional"></a>functional | [FieldsetWithContext](#fieldsetWithContextObject) | **Optional**<br/>List of functional messages, describing technical messages within a given context.
 
 **NOTE** In order to pass validation, a specification must contain either the `info` or `technical` sections (or both).
 
@@ -506,6 +506,7 @@ The Fieldset object may contain [vendor extensions](#vendorExtensions).
         "expression": "$40 == '1'",
         "description": "OrdType (40) equals 1 (Market)"
     },
+    "isSession": false,
     "fields": [...],
     "baseKey": "technical_key_1",
     "historyKey": "unique_history_key",
@@ -525,6 +526,7 @@ Field Name | Type | Description
 <a name="fieldsetWithContextWireId"></a>wireId | `string` or `integer` | **Required**<br/>Wire identifier for the message (eg A for Logon in FIX).
 <a name="fieldsetWithContextDescription"></a>description | `string` | **Required**<br/>HMTL or plain text description of the purpose and use of the message.
 <a name="fieldsetWithContextDirection"></a>direction | `string` | **Optional**<br/>Indication of message flow. Value MUST be from the list: `"in"`, `"out"`, and `"both"`. Default: `both`.
+<a name="fieldsetWithContextIsSession"></a>isSession | `boolean` | **Optional**<br/>Indication of whether the message is related to establishing, maintaining or terminating a session connection.
 <a name="fieldsetWithContextBaseKey"></a>baseKey | `string` | **Optional** <br/>The unique key given to the technical message upon which this functional view is based.
 <a name="fieldsetWithContextHistoryKey"></a>historyKey | `string` | **Optional** <br/>Unique, persistent key suitable for linking a fieldset across versions.
 <a name="fieldsetWithContextContext"></a>context | [Context](#contextObject) | **Required**<br/> Digital description of the intended message context.

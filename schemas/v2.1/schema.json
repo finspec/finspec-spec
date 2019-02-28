@@ -575,6 +575,10 @@
                     "type": "string",
                     "description": "Description of the purpose and use of the message."
                 },
+                "isSession": {
+                    "type": "boolean",
+                    "description": "Whether this fieldset relates to establishing, maintaining or terminating an API session."
+                },
                 "context" : {
                     "$ref": "#/definitions/context"
                 },
