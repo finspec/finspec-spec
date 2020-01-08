@@ -375,7 +375,14 @@
                         "ldate",
                         "ltime",
                         "mtime",
-                        "utime"
+                        "utime",
+                        "String",
+                        "xs:string",
+                        "xs:integer",
+                        "xs:decimal",
+                        "xs:dateTime",
+                        "xs:time",
+                        "xs:date"
                     ]
                 },
                 "length": {
