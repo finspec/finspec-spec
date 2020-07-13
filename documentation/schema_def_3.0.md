@@ -27,9 +27,9 @@ In particular, machines will require fast, look-up access to structured elements
 To accomodate this, FinSpec 3.0 defines additional custom HTML tags which to be carried in selected HTML description fields, allowing fine-grained control over how field lists and examples are positioned within other descriptive elements.
 
 Custom HTML Tag   | Description | Available In
--------------|:----------------------:|------------
-<finspec-fields><finspec-fields> | An instruction to insert a table representing the list of fields (described in the same Fieldset) as a block-level HTML div at that point. | [Fieldset](#fieldsetObject), [FieldsetWithContext](#fieldsetWithContextObject)
-<finspec-example data-ref="example_key"><finspec-example> | An instruction to insert the (globally-defined) example object with the indicated key as a block-level HTML div at that point. | [Datatype](#datatypeObject), [InfoSection](#infoSectionObject), [Fieldset](#fieldsetObject), [FieldsetWithContext](#fieldsetWithContextObject)
+-------------|----------------------|------------
+`<finspec-fields><finspec-fields>` | An instruction to insert a table representing the list of fields (described in the same Fieldset) as a block-level HTML div at that point. | [Fieldset](#fieldsetObject), [FieldsetWithContext](#fieldsetWithContextObject)
+`<finspec-example data-ref="example_key"><finspec-example>` | An instruction to insert the (globally-defined) example object with the indicated key as a block-level HTML div at that point. | [Datatype](#datatypeObject), [InfoSection](#infoSectionObject), [Fieldset](#fieldsetObject), [FieldsetWithContext](#fieldsetWithContextObject)
 
 The use of these custom HTML tags is optional. HTML description sections which do not contain these elements should be intepretted as requesintg that any relevant field table and examples directly follow after the relevant HTML description. 
 
