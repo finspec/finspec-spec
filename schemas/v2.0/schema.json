@@ -1,0 +1,1266 @@
+{
+    "title": "A JSON Schema for FinSpec v2.0.",
+    "id": "https://fixspec.com/finspec/v2.0/schema.json#",
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "required": [
+        "finspec",
+        "info",
+        "protocol",
+        "datatypes",
+        "messages"
+    ],
+    "additionalProperties": false,
+    "patternProperties": {
+        "^x-": {
+            "$ref": "#/definitions/vendorExtension"
+        }
+    },
+    "properties": {
+        "finspec": {
+            "type": "string",
+            "enum": [
+                "2.0"
+            ],
+            "description": "The FinSpec version of this document."
+        },
+        "info": {
+            "$ref": "#/definitions/info"
+        },
+        "protocol": {
+            "$ref": "#/definitions/protocol"
+        },
+        "changes": {
+            "$ref": "#/definitions/changes"
+        },
+        "datatypes" : {
+            "$ref": "#/definitions/datatypes"
+        },
+        "blocks": {
+            "$ref": "#/definitions/blocks"
+        },
+        "messages": {
+            "$ref": "#/definitions/messages"
+        },
+        "nav": {
+            "$ref": "#/definitions/nav"
+        },
+        "workflows": {
+            "$ref": "#/definitions/workflows"
+        }
+    },
+    "definitions": {
+        "info": {
+            "type": "object",
+            "description": "General information about the author of the API.",
+            "required": [
+                "version",
+                "issuer",
+                "issueDate",
+                "title"
+            ],
+            "additionalProperties": false,
+            "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            },
+            "properties": {
+                "version": {
+                    "type": "string",
+                    "description": "A semantic version number of the API."
+                },
+                "issuer": {
+                    "type": "string",
+                    "description": "The name of the API issuer."
+                },
+                "issueDate": {
+                    "type": "string",
+                    "description": "The issue date of the API description expressed in YYYY-MM-DD format.",
+                    "pattern": "^(19|20)\\d{2}-(0\\d|1[012])-([0-2]\\d|3[01])$"
+                },
+                "liveDate": {
+                    "type": "string",
+                    "description": "The anticipated production-live date of the API description expressed in YYYY-MM-DD format.",
+                    "pattern": "^(19|20)\\d{2}-(0\\d|1[012])-([0-2]\\d|3[01])$"
+                },
+                "title": {
+                    "type": "string",
+                    "description": "A unique and precise title of the API service."
+                },
+                "logo": {
+                    "type": "string",
+                    "description": "A fully-qualified URL to a suitable logo image for the spec author."
+                },
+                "contacts": {
+                    "$ref": "#/definitions/contacts"
+                },
+                "status": {
+                    "type": "string",
+                    "description": "A description of the current state of this specification (eg DRAFT or FINAL)."
+                }
+            }
+        },
+        "contacts": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items" : {
+                "$ref": "#/definitions/contact"
+            },
+            "description": "List of contact details for the owners of the API.",
+            "additionalProperties": false
+        },
+        "contact": {
+            "type": "object",
+            "description": "Contact detail of a person or department within the API owner.",
+            "required": [
+                "name"
+            ],
+            "additionalProperties": false,
+            "anyOf": [
+                {"required": ["phone"]},
+                {"required": ["email"]},
+                {"required": ["url"]}
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The identifying name of the contact person/organization."
+                },
+                "phone": {
+                    "type": "string",
+                    "description": "The phone number (including international dialing code) for the contact."
+                },
+                "url": {
+                    "type": "string",
+                    "description": "The URL pointing to the contact information.",
+                    "format": "uri"
+                },
+                "email": {
+                    "type": "string",
+                    "description": "The email address of the contact person/organization.",
+                    "format": "email"
+                }
+            },
+            "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        },
+        "protocol": {
+            "type": "object",
+            "description": "Metadata about the protocol used by the API.",
+            "required": [
+                "name"
+            ],
+            "additionalProperties": false,
+            "anyOf": [
+                {"required": ["isFIX"]},
+                {"required": ["isOffsetBased"]},
+                {"required": ["isTagValue"]},
+                {"required": ["isObject"]}
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "The common name for the protocol."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "An optional description of the protocol."
+                },
+                "isFIX": {
+                    "type": "boolean",
+                    "description": "Is this the FIX protocol? (Useful short-cut for one of the most popular protocols)."
+                },
+                "isOffsetBased": {
+                    "type": "boolean",
+                    "description": "Is this a offset-based message such as ITCH?"
+                },
+                "isTagValue": {
+                    "type": "boolean",
+                    "description": "Is the protocol tag-value based, such as FIX or SWIFT?"
+                },
+                "isObject": {
+                    "type": "boolean",
+                    "description": "Does the specification describe the set of object attributes returned from an SDK?"
+                },
+                "isBinary": {
+                    "type": "boolean",
+                    "description": "Indicates whether protocol is text or binary."
+                },
+                "endianness" : {
+                    "type": "string",
+                    "enum": [
+                        "little",
+                        "big"
+                    ],
+                    "description": "Default endianness of numerical types for binary/native APIs."
+                },
+                "charset" : {
+                    "type": "string",
+                    "description": "Legal character set used for string values e.g. 'UTF8', 'ISO 8859-1', etc."
+                },
+                "hasHeader": {
+                    "type": "boolean",
+                    "description": "Do messages in this protocol always have a defined header block?"
+                },
+                "hasTrailer": {
+                    "type": "boolean",
+                    "description": "Do messages in this protocol always have a defined trailer (footer) block?"
+                }
+            },
+            "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        },
+        "changes": {
+            "type": "object",
+            "description": "An optional block providing a description of changes in this, and prior, spec versions.",
+            "required": [
+                "summary"
+            ],
+            "additionalProperties": false,
+            "anyOf": [
+                {"required": ["lastVersion"]},
+                {"required": ["lastVersionDate"]}
+            ],
+            "properties": {
+                "summary": {
+                    "type": "string",
+                    "description": "A HTML or text description of the latest changes made."
+                },
+                "lastVersion": {
+                    "type": "string",
+                    "description": "The version number of the immediately prior spec version (i.e. the starting spec to which changes have been applied)."
+                },
+                "lastVersionDate": {
+                    "type": "string",
+                    "description": "The date of the immediately prior spec version (i.e. the starting spec to which changes have been applied) in YYYY-MM-DD format.",
+                    "pattern": "^(19|20)\\d{2}-(0\\d|1[012])-([0-2]\\d|3[01])$"
+                },
+                "history": {
+                    "$ref": "#/definitions/history"
+                }
+            },
+            "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        },
+        "history": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items" : {
+                "$ref": "#/definitions/historyRecord"
+            },
+            "description": "An optional block providing a description of changes in prior, spec versions.",
+            "additionalProperties": false
+        },
+        "historyRecord": {
+            "type": "object",
+            "description": "An individual history record entry.",
+            "required": [
+                "version",
+                "issueDate",
+                "summary"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "version": {
+                    "type": "string",
+                    "description": "The spec version number to which this history record relates."
+                },
+                "issueDate": {
+                    "type": "string",
+                    "description": "The issue date of the spec to which this history record relates, in YYYY-MM-DD format.",
+                    "pattern": "^(19|20)\\d{2}-(0\\d|1[012])-([0-2]\\d|3[01])$"
+                },
+                "liveDate": {
+                    "type": "string",
+                    "description": "The live date of the spec version to which this history record relates, in YYYY-MM-DD format.",
+                    "pattern": "^(19|20)\\d{2}-(0\\d|1[012])-([0-2]\\d|3[01])$"
+                },
+                "summary": {
+                    "type": "string",
+                    "description": "A HTML or text description of the changes applied in the indicated spec version."
+                }
+            },
+            "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        },
+        "datatypes": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items" : {
+                "$ref": "#/definitions/datatype"
+            },
+            "description": "List of datatypes used by the API.",
+            "additionalProperties": false
+        },
+        "datatype": {
+            "type": "object",
+            "description": "Description of a specific datatype used by the API.",
+            "required": [
+                "name",
+                "baseType",
+                "description"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Name of the type. e.g. int, uint8e, Price, Boolean, etc."
+                },
+                "baseType": {
+                    "type": "string",
+                    "description": "Specifies the base/raw data type of the value.",
+                    "enum" : [
+                        "char",
+                        "integer",
+                        "number",
+                        "string",
+                        "ascii",
+                        "uint8",
+                        "int8",
+                        "uint16",
+                        "int16",
+                        "uint32",
+                        "int32",
+                        "uint64",
+                        "int64",
+                        "float",
+                        "double"
+                    ]
+                },
+                "length": {
+                    "type": "integer",
+                    "description": "Length of value for this type in number of bytes."
+                },
+                "precision": {
+                    "type": "integer",
+                    "description": "Precision for floating point type value."
+                },
+                "isUnsigned": {
+                    "type": "boolean",
+                    "description": "Whether numerical value is unsigned or not. Default: false"
+                },
+                "isBitField": {
+                    "type": "boolean",
+                    "description": "Whether type represents a bit field. Default: false"
+                },
+                "pattern": {
+                    "type": "string",
+                    "description": "Regular expression to describe the pattern of the value for this datatype."
+                },
+                "padChar": {
+                    "type": "string",
+                    "description": "Character used for padding."
+                },
+                "padSide": {
+                    "type": "string",
+                    "description": "Whether field value should be padded to left or right.",
+                    "enum" : [
+                        "left",
+                        "right"
+                    ]
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description/remark for this type."
+                },
+                "examples": {
+                    "$ref": "#/definitions/exampleArray"
+                }
+            },
+            "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        },
+        "blocks": {
+            "description": "A re-usable field block (such as common header of trailer).",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/definitions/fieldSet"
+            }
+        },
+        "messages": {
+            "type": "object",
+            "description": "List of messages supported by this API spec.",
+            "anyOf": [
+                {"required": ["info"]},
+                {"required": ["technical"]}
+            ],
+            "properties" : {
+                "info": {
+                    "description": "Informational messages which do not contain fields.",
+                    "type": "object",
+                    "properties": {
+                        "/": {}
+                    },
+                    "patternProperties": {
+                        "^.+$": {
+                            "$ref": "#/definitions/infoSection"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "technical": {
+                    "description": "Messages used for establishing, maintaining and closing API sessions.",
+                    "type": "object",
+                    "properties": {
+                        "/": {}
+                    },
+                    "patternProperties": {
+                        "^.+$": {
+                            "$ref": "#/definitions/fieldSet"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "functional": {
+                    "description": "Functional (context-specific) message descriptions.",
+                    "type": "object",
+                    "properties": {
+                        "/": {}
+                    },
+                    "patternProperties": {
+                        "^.+$": {
+                            "$ref": "#/definitions/fieldSetWithContext"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            }
+        },
+        "infoSection": {
+            "type": "object",
+            "description": "Informational section",
+            "required": [
+                "name",
+                "description"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Name of the section."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "HTML or plain text content."
+                },
+                "key": {
+                    "type": "string",
+                    "description": "Unique identifier (key) for the information section, as indicated in the nav block."
+                },
+                "historyKey": {
+                    "type": "string",
+                    "description": "Linking identifier that is persisted across spec versions for this object, facilitating cross-version comparison."
+                }
+            },
+            "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        },
+        "fieldSet": {
+            "type": "object",
+            "description": "Description of a set of fields (message or block) within the API.",
+            "required": [
+                "name",
+                "description",
+                "fields"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Name of the message."
+                },
+                "wireId": {
+                    "type": "string",
+                    "description": "Unique, wire identifier for the message (eg tag 35 in FIX)."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description of the purpose and use of the message."
+                },
+                "key": {
+                    "type": "string",
+                    "description": "Unique identifier (key) for the message, as indicated in the corresponding block."
+                },
+                "historyKey": {
+                    "type": "string",
+                    "description": "Linking identifier that is persisted across spec versions for this object, facilitating cross-version comparison."
+                },
+                "isSession": {
+                    "type": "boolean",
+                    "description": "Whether this fieldset relates to establishing, maintaining or terminating an API session."
+                },
+                "isHeader": {
+                    "type": "boolean",
+                    "description": "Whether this fieldset describes a re-usable header block."
+                },
+                "isTrailer": {
+                    "type": "boolean",
+                    "description": "Whether this fieldset describes a re-usable trailer (footer) block."
+                },
+                "fields": {
+                    "$ref": "#/definitions/fieldArray"
+                },
+                "direction": {
+                    "type": "string",
+                    "description": "Indication of message flow. Default is both.",
+                    "enum" : [
+                        "in",
+                        "out",
+                        "both"
+                    ]
+                },
+                "examples" : {
+                    "$ref": "#/definitions/exampleArray"
+                }
+            },
+            "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        },
+        "fieldSetWithContext": {
+            "type": "object",
+            "description": "Description of a functional (context-specific) application-level message within the API.",
+            "required": [
+                "name",
+                "wireId",
+                "description",
+                "fields",
+                "context"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Name of the message."
+                },
+                "wireId": {
+                    "type": "string",
+                    "description": "Wire identifier for the message (eg tag 35 in FIX)."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description of the purpose and use of the message."
+                },
+                "context" : {
+                    "$ref": "#/definitions/context"
+                },
+                "fields": {
+                    "$ref": "#/definitions/fieldArray"
+                },
+                "key": {
+                    "type": "string",
+                    "description": "Unique identifier (key) for the message, as indicated in the corresponding block."
+                },
+                "baseKey": {
+                    "type": "string",
+                    "description": "Unique identifier (key) for the technical message upon which this functional view is based."
+                },
+                "historyKey": {
+                    "type": "string",
+                    "description": "Linking identifier that is persisted across spec versions for this object, facilitating cross-version comparison."
+                },
+                "direction": {
+                    "type": "string",
+                    "description": "Indication of message flow. Default is both.",
+                    "enum" : [
+                        "in",
+                        "out",
+                        "both"
+                    ]
+                },
+                "examples" : {
+                    "$ref": "#/definitions/exampleArray"
+                }
+            },
+            "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        },
+        "fieldArray": {
+            "type": "array",
+            "minItems": 1,
+            "items" : {
+                "$ref": "#/definitions/field"
+            },
+            "description": "List of fields available within a fieldset (message or block).",
+            "additionalProperties": false,
+            "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        },
+        "field": {
+            "type": "object",
+            "description": "Description of a specific field within a fieldSet (message or block).",
+            "required": [
+                "name"
+            ],
+            "anyOf": [
+                {"required": ["blockKey"]},
+                {"required": ["datatype"]}
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "offset": {
+                    "type": "integer",
+                    "description": "Zero-based offset of the field within the message for binary APIs."
+                },
+                "position": {
+                    "type": "integer",
+                    "description": "Zero-based position of the field within the message for text/tag-value APIs. Where absent, ordering should be assumed from positioning within the JSON."
+                },
+                "wireId": {
+                    "type": "string",
+                    "description": "Wire identifier for the field (eg tag 35 in FIX)."
+                },
+                "blockKey": {
+                    "type": "string",
+                    "description": "The unique reference for the block from the `blocks` section."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description of the purpose and use of the field."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the field."
+                },
+                "datatype": {
+                    "type" : "string",
+                    "description" : "Field datatype from the list of API datatypes."
+                },
+                "minValue": {
+                    "type": "number",
+                    "description" : "Minimum permitted field value for numeric types."
+                },
+                "maxValue": {
+                    "type": "number",
+                    "description" : "Maximum permitted field value for numeric types."
+                },
+                "exclusiveMinValue": {
+                    "type": "boolean",
+                    "description" : "Whether 'minValue' value is exclusive or not."
+                },
+                "exclusiveMaxValue": {
+                    "type": "boolean",
+                    "description" : "Whether 'maxValue' value is exclusive or not."
+                },
+                "minLength": {
+                    "type": "integer",
+                    "description" : "Minimum permitted length of value for string types."
+                },
+                "maxLength": {
+                    "type": "integer",
+                    "description" : "Maximum permitted length of value for string types."
+                },
+                "length": {
+                    "type": "integer",
+                    "description" : "Field value length in number of bytes (binary) or characters (text)."
+                },
+                "values": {
+                    "$ref": "#/definitions/enumArray",
+                     "description": "List of possible values for this field."
+                },
+                "pattern": {
+                    "type": "string",
+                    "description": "Regular expression to describe the pattern of the value for this field."
+                },
+                "alwaysRequired": {
+                    "type": "boolean",
+                    "description": "Boolean flag to indicate that this field is present in 100% of cases. Default: false"
+                },
+                "conditions": {
+                    "$ref": "#/definitions/conditions",
+                    "description": "Section defining field conditional requirements"
+                },
+                "fields": {
+                    "$ref": "#/definitions/fieldArray",
+                    "description": "List of nested fields, indicating a repeating group under the current field."
+                },
+                "bits": {
+                    "description": "Details about how bits are organized in current bit field.",
+                    "type": "array",
+                    "minItems": 1,
+                    "items" : {
+                        "$ref": "#/definitions/bit"
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "dependencies": {
+                "exclusiveMinValue": [ "minValue" ],
+                "exclusiveMaxValue": [ "maxValue" ]
+            },
+            "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        },
+        "context": {
+            "type": "object",
+            "required": [
+                "expressionType",
+                "expression",
+                "description"
+            ],
+            "properties" : {
+                "expressionType": {
+                    "type": "string",
+                    "description": "Type of grammar used in expression field. Default: groovy.",
+                    "enum": ["jsep", "javascript", "groovy"]
+                },
+                "expression": {
+                    "type": "string",
+                    "description": "Expression. The message context is considered to be in effect if this expression evaluates to true."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Human-readable descirption of the context."
+                }
+            },
+            "description": "Description of the message context.",
+            "additionalProperties": false,
+            "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        },
+        "exampleArray": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items" : {
+                "$ref": "#/definitions/example"
+            },
+            "description": "List of examples.",
+            "additionalProperties": false
+        },
+        "example": {
+            "type": "object",
+            "description": "An example of an object, such as a field or fieldset.",
+            "required": [
+                "description"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "example": {
+                    "type": "string",
+                    "description": "Actual example."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description (or purpose) of the example."
+                }
+            },
+            "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        },
+        "bit": {
+            "type": "object",
+            "description": "Description of a specific bit within a group of bits.",
+            "required": [
+                "name",
+                "offset",
+                "width"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Name of the bit field."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description of this bit field."
+                },
+                "offset": {
+                    "type": "integer",
+                    "description": "Bit offset within this bit group."
+                },
+                "width": {
+                    "type": "integer",
+                    "description": "Width of bit."
+                },
+                "values": {
+                    "$ref": "#/definitions/enumArray",
+                     "description": "List of possible values for this bit."
+                }
+            },
+            "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        },
+        "enumArray": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items" : {
+                "$ref": "#/definitions/enum"
+            },
+            "description": "List of possible values for a field.",
+            "additionalProperties": false
+        },
+        "enum": {
+            "type": "object",
+            "description": "Description of an enumerated, valid value.",
+            "required": [
+                "wireValue"
+            ],
+            "anyOf": [
+                {"required": ["name"]},
+                {"required": ["description"]}
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "wireValue": {
+                    "oneOf": [
+                        { "type": "string" },
+                        { "type": "number" }
+                    ],
+                    "description": "Enumeration as it appears on the wire."
+                },
+                "name" : {
+                    "type": "string",
+                    "description": "Short, common name for this enumeration."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Longer description of enumerated value."
+                },
+                "isDefault": {
+                    "type": "boolean",
+                    "description": "Whether this value should be considered the default for the field if it is absent from the fieldset. Default is false."
+                }
+            },
+            "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        },
+        "conditions": {
+            "type": "array",
+            "description": "Field conditional requirements",
+            "required": [
+                "conditions"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "label": {
+                    "type": "string",
+                    "description": "Decription of the condition rule."
+                },
+                "expressionType": {
+                    "type": "string",
+                    "description": "Type of grammar used in expression field.",
+                    "enum": [ "jsep", "javascript", "groovy"]
+                },
+                "expression": {
+                    "type": "string",
+                    "description": "Condition expression. Below block matters if this expression evaluates to true."
+                },
+                "isReqd": {
+                    "type": "boolean",
+                    "description": "Field is mandatory in such conditions"
+                },
+                "isAbsent": {
+                    "type": "boolean",
+                    "description": "Field should not be present in such conditions"
+                },
+                "values": {
+                    "$ref": "#/definitions/enumArray",
+                    "description": "Restricted set of permitted enumerations when the conditions described above are true"
+                }
+            },
+            "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        },
+        "nav": {
+            "type": "object",
+            "anyOf": [
+                {"required": ["technical"]},
+                {"required": ["functional"]},
+                {"required": ["info"]},
+                {"required": ["block"]}
+            ],
+            "description": "Specification navigation",
+            "properties": {
+                "technical": {
+                    "type": "object",
+                    "description": "Navigation for all technical messages.",
+                    "$ref": "#/definitions/navSection"
+                },
+                "functional": {
+                    "type": "object",
+                    "description": "Navigation for all functional views (context-specific fieldsets).",
+                    "$ref": "#/definitions/navSection"
+                },
+                "info": {
+                    "type": "object",
+                    "description": "Navigation for all information sections.",
+                    "$ref": "#/definitions/navSection"
+                },
+                "block": {
+                    "type": "object",
+                    "description": "Navigation for all re-usable fieldsets.",
+                    "$ref": "#/definitions/navSection"
+                }
+            },
+            "additionalProperties": false,
+            "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        },
+        "navSection": {
+            "type": "object",
+            "description": "Navigation section containing further menu items.",
+            "additionalProperties": {
+                "$ref": "#/definitions/navSubSection"
+            }
+        },
+        "navSubSection": {
+            "type": "object",
+            "description": "Navigation sub-section containing further menu items.",
+            "anyOf": [
+                {"required": ["items"]},
+                {"required": ["menu"]}
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "items": {
+                    "$ref": "#/definitions/navItemArray"
+                },
+                "menu": {
+                    "$ref": "#/definitions/navSection"
+                }
+            }
+        },
+        "navItemArray": {
+            "type": "array",
+            "minItems": 0,
+            "uniqueItems": true,
+            "items" : {
+                "$ref": "#/definitions/navItem"
+            },
+            "description": "Container for navigation items",
+            "additionalProperties": false
+        },
+        "navItem": {
+            "type": "object",
+            "description": "Individual navigation item",
+            "additionalProperties": false,
+            "required": [
+                "key",
+                "name"
+            ],
+            "properties": {
+                "key": {
+                    "type": "string",
+                    "description": "Unique key linking for the information section or fieldset. Links to the key found in the relevant blocks or messages object"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of the section or fieldset."
+                }
+            },
+            "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        },
+        "workflows": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items" : {
+                "$ref": "#/definitions/workflow"
+            },
+            "description": "List of workflows",
+            "additionalProperties": false
+        },
+        "workflow": {
+            "type": "object",
+            "description": "Description of the specific business case modelled in the workflow.",
+            "required": [
+                "name",
+                "description",
+                "includeMessages",
+                "states",
+                "transitions"
+            ],
+            "additionalProperties": false,
+            "properties": {
+               "name": {
+                  "type": "string",
+                  "description": "Name of the workflow."
+                },
+               "description": {
+                  "type": "string",
+                  "description": "Description of the workflow described"
+                },
+                "includeMessages": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items" : {
+                        "$ref": "#/definitions/includeMessage"
+                    },
+                    "description": "List of messages included in the workflow",
+                    "additionalProperties": false
+                },
+                "states": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items" : {
+                        "$ref": "#/definitions/state"
+                    },
+                    "description": "Set of states available in this workflow",
+                    "additionalProperties": false
+                },
+                "transitions": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items" : {
+                        "$ref": "#/definitions/transition"
+                    },
+                    "description": "List of events that causes the workflow to transition to another state",
+                    "additionalProperties": false
+                }
+            },
+            "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        },
+        "includeMessage": {
+            "type": "object",
+            "description": "Messages linked by specific fields",
+            "required": [
+                "messageType"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "messageType": {
+                    "description": "List of wireID included in this workflow",
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items" : {
+                        "type": "string"
+                    }
+                },
+                "linkedBy": {
+                    "description": "Field wireID that link message together",
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items" : {
+                        "type": "string"
+                    }
+                }
+            },
+            "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        },
+        "state": {
+            "type": "object",
+            "description": "Individual state composing of the workflow",
+            "required": [
+                "ref"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "ref": {
+                   "type": "string",
+                   "description": "Unique reference of the state"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Short description of the state"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Human-readable description of the state."
+                },
+                "isInitial": {
+                    "type": "boolean",
+                    "description": "This is the initial state of the workflow."
+                },
+                "isFinal": {
+                    "type": "boolean",
+                    "description": "This is the final state of the workflow."
+                }
+            },
+            "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        },
+        "transition": {
+            "type": "object",
+            "description": "details of the transition phase with triggering action and end state",
+            "required": [
+                "start",
+                "responses"
+              ],
+            "additionalProperties": false,
+            "properties": {
+                "description": {
+                    "type": "string",
+                    "description": "Human-readable description of the state."
+                },
+                "start": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items" : {
+                        "type": "string"
+                    }
+                },
+                "triggerBy": {
+                    "ref": "#/definitions/triggerBy",
+                    "description": "Event that triggers the transition"
+                },
+                "responses": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items" : {
+                        "ref": "#/definitions/response"
+                    }
+                }
+            },
+            "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        },
+        "triggerBy": {
+            "type": "object",
+            "description": "Event that triggers the transition",
+            "required": [
+                "messageWireId",
+                "expressionType",
+                "expression"
+            ],
+            "additionalProperties": false,
+            "properties": {
+               "messageWireId": {
+                    "type": "string",
+                    "description": "message type ID that triggers the transition"
+                },
+                "expressionType": {
+                    "type": "string",
+                    "description": "Type of grammar used in expression field.",
+                    "enum": ["jsep", "groovy"]
+                },
+                "expression": {
+                  "type": "string",
+                  "description": "Condition expression. Below block matters if this expression evaluates to true."
+                }
+            },
+            "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        },
+        "response": {
+            "type": "object",
+            "description": "Possible message response",
+            "required": [
+                "messageWireId",
+                "end"
+            ],
+            "additionalProperties": false,
+            "properties": {
+                "messageWireId": {
+                    "type": "string",
+                    "description": "Unique reference of the message that trigger the event"
+                },
+                "direction": {
+                    "type": "string",
+                    "description": "Indication of message flow.",
+                    "enum" : [
+                        "in",
+                        "out"
+                    ]
+                },
+                "where": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items" : {
+                        "ref": "#/definitions/identifyBy"
+                    }
+                },
+                "end": {
+                    "type": "string",
+                    "description": "resulting state"
+                },
+                "isSuccess": {
+                    "type": "boolean",
+                    "description": "Is this a successful response to the action"
+                }
+           },
+           "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        },
+        "vendorExtension": {
+            "description": "Any property starting with x- is valid.",
+            "additionalProperties": true,
+            "additionalItems": true
+        }
+    }
+}
