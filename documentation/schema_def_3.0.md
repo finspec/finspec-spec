@@ -1,15 +1,14 @@
-# Schema Definition v2.1
+# Schema Definition v3.0
 
 ## Change log
 
-A few minor changes have been introduced to this version. In no particular order, these include:
+A number of important innovations have been introduced to this version. In no particular order, these include:
 
-* `nav` section becomes a mandatory element of the schema: [Nav](#navObject)
-*  Add `key` as optional attribute for the fields block: [Field](#fieldObject)
-*  Various adjustments to the workflow schema 2.0: [Workflow](#workflowsObject)
-*  Support for document, message and field-level notes [NotesArray](#notesArray)
+*  A new, optional `layout` section to capture presentation ordering of elements: [Layout](#layoutArray)
+*  Ability to flexibly embed field tables and examples within message presentations using custom HTML tags
+*  Changes to examples array, making them global and differentiating raw versus illustrative examples. 
+*  Ablity to control the positioning of fields and examples within HTML descriptive sections.
 
----
 
 ## Format
 
@@ -19,7 +18,21 @@ All identifiers in the specification are **case sensitive**.
 
 The schema exposes two types of fields. Fixed fields, which have a declared name, and Patterned fields, which declare a regex pattern for the field name. Patterned fields can have multiple occurrences as long as each has a unique name.
 
----
+### Note On Descriptive Text [New in 3.0]
+
+The FinSpec project aims to accomodate the need for both machine-readable and human-readable API documentation. This requires a careful balance between highly-structured, machine-readable elements, and more loosely-structured descriptive elements designed for humans (typically HTML descriptions).
+
+In particular, machines will require fast, look-up access to structured elements such as field arrays, whereas human authors like to surround field lists with explanatory, descriptive text.
+
+To accomodate this, FinSpec 3.0 defines additional custom HTML tags which to be carried in selected HTML description fields, allowing fine-grained control over how field lists and examples are positioned within other descriptive elements.
+
+Custom HTML Tag   | Description | Available In
+-------------|:----------------------:|------------
+<finspec-fields><finspec-fields> | An instruction to insert a table representing the list of fields (described in the same Fieldset) as a block-level HTML div at that point. | [Fieldset](#fieldsetObject), [FieldsetWithContext](#fieldsetWithContextObject)
+<finspec-example data-ref="example_key"><finspec-example> | An instruction to insert the (globally-defined) example object with the indicated key as a block-level HTML div at that point. | [Datatype](#datatypeObject), [InfoSection](#infoSectionObject), [Fieldset](#fieldsetObject), [FieldsetWithContext](#fieldsetWithContextObject)
+
+The use of these custom HTML tags is optional. HTML description sections which do not contain these elements should be intepretted as requesintg that any relevant field table and examples directly follow after the relevant HTML description. 
+
 
 ## File Structure
 
@@ -34,7 +47,13 @@ While the FinSpec Specification tries to accommodate most use cases, additional 
 The extensions properties are always prefixed by `"x-"` and can have any valid JSON format value.
 
 <table>
-  <thead><tr><th style="width:20%">Field Pattern</th><th style="width:15%">Type</th><th>Description</th></tr></thead>
+  <thead>
+    <tr>
+        <th style="width:20%">Field Pattern</th>
+        <th style="width:20%">Type</th>
+        <th>Description</th>
+    </tr>
+  </thead>
   <tbody>
     <tr>
       <td><a name="finspecExtensions"></a>^x-</td>
@@ -57,14 +76,16 @@ This is the root document object for the API specification.
 
 Field Name   | Type                                       | Description
 -------------|:------------------------------------------:|-----------------------
-finspec      |`string`                                    | **Required**<br/>Specifies the FinSpec Specification version being used. The value MUST be "2.1".
+finspec      |`string`                                    | **Required**<br/>Specifies the FinSpec Specification version being used. The value MUST be "3.0".
 info         | [Info](#infoObject)                 | **Required**<br/>Provides metadata about the specification. The metadata can be used by the clients if needed.
 protocol     | [Protocol](#protocolObject)         |**Required**<br/>Metadata describing the protocol.
 changes      | [Changes](#changesObject)           | **Optional**<br/>A description of the changes made in this version of the API specification.
 datatypes    | [Datatype](#datatypeObject)         | **Required**<br/>A list of datatypes used in the API specification.
 nav     | [Nav](#navObject)         | **Required**<br/>A proposed UI navigation structure for the API specification.
+layout     | [Layout](#layoutArray)         | **Optional**<br/>[Added in 3.0] A layout object to control the logical presentation of messages in a printed or displayed document.
 blocks | [Blocks](#blocksObject) | **Required if supported by protocol**<br/>A list of common blocks used by the messages in the API specification. e.g. Header, footer, etc.
 messages     | [Messages](#messagesObject)         | **Required**<br/>A list of messages used in the API specification.
+examples     | [Examples](#examplesObject)         | **Optional**<br/>A keyed list of message examples.
 notes     | [Notes](#notesArray)         | **Optional**<br/>An list of notes about the specification as a whole.
 workflows    | [Workflows](#workflowsObject)           | **Optional**<br/>A list of finite state machine style workflow (optional)
 
@@ -280,7 +301,7 @@ Field Name | Type | Description
 <a name="pattern"></a>pattern | `string` | **Optional**<br/>Regular expression to describe the pattern of the value for this datatype.
 <a name="padChar"></a>padChar | `string` | **Optional**<br/>Character used for padding.
 <a name="padSide"></a>padSide | `string` | **Optional**<br/>Whether field value should be padded to left or right. Value MUST be from the list: `"left"` and `"right"`.
-<a name="datatypeExamples"></a>examples | [ExamplesArray](#exampleArray) | **Optional**<br/>Array of examples to explain the datatype.
+<a name="datatypeExamples"></a>examples | `array` | **Optional**<br/>Array of **keys** referring to entries in the global [examplesObject](#examplesObject) which describe this datatype.
 
 
 The Datatype object may contain [vendor extensions](#vendorExtensions).
@@ -322,7 +343,7 @@ The Datatype object may contain [vendor extensions](#vendorExtensions).
 }
 ```
 
-The navigation object (which becomes required with version 2.1) allows the capture of intended UI navigation for a specification; how the author intended messages and information sections to be logically grouped for display. Think of it as the electronic equivalent of a Table Of Contents.
+The navigation object allows the capture of intended UI navigation for a specification; how the author intended messages and information sections to be logically grouped for display. Think of it as the electronic equivalent of a Table Of Contents.
 
 The top-level `nav` object may have up to four sections (but a minimum of one), relating to various content types: `info`, `blocks`, `technical` and `functional`.
 
@@ -336,6 +357,73 @@ Field Name | Type | Description
 <a name="key"></a>key | `string` | **Required**<br/>Unique key linking for the information section or fieldset. Links to the key found in the relevant blocks or messages object.
 
 Both the (top-level) Navigation object and the (lowest-level) NavItemsArray objects may contain [vendor extensions](#vendorExtensions).
+
+
+### <a name="layoutArray"></a>Layout [New in 3.0]
+
+```json
+{
+    "layout": [
+        {
+            "prepend": "<h1>Section Header</h1><p>This is some introductory text for this section that should appear before all pages.</p>",
+            "append": "<p>This text will appear after all pages.</p>",
+            "orientation": "landscape",
+            "pages": [
+                {
+                    "prepend": "<h1>Page Header</h1><p>This text will appear before all messages.</p>",
+                    "append": "<p>This text will appear after all messages.</p>",
+                    "messages": [
+                        {
+                            "type": "info",
+                            "key": "info_item_unique_key"
+                        },
+                        {
+                            "type": "technical",
+                            "key": "technical_message_key"
+                        },
+                        ...
+                    ]
+                },
+                ...                
+            ]
+        },
+        ...
+    ]
+}
+```
+
+The layout object is designed to capture the intended layout of messages when presented either in print format (eg PDF), or as single-page documentation online.
+
+The top-level `layout` array contains one or more "section" objects, each representing a distinct segment of a document. And each "section" object can indicate a series of pages which - in turn - links to one or more messages described elsewhere in the FinSpec. Much the same as in Word, section objects can indicate an orientation of either portrait or landscape to control presentation. Pages can point to one or more messages within should be understood to have an implicit page break when output to Word or PDF. 
+
+At both the section and page level, it is possible to include `prepend` and `append` HTML sections to add additional information that is perhaps not directly relevant for messages.  
+
+####Section
+
+Field Name | Type | Description
+---|:---:|---
+<a name="prepend"></a>prepend | `string` | **Optional**<br/>HTML content to be output **before** any pages in this section.
+<a name="append"></a>append | `string` | **Optional**<br/>HTML content to be output **after** all pages in this section.
+<a name="orientation"></a>orientation | `string` | **Optional**<br/>The page orientation used for Word/PDF. Valid values as `portrait` and `landscape`. Default is `portrait`.
+<a name="pages"></a>pages | [PageArray](#pageArray) | **Optional**<br/>An array of pages contained in this section. Each page ends with an implicit page break.
+
+#### <a name="pageArray"></a>PageArray
+
+Field Name | Type | Description
+---|:---:|---
+<a name="prepend"></a>prepend | `string` | **Optional**<br/>HTML content to be output **before** any messages on this page.
+<a name="append"></a>append | `string` | **Optional**<br/>HTML content to be output **after** all messages on this page.
+<a name="messages"></a>messages | [PageMessageArray](#pageMessageArray) | **Optional**<br/>An array of references to messages which should appear on this page.
+
+#### <a name="pageMessageArray"></a>PageMessageArray
+
+Field Name | Type | Description
+---|:---:|---
+<a name="type"></a>type | `string` | **Required**<br/>The type of message that this refers to. Valid values are `info`, `block`, `technical` and `functional`.
+<a name="key"></a>key | `string` | **Required**<br/>The unique key reference for the message.
+
+
+The `layout`, `section` and `pageArray` objects may contain [vendor extensions](#vendorExtensions), but entries in the `pageMessageArray` should not contain extensions.
 
 
 ### <a name="blocksObject"></a>Blocks
@@ -487,7 +575,7 @@ Field Name | Type | Description
 <a name="fieldsetIsHeader"></a>isHeader | `boolean` | **Optional** <br/>Boolean to indicate whether this fieldset represents a common header block. Default is `false`.
 <a name="fieldsetIsTrailer"></a>isTrailer | `boolean` | **Optional** <br/>Boolean to indicate whether this fieldset represents a common trailer block. Default is `false`.
 <a name="fieldsetFields"></a>fields | [Field](#fieldObject) | **Required**<br/> List of fields available within a message.
-<a name="fieldsetExamples"></a>examples | [ExamplesArray](#exampleArray) | **Optional**<br/>List of message examples.
+<a name="fieldsetExamples"></a>examples | `array` | **Optional**<br/>Array of **keys** referring to entries in the global [examplesObject](#examplesObject) which illustrate this Fieldset. Note that by placing entries here, the author is indicating that exaples should be displayed as a list at the end of the message as opposed to embedded within the description.
 <a name="fieldsetNotes"></a>notes     | [Notes](#notesArray)         | **Optional**<br/>An list of notes about this fieldset.
 
 The Fieldset object may contain [vendor extensions](#vendorExtensions).
@@ -531,7 +619,7 @@ Field Name | Type | Description
 <a name="fieldsetWithContextHistoryKey"></a>historyKey | `string` | **Optional** <br/>Unique, persistent key suitable for linking a fieldset across versions.
 <a name="fieldsetWithContextContext"></a>context | [Context](#contextObject) | **Required**<br/> Digital description of the intended message context.
 <a name="fieldsetWithContextFields"></a>fields | [Field](#fieldObject) | **Required**<br/> List of fields available within a message.
-<a name="fieldsetWithContextExamples"></a>examples | [ExamplesArray](#exampleArray) | **Optional**<br/>List of message examples.
+<a name="fieldsetWithContextExamples"></a>examples | `array` | **Optional**<br/>Array of **keys** referring to entries in the global [examplesObject](#examplesObject) which illustrate this Fieldset. Note that by placing entries here, the author is indicating that exaples should be displayed as a list at the end of the message as opposed to embedded within the description.
 <a name="fieldsetWithContextNotes"></a>notes     | [Notes](#notesArray)         | **Optional**<br/>An list of notes about this message.
 
 The FieldsetWithContext object may contain [vendor extensions](#vendorExtensions).
@@ -558,7 +646,7 @@ Field Name | Type | Description
 The Context object may contain [vendor extensions](#vendorExtensions).
 
 
-### <a name="fieldObject"></a>Field [Updated in 2.1]
+### <a name="fieldObject"></a>Field
 
 ```json
 {
@@ -645,7 +733,7 @@ Field Name | Type | Description
 ---|:---:|---
 <a name="fieldOffset"></a>offset | `integer` | **Required for offset-based protocols**<br/>Zero-based offset of the field within the message for binary APIs.
 <a name="fieldPosition"></a>position | `integer` | **Optional**<br/>Zero-based position of the field within the message for text/tag-value APIs. Where absent, ordering should be assumed from positioning within the JSON.
-<a name="fieldkey"></a>key | `string` | **Optional**<br/>Unique field identifier. In case the same wire_id appears multiple times in the same message. [Added in 2.1]
+<a name="fieldkey"></a>key | `string` | **Optional**<br/>Unique field identifier. In case the same wire_id appears multiple times in the same message.
 <a name="fieldWireId"></a>wireId | `string` | **Required for tag-value protocols**<br/>Wire identifier for the field (eg tag 35 in FIX).
 <a name="fieldBlockKey"></a>blockKey | `string` | **Required for blocks** <br/>The unique reference for the block from the `blocks` section.
 <a name="fieldDescription"></a>description | `string` | **Optional**<br/>Description of the purpose and use of the field.
@@ -808,30 +896,32 @@ Tokens that can be used in condition expression are:
 5. In the case of `groovy`, the comparison operator of ==~ may be used to indicate a regular expression.
 
 
-### <a name="exampleArray"></a>ExamplesArray
+### <a name="examplesObject"></a>ExamplesObject [Revised in 3.0]
 
 ```json
 {
-    "examples": [
-        {
+    "examples": {
+        "example_1": {
+            "name": "Market order example",
+            "raw": "8=FIX.4.2|9=69|35=A|34=12|49=SENDER|52=20140228-05:42:38.026|56=TARGET|98=0|108=120|10=238|",
             "example": "8=FIX.4.2|9=69|5=A|34=12|49=SENDER|52=20140228-05:42:38.026|56=TARGET|98=0|108=120|10=238|",
             "description": "Market order example"
         },
         ...
-    ]
+    }
 }
 ```
 
-A simple array of examples associated with the fieldset. While we encourage placing the message example in the `example` attribute itself, this is optional should it be too restrictive for the use case. In such cases, the example should be placed in the `description` instead.
-
-**TIP:** Use the HTML tag `<code>` to format messages nicely.
+A keyed array of examples of various types. This object is placed in the root of the FinSpec document and referred to from within Fieldset objects using the unique key associate with each example. This structure allows examples to be conveniently re-used or shared between different Fieldsets.
 
 Field Name | Type | Description
 ---|:---:|---
-<a name="exampleExample"></a>example | `string` | **Optional**<br/>Actual example.
-<a name="exampleDescription"></a>description | `string` | **Required**<br/>Description (or purpose) of the example.
+<a name="exampleName"></a>name | `string` | **Optional**<br/>Example name or title.
+<a name="exampleRaw"></a>raw | `string` | **Optional**<br/>Actual example of a **complete** message (not just a fragement of it). Note that this should be plain text and not HTML. 
+<a name="exampleExample"></a>example | `string` | **Optional**<br/>A more user-friendly display, intended to allow users to understand the example more clearly, perhaps by only liksting certain fields/values of interest. May contain HTML.
+<a name="exampleDescription"></a>description | `string` | **Required**<br/>Description (or purpose) of the example. May contain HTML.
 
-The ExampleArray object may contain [vendor extensions](#vendorExtensions).
+Each (sub-)object within the examplesObject may contain [vendor extensions](#vendorExtensions), but the top-level examplesObject may not.
 
 ---
 
@@ -865,8 +955,6 @@ The NotesArray object may contain [vendor extensions](#vendorExtensions).
 
 ## <a name="workflows"></a>WorkflowsObject
 
-**NOTE** Structure has changed under v2.1.
-
 ```json
 {
     "workflows": [
@@ -885,15 +973,13 @@ The workflows object section is a simple list of workflow objects, each defined 
 
 Field Name | Type | Description
 ---|:---:|---
-<a name="workflowNav"></a>nav | [WorkflowNav](#workflowNavObject) | **Required**<br/>[Added in 2.1] List of individual workflow described in this specifications. Must contain at least 1 workflow.
+<a name="workflowNav"></a>nav | [WorkflowNav](#workflowNavObject) | **Required**<br/>List of individual workflow described in this specifications. Must contain at least 1 workflow.
 <a name="workflowStates"></a>states | [State](#stateObject) | **Required**<br/>list of possible individual states the object (e.g. Orders, Quote) can take in the workflow
-<a name="workflowEvent"></a>event | [Event](#eventMessageObject) | **optional**<br/>[Added in 2.1] List of market related events that trigger or result from a transition.
+<a name="workflowEvent"></a>event | [Event](#eventMessageObject) | **optional**<br/>List of market related events that trigger or result from a transition.
 <a name="workflowTransitions"></a>transitions | [Transition](#transitionObject) | **Required**<br/> Description of transitions (including triggering event - FIX msg - and resulting state)
 
-The IncludeMessageArray have been decommissioned in 2.1.
 
-
-### <a name="workflowNavObject"></a>workflowNav [Added in 2.1]
+### <a name="workflowNavObject"></a>workflowNav
 
 ```json
  "nav": {
@@ -912,7 +998,7 @@ Field Name | Type | Description
 <a name="workflowDescription"></a>description | `string` | **Required**<br/>Description of the specific workflow being modelled.
 
 
-### <a name="stateObject"></a>State  [Updated in 2.1]
+### <a name="stateObject"></a>State
 
 ```json
 {
@@ -931,14 +1017,12 @@ Field Name | Type | Description
 <a name="statedescription"></a>description | `string` | **Optional**<br/>Description of this specific state
 <a name="isInitial"></a>isInitial | `boolean` | **Required**<br/>Is this an initial state? can not transition from any other state.
 <a name="isFinal"></a>isFinal | `boolean` | **Required**<br/>Is this a final state? Can not transition to any further state.
-<a name="stateisDefaultError"></a>isDefaultError | `boolean` | **Optional (default to `FALSE`)**<br/>Is this the default state/message for rejection [Added in 2.1]
-
-State ref object has been removed starting 2.1
+<a name="stateisDefaultError"></a>isDefaultError | `boolean` | **Optional (default to `FALSE`)**<br/>Is this the default state/message for rejection
 
 **NOTE:** Within a state objects, it is expected that exactly one state is marked as `isInitial`, and a second state is marked as `isFinal`.
 
 
-### <a name="eventObject"></a>event [Added in 2.1]
+### <a name="eventObject"></a>event
 
 ```json
 "MARKET_OPEN": {
@@ -1002,11 +1086,11 @@ Field Name | Type | Description
 ---|:---:|---
 <a name="transitionDescription"></a>description | `string` | **Required**<br/>Description of this transition
 <a name="transitionStart">transitionStart</a>start | `Array` | **Required**<br/>List of states the transition can initiate from.
-<a name="transitionTrigger">trigger</a>trigger | [Trigger](#triggerObject) | **Optional**<br/> Solicited message (Action) required to trigger the transition.[Renamed and Updated in 2.1]
+<a name="transitionTrigger">trigger</a>trigger | [Trigger](#triggerObject) | **Optional**<br/> Solicited message (Action) required to trigger the transition.
 <a name="responses"></a>responses | [Array](#responseObject) | **Required**<br/>List of possible responses: messages with field conditions.
 
 
-#### <a name="triggerObject"></a>Trigger [Renamed and Updated in 2.1]
+#### <a name="triggerObject"></a>Trigger
 
 
 The 'trigger' object is defined by the fields below:
@@ -1020,7 +1104,7 @@ Field Name | Type | Description
 <a name="transitionWhere"></a>Where | `string` | **Optional**<br/>Specific field condition in the message, expressed as a `groovy` expression.
 
 
-#### <a name="responseObject"></a>Response [Updated in 2.1]
+#### <a name="responseObject"></a>Response
 
 ```json
 "bbbb2266": {
@@ -1052,7 +1136,7 @@ Field Name | Type | Description
 <a name="responseDescription"></a>Description | `string` | **Optional**<br/>Description of the response.
 
 
-#### <a name="withObject"></a>With [Added in 2.1]
+#### <a name="withObject"></a>With
 
 The 'with' object contains a series of objects. For sake of clarity, we have organised those objects under 5 different blocks:
 
@@ -1066,7 +1150,7 @@ Block Name |  Description
 
 Please read following sections for details on the content of each blocks of objects.
 
-#### <a name="withSimpleValueObject"></a>withSimpleValue [Added in 2.1]
+#### <a name="withSimpleValueObject"></a>withSimpleValue
 
 ```json
 
@@ -1091,7 +1175,7 @@ Field Name | Type | Description
 <a name="withSimpleValueDate">Date</a> | `string` | **Optional**<br/>date to be computed in the following format YYYYMMDD. Can also be a compute instruction like TODAY, YESTERDAY.
 <a name="withSimpleValueTime">Time</a> | `string` | **Optional**<br/>Time in timestampUTC. Can also be a compute instruction like NOW.
 
-#### <a name="withReferencedValueObject"></a>withReferencedValue [Added in 2.1]
+#### <a name="withReferencedValueObject"></a>withReferencedValue
 
 ```json
 "with": {
@@ -1118,7 +1202,7 @@ Field Name | Type | Description
 
 Note that This and Last are mutually exclusive.
 
-#### <a name="withRangeObject"></a>withRange [Added in 2.1]
+#### <a name="withRangeObject"></a>withRange
 
 ```json
 "32": {
@@ -1138,7 +1222,7 @@ Field Name | Type | Description
 <a name="withRangeMin">Min</a> | [with](#withObject) | **Optional**<br/>Min value of this field - used for integer fields.
 <a name="withRangeMax">Max</a> | [with](#withObject) | **Optional**<br/>Max value of this field - used for integer fields.
 
-#### <a name="withMathObject"></a>withMath [Added in 2.1]
+#### <a name="withMathObject"></a>withMath
 
 ```json
 "6": {
@@ -1190,7 +1274,7 @@ Field Name | Type | Description
 <a name="withMathDivideDenominator">Denominator</a> | [with](#withObject) | **Required**<br/>Denominator of the divide operation.
 
 
-#### <a name="withIfObject"></a>withIf [Added in 2.1]
+#### <a name="withIfObject"></a>withIf
 
 ```json
 "31": {
