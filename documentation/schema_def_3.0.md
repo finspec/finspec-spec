@@ -918,7 +918,7 @@ Field Name | Type | Description
 ---|:---:|---
 <a name="exampleName"></a>name | `string` | **Optional**<br/>Example name or title.
 <a name="exampleRaw"></a>raw | `string` | **Optional**<br/>Actual example of a **complete** message (not just a fragement of it). Note that this should be plain text and not HTML. 
-<a name="exampleExample"></a>example | `string` | **Optional**<br/>A more user-friendly display, intended to allow users to understand the example more clearly, perhaps by only liksting certain fields/values of interest. May contain HTML.
+<a name="exampleExample"></a>example | `string` | **Optional**<br/>A more user-friendly display, intended to allow users to understand the example more clearly, perhaps by only listing certain fields/values of interest. May contain HTML.
 <a name="exampleDescription"></a>description | `string` | **Required**<br/>Description (or purpose) of the example. May contain HTML.
 
 Each (sub-)object within the examplesObject may contain [vendor extensions](#vendorExtensions), but the top-level examplesObject may not.
