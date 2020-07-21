@@ -2,17 +2,17 @@
 
 ## Change log
 
-A number of important innovations have been introduced to this version. In no particular order, these include:
+Several important innovations have been introduced to this version. In no particular order, these include:
 
 *  A new, optional `layout` section to capture presentation ordering of elements: [Layout](#layoutArray)
 *  Ability to flexibly embed field tables and examples within message presentations using custom HTML tags
 *  Changes to examples array, making them global and differentiating raw versus illustrative examples. 
-*  Ablity to control the positioning of fields and examples within HTML descriptive sections.
+*  Ability to control the positioning of fields and examples within HTML descriptive sections.
 
 
 ## Format
 
-The files describing the APIs in accordance with the FinSpec specification are represented as JSON objects and conform to the JSON standards.
+The files describing the APIs per the FinSpec specification are represented as JSON objects and conform to the JSON standards.
 
 All identifiers in the specification are **case sensitive**.
 
@@ -20,18 +20,18 @@ The schema exposes two types of fields. Fixed fields, which have a declared name
 
 ### Note On Descriptive Text [New in 3.0]
 
-The FinSpec project aims to accomodate the need for both machine-readable and human-readable API documentation. This requires a careful balance between highly-structured, machine-readable elements, and more loosely-structured descriptive elements designed for humans (typically HTML descriptions).
+The FinSpec project aims to accommodate the need for both machine-readable and human-readable API documentation. This requires a careful balance between highly-structured, machine-readable elements, and more loosely-structured descriptive elements designed for humans (typically HTML descriptions).
 
 In particular, machines will require fast, look-up access to structured elements such as field arrays, whereas human authors like to surround field lists with explanatory, descriptive text.
 
-To accomodate this, FinSpec 3.0 defines additional custom HTML tags which to be carried in selected HTML description fields, allowing fine-grained control over how field lists and examples are positioned within other descriptive elements.
+To accommodate this, FinSpec 3.0 defines additional custom HTML tags which to be carried in selected HTML description fields, allowing fine-grained control over how field lists and examples are positioned within other descriptive elements.
 
 Custom HTML Tag   | Description | Available In
 -------------|----------------------|------------
 `<finspec-fields><finspec-fields>` | An instruction to insert a table representing the list of fields (described in the same Fieldset) as a block-level HTML div at that point. | [Fieldset](#fieldsetObject), [FieldsetWithContext](#fieldsetWithContextObject)
 `<finspec-example data-ref="example_key"><finspec-example>` | An instruction to insert the (globally-defined) example object with the indicated key as a block-level HTML div at that point. | [Datatype](#datatypeObject), [InfoSection](#infoSectionObject), [Fieldset](#fieldsetObject), [FieldsetWithContext](#fieldsetWithContextObject)
 
-The use of these custom HTML tags is optional. HTML description sections which do not contain these elements should be intepretted as requesintg that any relevant field table and examples directly follow after the relevant HTML description. 
+The use of these custom HTML tags is optional. HTML description sections which do not contain these elements should be intepreted as an instruction to insert and relevant field table and examples directly after the relevant HTML description. 
 
 
 ## File Structure
@@ -214,7 +214,7 @@ The Protocol object may contain [vendor extensions](#vendorExtensions).
 }
 ```
 
-An optional block providing a description of changes in this, and prior, spec versions.
+An optional block describing changes in this, and prior, spec versions.
 
 Field Name | Type | Description
 ---|:---:|---
@@ -240,7 +240,7 @@ The Changes object may contain [vendor extensions](#vendorExtensions).
 }
 ```
 
-An optional block providing a description of changes in this, and prior, spec versions.
+An optional block describing changes in this, and prior, spec versions.
 
 Field Name | Type | Description
 ---|:---:|---
@@ -287,7 +287,7 @@ The History object may contain [vendor extensions](#vendorExtensions).
 }
 ```
 
-Describes type of data stored in the field value of the API.
+Describes the type of data stored in the field value of the API.
 
 Field Name | Type | Description
 ---|:---:|---
@@ -392,9 +392,9 @@ Both the (top-level) Navigation object and the (lowest-level) NavItemsArray obje
 }
 ```
 
-The layout object is designed to capture the intended layout of messages when presented either in print format (eg PDF), or as single-page documentation online.
+The layout object is designed to capture the intended layout of messages when presented either in print format (eg PDF) or as single-page documentation online.
 
-The top-level `layout` array contains one or more "section" objects, each representing a distinct segment of a document. And each "section" object can indicate a series of pages which - in turn - links to one or more messages described elsewhere in the FinSpec. Much the same as in Word, section objects can indicate an orientation of either portrait or landscape to control presentation. Pages can point to one or more messages within should be understood to have an implicit page break when output to Word or PDF. 
+The top-level `layout` array contains one or more "section" objects, each representing a distinct segment of a document. And each "section" object can indicate a series of pages which - in turn - links to one or more messages described elsewhere in the FinSpec. Much the same as in Word, section objects can indicate an orientation of either portrait or landscape to control the presentation. Pages can point to one or more messages within should be understood to have an implicit page break when output to Word or PDF. 
 
 At both the section and page level, it is possible to include `prepend` and `append` HTML sections to add additional information that is perhaps not directly relevant for messages.  
 
@@ -463,7 +463,7 @@ The `layout`, `section` and `pageArray` objects may contain [vendor extensions](
 
 A list of re-useable blocks (or components) used in the messages in the API specification. From FinSpec Schema v2.0, this is a keyed JSON fragment, with each block's key being a unique reference to that block for reference in other fieldsets. While we recommend using random keys here, your implementation may allow other keys such as slugged names. Each block (eg `block_1` in the example here) represents a [FieldSet](#fieldSetObject).
 
-**IMPORTANT** It is NOT assumed that these JSON keys are maintained across specification versions; for example if you choose to set the key equal to a slugged name then this key will "break" should you ever change the block name. For this reason, the `historyKey` attribute is used to maintain a consistent identifier across specification versions. It is `historyKey` and not JSON key that should therefore be used in comparison logic.
+**IMPORTANT** It is NOT assumed that these JSON keys are maintained across specification versions; for example, if you choose to set the key equal to a slugged name then this key will "break" should you ever change the block name. For this reason, the `historyKey` attribute is used to maintain a consistent identifier across specification versions. It is `historyKey` and not JSON key that should, therefore, be used in comparison logic.
 
 The Blocks object may **not** contain vendor extensions.
 
@@ -519,7 +519,7 @@ Field Name | Type | Description
 <a name="messagesTechnical"></a>technical | [Fieldset](#fieldsetObject) | **See note below**<br/>List of session and application-level e.g. Logon, Heartbeat, etc.
 <a name="messagesFunctional"></a>functional | [FieldsetWithContext](#fieldsetWithContextObject) | **Optional**<br/>List of functional messages, describing technical messages within a given context.
 
-**NOTE** In order to pass validation, a specification must contain either the `info` or `technical` sections (or both).
+**NOTE** To pass validation, a specification must contain either the `info` or `technical` sections (or both).
 
 For those upgrading from 1.x schema versions, note that the `session` and `application` blocks have now been removed in favour of a single `technical` block, combined with a new `isSession` attribute at the individual message level. Note also that the JSON messages lists within a given block are keyed JSON fragments, as opposed to simple arrays under 1.x.
 
@@ -603,9 +603,9 @@ The Fieldset object may contain [vendor extensions](#vendorExtensions).
 ```
 
 A functional view describes a message within a particular business context. Common use cases for functional views include:
-- Views differenting state (eg Order Acknowledgement vs Execution)
-- Views differenting order types (eg Limit Order vs VWAP)
-- Views differenting asset class (eg Spot FX Order vs FX Forward Order)
+- Views differentiating state (eg Order Acknowledgement vs Execution)
+- Views differentiating order types (eg Limit Order vs VWAP)
+- Views differentiating asset class (eg Spot FX Order vs FX Forward Order)
 
 
 Field Name | Type | Description
@@ -721,13 +721,13 @@ The Context object may contain [vendor extensions](#vendorExtensions).
 }
 ```
 
-Array of fields to be present in a given fieldset (message or block).
+An array of fields to be present in a given fieldset (message or block).
 
 Each field entry takes one of two forms:
 - A reference to a block defined elsewhere using the `blockKey` reference, or
 - An individual field defined in the fieldset.
 
-**IMPORTANT** Re-used header and trailer blocks MUST be explicitly referenced within `fields` arrays just like any other block. There is no "assumption" of their presence based on protocol. (This requirement allows FinSpec to support the definition of multiple header / trailer blocks, with flexibility for authors to indicate the correct choice for a given fieldset).
+**IMPORTANT** Re-used header and trailer blocks MUST be explicitly referenced within `fields` arrays just like any other block. There is no "assumption" of their presence based on protocol. (This requirement allows FinSpec to support the definition of multiple header/trailer blocks, with flexibility for authors to indicate the correct choice for a given fieldset).
 
 Field Name | Type | Description
 ---|:---:|---
@@ -848,7 +848,7 @@ The BitsArray object may contain [vendor extensions](#vendorExtensions).
 
 A simple array of conditions, **each of which should be evaluated in turn and the loop exited when the first evaluates to true**. See below for a description of condition grammar.
 
-**NOTE** In order for conditions to be examined, `alwaysRequired` should be set to `false` on the parent field, to avoid the parent field always being considered mandatory.
+**NOTE** For conditions to be examined, `alwaysRequired` should be set to `false` on the parent field, to avoid the parent field always being considered mandatory.
 
 Field Name | Type | Description
 ---|:---:|---
@@ -881,11 +881,11 @@ Field 44 must NOT be present
 ($2_OrderQty > 100)
 ```
 
-In simple terms, it's a conditional expression used in if statements which evaluates to true or false.
+In simple terms, it's a conditional expression used in if statements which evaluate to true or false.
 
-For tag values based APIs, value of the tag is expressed as: `$<wireId>` e.g. $40
+For tag values based APIs, the value of the tag is expressed as: `$<wireId>` e.g. $40
 
-For others e.g. native APIs, value of field is expressed as: `$<position>_<name>` e.g. $2_Price
+For others e.g. native APIs, the value of a field is expressed as: `$<position>_<name>` e.g. $2_Price
 
 Tokens that can be used in condition expression are:
 
@@ -940,7 +940,7 @@ Each (sub-)object within the examplesObject may contain [vendor extensions](#ven
 }
 ```
 
-A simple array of noted associated with a document / fieldset / field (depending on where the array appears).
+A simple array of noted associated with a document/fieldset/field (depending on where the array appears).
 
 Field Name | Type | Description
 ---|:---:|---
@@ -1019,7 +1019,7 @@ Field Name | Type | Description
 <a name="isFinal"></a>isFinal | `boolean` | **Required**<br/>Is this a final state? Can not transition to any further state.
 <a name="stateisDefaultError"></a>isDefaultError | `boolean` | **Optional (default to `FALSE`)**<br/>Is this the default state/message for rejection
 
-**NOTE:** Within a state objects, it is expected that exactly one state is marked as `isInitial`, and a second state is marked as `isFinal`.
+**NOTE:** Within state objects, it is expected that exactly one state is marked as `isInitial`, and a second state is marked as `isFinal`.
 
 
 ### <a name="eventObject"></a>event
@@ -1138,7 +1138,7 @@ Field Name | Type | Description
 
 #### <a name="withObject"></a>With
 
-The 'with' object contains a series of objects. For sake of clarity, we have organised those objects under 5 different blocks:
+The 'with' object contains a series of objects. For the sake of clarity, we have organised those objects under 5 different blocks:
 
 Block Name |  Description
 ---|---
@@ -1148,7 +1148,7 @@ Block Name |  Description
 [withMath](#withMathObject) | Objects used to define the operators to compute the value of the tag.
 [withIf](#withIfObject) | Objects used to define the conditions to compute the value of the tag.
 
-Please read following sections for details on the content of each blocks of objects.
+Please read the following sections for details on the content of each block of objects.
 
 #### <a name="withSimpleValueObject"></a>withSimpleValue
 
