@@ -1,6 +1,6 @@
 {
-    "title": "A JSON Schema for FinSpec v2.1.",
-    "id": "https://fixspec.com/finspec/v2.1/schema.json#",
+    "title": "A JSON Schema for FinSpec v3.0.",
+    "id": "https://fixspec.com/finspec/v3.0/schema.json#",
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
     "required": [
@@ -21,7 +21,7 @@
         "finspec": {
             "type": "string",
             "enum": [
-                "2.1"
+                "3.0"
             ],
             "description": "The FinSpec version of this document."
         },
@@ -46,6 +46,15 @@
         "nav": {
             "$ref": "#/definitions/nav"
         },
+        "layout": {
+            "$ref": "#/definitions/layout"
+        },
+        "transforms": {
+            "$ref": "#/definitions/transformsArray"
+        },
+        "example": {
+            "$ref": "#/definitions/examples"
+        },        
         "notes": {
             "$ref": "#/definitions/notesArray"
         },
@@ -422,7 +431,12 @@
                     "description": "Description/remark for this type."
                 },
                 "examples": {
-                    "$ref": "#/definitions/exampleArray"
+                    "type": "array",
+                    "description": "Array of simple, text examples.",
+                    "minItems": 1,
+                    "items": {
+                        "type": "string"
+                    }
                 }
             },
             "patternProperties": {
@@ -576,8 +590,13 @@
                         "both"
                     ]
                 },
-                "examples" : {
-                    "$ref": "#/definitions/exampleArray"
+                "examples": {
+                    "type": "array",
+                    "description": "Array of keys referring to entries in the global examplesObject.",
+                    "minItems": 1,
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "notes": {
                     "$ref": "#/definitions/notesArray"
@@ -644,8 +663,13 @@
                         "both"
                     ]
                 },
-                "examples" : {
-                    "$ref": "#/definitions/exampleArray"
+                "examples": {
+                    "type": "array",
+                    "description": "Array of keys referring to entries in the global examplesObject.",
+                    "minItems": 1,
+                    "items": {
+                        "type": "string"
+                    }
                 },
                 "notes": {
                     "$ref": "#/definitions/notesArray"
@@ -798,10 +822,10 @@
                 "description"
             ],
             "properties" : {
-                "expressionType": {
+                "lang": {
                     "type": "string",
                     "description": "Type of grammar used in expression field. Default: groovy.",
-                    "enum": ["jsep", "javascript", "groovy"]
+                    "enum": ["javascript", "groovy"]
                 },
                 "expression": {
                     "type": "string",
@@ -814,39 +838,6 @@
             },
             "description": "Description of the message context.",
             "additionalProperties": false,
-            "patternProperties": {
-                "^x-": {
-                    "$ref": "#/definitions/vendorExtension"
-                }
-            }
-        },
-        "exampleArray": {
-            "type": "array",
-            "minItems": 1,
-            "uniqueItems": true,
-            "items" : {
-                "$ref": "#/definitions/example"
-            },
-            "description": "List of examples.",
-            "additionalProperties": false
-        },
-        "example": {
-            "type": "object",
-            "description": "An example of an object, such as a field or fieldset.",
-            "required": [
-                "description"
-            ],
-            "additionalProperties": false,
-            "properties": {
-                "example": {
-                    "type": "string",
-                    "description": "Actual example."
-                },
-                "description": {
-                    "type": "string",
-                    "description": "Description (or purpose) of the example."
-                }
-            },
             "patternProperties": {
                 "^x-": {
                     "$ref": "#/definitions/vendorExtension"
@@ -946,10 +937,10 @@
                     "type": "string",
                     "description": "Decription of the condition rule."
                 },
-                "expressionType": {
+                "lang": {
                     "type": "string",
                     "description": "Type of grammar used in expression field.",
-                    "enum": [ "jsep", "javascript", "groovy"]
+                    "enum": ["javascript", "groovy"]
                 },
                 "expression": {
                     "type": "string",
@@ -1070,6 +1061,127 @@
                 }
             }
         },
+        "layout": {
+            "type": "array",
+            "minItems": 1,
+            "description": "A logical section within the document (equivalent to a section within a word processing document",
+            "properties": {
+                "prepend": {
+                    "type": "string",
+                    "description": "HTML content to be output before any pages in this section."
+                },
+                "append": {
+                    "type": "string",
+                    "description": "HTML content to be output after all pages in this section."
+                },
+                "orientation": {
+                    "type": "string",
+                    "description": "The page orientation used for Word/PDF. Default is portrait.",
+                    "enum": [
+                        "portrait",
+                        "landscape" 
+                    ]
+                },
+                "pages": {
+                    "type": "array",
+                    "minItems": 1,                    
+                    "description": "An array of pages contained in this section. Each page ends with an implicit page break.",
+                    "$ref": "#/definitions/layoutPage"
+                }
+            },
+            "additionalProperties": false,
+            "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        }, 
+        "layoutPage": {
+            "type": "object",
+            "description": "A sub-section within a document which ends with an explicit page break. This may extend over multiple printed pages.",
+            "properties": {
+                "prepend": {
+                    "type": "string",
+                    "description": "HTML content to be output before any messages on this page."
+                },
+                "append": {
+                    "type": "string",
+                    "description": "HTML content to be output after all messages on this page."
+                },
+                "messages": {
+                    "type": "array",
+                    "description": "An ordered array of message references which should be displayed on this page.",
+                    "$ref": "#/definitions/layoutPageMessage"
+                }
+            },
+            "additionalProperties": false,
+            "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        },
+        "layoutPageMessage": {
+            "type": "object",
+            "description": "A reference object to a message described within this FinSpec.",
+            "required": [
+                "type",
+                "key"
+            ],
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "The type of message to be output.",
+                    "enum": [
+                        "info",
+                        "block",
+                        "technical",
+                        "functional"
+                    ]
+                },
+                "key": {
+                    "type": "string",
+                    "description": "The unique reference for this message."
+                }
+            },
+            "additionalProperties": false,
+            "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        },
+        "examples": {
+            "type": "object",
+            "description": "A keyed array of examples (of various types) that can be referenced elsewhere in the FinSpec.",
+            "required": [
+                "description"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "Example name or title. Plain text only."
+                },
+                "raw": {
+                    "type": "string",
+                    "description": "Actual example of a complete message (not just a fragement of it). Plain text only."
+                },
+                "example": {
+                    "type": "string",
+                    "description": "User-friendly HTML intended to let users understand the example more clearly, for example by only listing certain fields/values of interest."
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Description (or purpose) of the example. May contain HTML."
+                }               
+            },
+            "additionalProperties": false,
+            "patternProperties": {
+                "^x-": {
+                    "$ref": "#/definitions/vendorExtension"
+                }
+            }
+        }, 
         "workflows": {
             "type": "object",
             "description": "Description of the specific business case modelled in the workflow.",
@@ -1469,22 +1581,131 @@
             "items": [
                 {
                     "type" : "object",
-                    "required": [ "note", "created_by_text", "updated_at"],
+                    "required": [ "note", "createdByText", "updatedAt"],
                     "properties": {
                         "note" : {
                             "type" : "string",
                             "description": "A HTML or text note content."
                         },
-                        "created_by_text" : {
+                        "createdByText" : {
                             "type" : "string",
                             "description": "User who created the note"
                         },
-                        "updated_at" : {
+                        "updatedAt" : {
                             "type" : "string",
                             "description": "Time the note was last updated in YYYY-MM-DD HH:mm:SS format"
                         }
                     },
                     "additionalProperties": true
+                }
+            ]
+        },
+        "transformsArray": {
+            "description": "An array of transformations to be performed by the receiving application",
+            "additionalProperties": false,
+            "type": "array",
+            "items": [
+                {
+                    "type": "object",
+                    "required": [
+                        "actions"
+                    ],
+                    "properties": {
+                        "scope": {
+                            "$ref": "#/definitions/transformScope"
+                        },
+                        "actions": {
+                            "$ref": "#/definitions/transformActionArray"
+                        }
+                    },
+                    "additionalProperties": true
+                }
+            ]
+        },
+        "transformScope": {
+            "description": "Used to filter the scope of the transform to messages which match the scope.",
+            "additionalProperties": true,
+            "type": "object",
+            "properties": {
+                "type": {
+                    "description": "Used to identify the type of messages on which to perform the action.",
+                    "type": "string",
+                    "enum": [
+                        "block",
+                        "technical",
+                        "functional"
+                    ]
+                },
+                "key": {
+                    "description": "The relevant unique key for the block / message targetted by this transformation.",
+                    "type": "string"
+                }, 
+                "direction": {
+                    "description": "The direction of the message.",
+                    "type": "string",
+                    "enum": [
+                        "in",
+                        "out",
+                        "both"
+                    ]                    
+                },
+                "lang": {
+                    "description": "Language used for the `condition` field. Default of `groovy`",
+                    "type": "string",
+                    "enum": [
+                        "groovy",
+                        "javascript"
+                    ]
+                },   
+                "condition": {
+                    "description": "An expression evaluating to a boolean, where tag numbers are prefixed with the '$' sign.",
+                    "type": "string"
+                } 
+            }
+        },
+        "transformActionArray": {
+            "description": "An array of transformation actions that should be performed (in the order of intended application) on scoped messages.",
+            "additionalProperties": false,
+            "type": "array",
+            "items": [
+                {
+                    "type": "object",
+                    "required": [
+                        "type"
+                    ],
+                    "properties": {
+                        "type": {
+                            "description": "Identifies the type of action to be performed.",
+                            "type": "string",
+                            "enum": [
+                                "drop",
+                                "store",
+                                "expression",
+                                "plugin"
+                            ]
+                        },
+                        "tag": {
+                            "description": "The tag to be dropped for `drop` types. Ignored for any other `type`.",
+                            "type": "string"
+                        },
+                        "uid": {
+                            "description": "An expression to generate a unique index for the sotrage of The tag to be dropped for `drop` types. Ignored for any other type.",
+                            "type": "string"
+                        },
+                        "lang": {
+                            "description": "Language used for the `expression` field. Default of `groovy`",
+                            "type": "string",
+                            "enum": [
+                                "groovy",
+                                "javascript"
+                            ]
+                        },
+                        "expression": {
+                            "description": "An expression to manipulate a field in a message, set or retrieve a $UID from storage, or to a call to an external plugin.",
+                            "type": "string"
+                        },
+                        "additionalProperties": true
+                    }
                 }
             ]
         }
