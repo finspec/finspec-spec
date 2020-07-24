@@ -28,6 +28,7 @@ Version | Date | Notes | Guide
 [0.2] | 2016-03-16 | Datatypes related enhancements. Added conditions block to field. | (Retired)
 [0.1] | 2016-01-06 | Initial release of FinSpec Specification. | (Retired)
 
+
 ## Schema Validation
 
 We *STRONGLY* recommend validating FinSpec schema validation prior to deployment or sharing with counterparties. You can find FinSpec Schema validator [here](https://github.com/finspec/finspec-validator).
