@@ -8,24 +8,26 @@ Our hope is that the specification will allow both humans and computers to disco
 
 ## Versioning
 
-The current version of the FinSpec specification is 2.1: To read more about the schema definition: [Get Started](https://github.com/finspec/finspec-spec/blob/master/schemas/v2.1/schema.json).
+The current version of the FinSpec specification is 3.0: To read more about the schema definition: [Get Started](https://github.com/finspec/finspec-spec/blob/master/schemas/v3.x/3-0-schema.json).
 
-FinSpec schema versions in the 2.x series are actively supported. 1.x versions are now deprecated, while support for 0.x versions is now withdrawn.
+FinSpec schema versions 3.x are actively supported. Schema versions in the 2.x range are no longer actively developed, but will be supported by FixSpec until the end of 2020. All prior versions are no longer supported.
 
-We would **strongly recommend** upgrading to 2.1 as soon as possible. Please contact happytohelp@fixspec.com for (free) assistance to upgrade schema version.
+We would **strongly recommend** upgrading to 3.0 as soon as possible. Please contact happytohelp@fixspec.com for (free) assistance to upgrade schema version.
 
 ### Revision History
 
-Version | Date | Notes
---- | --- | ---
-[[2.1](https://github.com/finspec/finspec-spec/blob/master/schemas/v2.1/schema.json)] | 2019-01-18 | Update to workflow schema.
-[[2.0](https://github.com/finspec/finspec-spec/blob/master/schemas/v2.0/schema.json)] | 2018-06-27 | Support for navigation and history keys. Extended block (component) support. Retire 0.x versions.
-[1.2] | 2018-02-14 | Support for machine readable bit fields.
-[1.1] | 2017-03-10 | Support for functional (context-specific) messages.
-[1.0] | 2017-02-28 | Enhanced protocol metadata, informational messages and change history.
-[0.3] | 2016-04-29 | Add support for finite state machine workflow.
-[0.2] | 2016-03-16 | Datatypes related enhancements. Added conditions block to field.
-[0.1] | 2016-01-06 | Initial release of FinSpec Specification.
+Version | Date | Notes | Guide
+--- | --- | --- | ---
+[[3.0](https://github.com/finspec/finspec-spec/blob/master/schemas/v3.x/3-0-schema.json)] | 2020-07-24 | Layout and Transform extensions. | [[Link](https://github.com/finspec/finspec-spec/-/blob/master/documentation/schema_def_3.0.md)]
+[[2.1](https://github.com/finspec/finspec-spec/blob/master/schemas/v2.1/schema.json)] | 2019-01-18 | Update to workflow schema. | [[Link](https://github.com/finspec/finspec-spec/-/blob/master/documentation/schema_def_2.1.md)]
+[[2.0](https://github.com/finspec/finspec-spec/blob/master/schemas/v2.0/schema.json)] | 2018-06-27 | Support for navigation and history keys. Extended block (component) support. Retire 0.x versions. | [[Link](https://github.com/finspec/finspec-spec/-/blob/master/documentation/schema_def_2.0.md)]
+[1.2] | 2018-02-14 | Support for machine readable bit fields. | (Retired)
+[1.1] | 2017-03-10 | Support for functional (context-specific) messages. | (Retired)
+[1.0] | 2017-02-28 | Enhanced protocol metadata, informational messages and change history. | (Retired)
+[0.3] | 2016-04-29 | Add support for finite state machine workflow. | (Retired)
+[0.2] | 2016-03-16 | Datatypes related enhancements. Added conditions block to field. | (Retired)
+[0.1] | 2016-01-06 | Initial release of FinSpec Specification. | (Retired)
+
 
 ## Schema Validation
 
@@ -33,7 +35,7 @@ We *STRONGLY* recommend validating FinSpec schema validation prior to deployment
 
 ## License
 
-Copyright 2019 FixSpec Limited
+Copyright 2020 FixSpec Limited
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

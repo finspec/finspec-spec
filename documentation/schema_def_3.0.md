@@ -1,25 +1,41 @@
-# Schema Definition v2.1
+# Schema Definition v3.0
 
 ## Change log
 
-A few minor changes have been introduced to this version. In no particular order, these include:
+Several important innovations have been introduced to this version. In no particular order, these include:
 
-* `nav` section becomes a mandatory element of the schema: [Nav](#navObject)
-*  Add `key` as optional attribute for the fields block: [Field](#fieldObject)
-*  Various adjustments to the workflow schema 2.0: [Workflow](#workflowsObject)
-*  Support for document, message and field-level notes [NotesArray](#notesArray)
+*  A new, optional `layout` section to capture presentation ordering of elements: [Layout](#layoutArray)
+*  Ability to flexibly embed field tables and examples within message presentations using custom HTML tags
+*  Changes to examples array, making them global and differentiating raw versus illustrative examples. 
+*  Ablity to control the positioning of fields and examples within HTML descriptive sections.
+*  A new, optional `transforms` section to capture expected logic for message transformations by the receiving application: [Transforms](#transformsArray).
+*  Change to `createdByText` and `updatedAt` in [Notes](#notesArray)to ensure consistent camel-case naming convention.
+*  Addition of JavaScript as permitted expression language (in addtion to Groovy), with corresponding changes to various condition blocks.
 
----
 
 ## Format
 
-The files describing the APIs in accordance with the FinSpec specification are represented as JSON objects and conform to the JSON standards.
+The files describing the APIs per the FinSpec specification are represented as JSON objects and conform to the JSON standards.
 
 All identifiers in the specification are **case sensitive**.
 
 The schema exposes two types of fields. Fixed fields, which have a declared name, and Patterned fields, which declare a regex pattern for the field name. Patterned fields can have multiple occurrences as long as each has a unique name.
 
----
+### Note On Descriptive Text [New in 3.0]
+
+The FinSpec project aims to accommodate the need for both machine-readable and human-readable API documentation. This requires a careful balance between highly-structured, machine-readable elements, and more loosely-structured descriptive elements designed for humans (typically HTML descriptions).
+
+In particular, machines will require fast, look-up access to structured elements such as field arrays, whereas human authors like to surround field lists with explanatory, descriptive text.
+
+To accommodate this, FinSpec 3.0 defines additional custom HTML tags which to be carried in selected HTML description fields, allowing fine-grained control over how field lists and examples are positioned within other descriptive elements.
+
+Custom HTML Tag   | Description | Available In
+-------------|----------------------|------------
+`<finspec-fields><finspec-fields>` | An instruction to insert a table representing the list of fields (described in the same Fieldset) as a block-level HTML div at that point. | [Fieldset](#fieldsetObject), [FieldsetWithContext](#fieldsetWithContextObject)
+`<finspec-example data-ref="example_key"><finspec-example>` | An instruction to insert the (globally-defined) example object with the indicated key as a block-level HTML div at that point. | [Datatype](#datatypeObject), [InfoSection](#infoSectionObject), [Fieldset](#fieldsetObject), [FieldsetWithContext](#fieldsetWithContextObject)
+
+The use of these custom HTML tags is optional. HTML description sections which do not contain these elements should be intepreted as an instruction to insert and relevant field table and examples directly after the relevant HTML description. 
+
 
 ## File Structure
 
@@ -34,7 +50,13 @@ While the FinSpec Specification tries to accommodate most use cases, additional 
 The extensions properties are always prefixed by `"x-"` and can have any valid JSON format value.
 
 <table>
-  <thead><tr><th style="width:20%">Field Pattern</th><th style="width:15%">Type</th><th>Description</th></tr></thead>
+  <thead>
+    <tr>
+        <th style="width:20%">Field Pattern</th>
+        <th style="width:20%">Type</th>
+        <th>Description</th>
+    </tr>
+  </thead>
   <tbody>
     <tr>
       <td><a name="finspecExtensions"></a>^x-</td>
@@ -57,16 +79,19 @@ This is the root document object for the API specification.
 
 Field Name   | Type                                       | Description
 -------------|:------------------------------------------:|-----------------------
-finspec      |`string`                                    | **Required**<br/>Specifies the FinSpec Specification version being used. The value MUST be "2.1".
+finspec      |`string`                                    | **Required**<br/>Specifies the FinSpec Specification version being used. The value MUST be "3.0".
 info         | [Info](#infoObject)                 | **Required**<br/>Provides metadata about the specification. The metadata can be used by the clients if needed.
 protocol     | [Protocol](#protocolObject)         |**Required**<br/>Metadata describing the protocol.
 changes      | [Changes](#changesObject)           | **Optional**<br/>A description of the changes made in this version of the API specification.
 datatypes    | [Datatype](#datatypeObject)         | **Required**<br/>A list of datatypes used in the API specification.
 nav     | [Nav](#navObject)         | **Required**<br/>A proposed UI navigation structure for the API specification.
+layout     | [Layout](#layoutArray)         | **Optional**<br/>[Added in 3.0] A layout object to control the logical presentation of messages in a printed or displayed document.
 blocks | [Blocks](#blocksObject) | **Required if supported by protocol**<br/>A list of common blocks used by the messages in the API specification. e.g. Header, footer, etc.
 messages     | [Messages](#messagesObject)         | **Required**<br/>A list of messages used in the API specification.
+examples     | [Examples](#examplesObject)         | **Optional**<br/>A keyed list of message examples.
 notes     | [Notes](#notesArray)         | **Optional**<br/>An list of notes about the specification as a whole.
-workflows    | [Workflows](#workflowsObject)           | **Optional**<br/>A list of finite state machine style workflow (optional)
+workflows    | [Workflows](#workflowsObject)           | **Optional**<br/>A list of finite state machine style workflow
+transforms    | [Transforms](#transformsArray)           | **Optional**<br/>A list of message-level transformations to be performed by the receiving application
 
 The Root object may contain [vendor extensions](#vendorExtensions).
 
@@ -193,7 +218,7 @@ The Protocol object may contain [vendor extensions](#vendorExtensions).
 }
 ```
 
-An optional block providing a description of changes in this, and prior, spec versions.
+An optional block describing changes in this, and prior, spec versions.
 
 Field Name | Type | Description
 ---|:---:|---
@@ -219,7 +244,7 @@ The Changes object may contain [vendor extensions](#vendorExtensions).
 }
 ```
 
-An optional block providing a description of changes in this, and prior, spec versions.
+An optional block describing changes in this, and prior, spec versions.
 
 Field Name | Type | Description
 ---|:---:|---
@@ -266,7 +291,7 @@ The History object may contain [vendor extensions](#vendorExtensions).
 }
 ```
 
-Describes type of data stored in the field value of the API.
+Describes the type of data stored in the field value of the API.
 
 Field Name | Type | Description
 ---|:---:|---
@@ -280,7 +305,7 @@ Field Name | Type | Description
 <a name="pattern"></a>pattern | `string` | **Optional**<br/>Regular expression to describe the pattern of the value for this datatype.
 <a name="padChar"></a>padChar | `string` | **Optional**<br/>Character used for padding.
 <a name="padSide"></a>padSide | `string` | **Optional**<br/>Whether field value should be padded to left or right. Value MUST be from the list: `"left"` and `"right"`.
-<a name="datatypeExamples"></a>examples | [ExamplesArray](#exampleArray) | **Optional**<br/>Array of examples to explain the datatype.
+<a name="datatypeExamples"></a>examples | `array` | **Optional**<br/>Array of **keys** referring to entries in the global [examplesObject](#examplesObject) which describe this datatype.
 
 
 The Datatype object may contain [vendor extensions](#vendorExtensions).
@@ -322,7 +347,7 @@ The Datatype object may contain [vendor extensions](#vendorExtensions).
 }
 ```
 
-The navigation object (which becomes required with version 2.1) allows the capture of intended UI navigation for a specification; how the author intended messages and information sections to be logically grouped for display. Think of it as the electronic equivalent of a Table Of Contents.
+The navigation object allows the capture of intended UI navigation for a specification; how the author intended messages and information sections to be logically grouped for display. Think of it as the electronic equivalent of a Table Of Contents.
 
 The top-level `nav` object may have up to four sections (but a minimum of one), relating to various content types: `info`, `blocks`, `technical` and `functional`.
 
@@ -336,6 +361,73 @@ Field Name | Type | Description
 <a name="key"></a>key | `string` | **Required**<br/>Unique key linking for the information section or fieldset. Links to the key found in the relevant blocks or messages object.
 
 Both the (top-level) Navigation object and the (lowest-level) NavItemsArray objects may contain [vendor extensions](#vendorExtensions).
+
+
+### <a name="layoutArray"></a>Layout [New in 3.0]
+
+```json
+{
+    "layout": [
+        {
+            "prepend": "<h1>Section Header</h1><p>This is some introductory text for this section that should appear before all pages.</p>",
+            "append": "<p>This text will appear after all pages.</p>",
+            "orientation": "landscape",
+            "pages": [
+                {
+                    "prepend": "<h1>Page Header</h1><p>This text will appear before all messages.</p>",
+                    "append": "<p>This text will appear after all messages.</p>",
+                    "messages": [
+                        {
+                            "type": "info",
+                            "key": "info_item_unique_key"
+                        },
+                        {
+                            "type": "technical",
+                            "key": "technical_message_key"
+                        },
+                        ...
+                    ]
+                },
+                ...                
+            ]
+        },
+        ...
+    ]
+}
+```
+
+The layout object is designed to capture the intended layout of messages when presented either in print format (eg PDF) or as single-page documentation online.
+
+The top-level `layout` array contains one or more "section" objects, each representing a distinct segment of a document. And each "section" object can indicate a series of pages which - in turn - links to one or more messages described elsewhere in the FinSpec. Much the same as in Word, section objects can indicate an orientation of either portrait or landscape to control the presentation. Pages can point to one or more messages within should be understood to have an implicit page break when output to Word or PDF. 
+
+At both the section and page level, it is possible to include `prepend` and `append` HTML sections to add additional information that is perhaps not directly relevant for messages.  
+
+####Section
+
+Field Name | Type | Description
+---|:---:|---
+<a name="prepend"></a>prepend | `string` | **Optional**<br/>HTML content to be output **before** any pages in this section.
+<a name="append"></a>append | `string` | **Optional**<br/>HTML content to be output **after** all pages in this section.
+<a name="orientation"></a>orientation | `string` | **Optional**<br/>The page orientation used for Word/PDF. Valid values as `portrait` and `landscape`. Default is `portrait`.
+<a name="pages"></a>pages | [PageArray](#pageArray) | **Optional**<br/>An array of pages contained in this section. Each page ends with an implicit page break.
+
+#### <a name="pageArray"></a>PageArray
+
+Field Name | Type | Description
+---|:---:|---
+<a name="prepend"></a>prepend | `string` | **Optional**<br/>HTML content to be output **before** any messages on this page.
+<a name="append"></a>append | `string` | **Optional**<br/>HTML content to be output **after** all messages on this page.
+<a name="messages"></a>messages | [PageMessageArray](#pageMessageArray) | **Optional**<br/>An array of references to messages which should appear on this page.
+
+#### <a name="pageMessageArray"></a>PageMessageArray
+
+Field Name | Type | Description
+---|:---:|---
+<a name="type"></a>type | `string` | **Required**<br/>The type of message that this refers to. Valid values are `info`, `block`, `technical` and `functional`.
+<a name="key"></a>key | `string` | **Required**<br/>The unique key reference for the message.
+
+
+The `layout`, `section` and `pageArray` objects may contain [vendor extensions](#vendorExtensions), but entries in the `pageMessageArray` should not contain extensions.
 
 
 ### <a name="blocksObject"></a>Blocks
@@ -375,7 +467,7 @@ Both the (top-level) Navigation object and the (lowest-level) NavItemsArray obje
 
 A list of re-useable blocks (or components) used in the messages in the API specification. From FinSpec Schema v2.0, this is a keyed JSON fragment, with each block's key being a unique reference to that block for reference in other fieldsets. While we recommend using random keys here, your implementation may allow other keys such as slugged names. Each block (eg `block_1` in the example here) represents a [FieldSet](#fieldSetObject).
 
-**IMPORTANT** It is NOT assumed that these JSON keys are maintained across specification versions; for example if you choose to set the key equal to a slugged name then this key will "break" should you ever change the block name. For this reason, the `historyKey` attribute is used to maintain a consistent identifier across specification versions. It is `historyKey` and not JSON key that should therefore be used in comparison logic.
+**IMPORTANT** It is NOT assumed that these JSON keys are maintained across specification versions; for example, if you choose to set the key equal to a slugged name then this key will "break" should you ever change the block name. For this reason, the `historyKey` attribute is used to maintain a consistent identifier across specification versions. It is `historyKey` and not JSON key that should, therefore, be used in comparison logic.
 
 The Blocks object may **not** contain vendor extensions.
 
@@ -431,7 +523,7 @@ Field Name | Type | Description
 <a name="messagesTechnical"></a>technical | [Fieldset](#fieldsetObject) | **See note below**<br/>List of session and application-level e.g. Logon, Heartbeat, etc.
 <a name="messagesFunctional"></a>functional | [FieldsetWithContext](#fieldsetWithContextObject) | **Optional**<br/>List of functional messages, describing technical messages within a given context.
 
-**NOTE** In order to pass validation, a specification must contain either the `info` or `technical` sections (or both).
+**NOTE** To pass validation, a specification must contain either the `info` or `technical` sections (or both).
 
 For those upgrading from 1.x schema versions, note that the `session` and `application` blocks have now been removed in favour of a single `technical` block, combined with a new `isSession` attribute at the individual message level. Note also that the JSON messages lists within a given block are keyed JSON fragments, as opposed to simple arrays under 1.x.
 
@@ -487,7 +579,7 @@ Field Name | Type | Description
 <a name="fieldsetIsHeader"></a>isHeader | `boolean` | **Optional** <br/>Boolean to indicate whether this fieldset represents a common header block. Default is `false`.
 <a name="fieldsetIsTrailer"></a>isTrailer | `boolean` | **Optional** <br/>Boolean to indicate whether this fieldset represents a common trailer block. Default is `false`.
 <a name="fieldsetFields"></a>fields | [Field](#fieldObject) | **Required**<br/> List of fields available within a message.
-<a name="fieldsetExamples"></a>examples | [ExamplesArray](#exampleArray) | **Optional**<br/>List of message examples.
+<a name="fieldsetExamples"></a>examples | `array` | **Optional**<br/>Array of **keys** referring to entries in the global [examplesObject](#examplesObject) which illustrate this Fieldset. Note that by placing entries here, the author is indicating that exaples should be displayed as a list at the end of the message as opposed to embedded within the description.
 <a name="fieldsetNotes"></a>notes     | [Notes](#notesArray)         | **Optional**<br/>An list of notes about this fieldset.
 
 The Fieldset object may contain [vendor extensions](#vendorExtensions).
@@ -502,7 +594,7 @@ The Fieldset object may contain [vendor extensions](#vendorExtensions).
     "direction": "in",
     "description": "...",
     "context": {
-        "expressionType": "groovy",
+        "lang": "groovy",
         "expression": "$40 == '1'",
         "description": "OrdType (40) equals 1 (Market)"
     },
@@ -515,9 +607,9 @@ The Fieldset object may contain [vendor extensions](#vendorExtensions).
 ```
 
 A functional view describes a message within a particular business context. Common use cases for functional views include:
-- Views differenting state (eg Order Acknowledgement vs Execution)
-- Views differenting order types (eg Limit Order vs VWAP)
-- Views differenting asset class (eg Spot FX Order vs FX Forward Order)
+- Views differentiating state (eg Order Acknowledgement vs Execution)
+- Views differentiating order types (eg Limit Order vs VWAP)
+- Views differentiating asset class (eg Spot FX Order vs FX Forward Order)
 
 
 Field Name | Type | Description
@@ -531,7 +623,7 @@ Field Name | Type | Description
 <a name="fieldsetWithContextHistoryKey"></a>historyKey | `string` | **Optional** <br/>Unique, persistent key suitable for linking a fieldset across versions.
 <a name="fieldsetWithContextContext"></a>context | [Context](#contextObject) | **Required**<br/> Digital description of the intended message context.
 <a name="fieldsetWithContextFields"></a>fields | [Field](#fieldObject) | **Required**<br/> List of fields available within a message.
-<a name="fieldsetWithContextExamples"></a>examples | [ExamplesArray](#exampleArray) | **Optional**<br/>List of message examples.
+<a name="fieldsetWithContextExamples"></a>examples | `array` | **Optional**<br/>Array of **keys** referring to entries in the global [examplesObject](#examplesObject) which illustrate this Fieldset. Note that by placing entries here, the author is indicating that exaples should be displayed as a list at the end of the message as opposed to embedded within the description.
 <a name="fieldsetWithContextNotes"></a>notes     | [Notes](#notesArray)         | **Optional**<br/>An list of notes about this message.
 
 The FieldsetWithContext object may contain [vendor extensions](#vendorExtensions).
@@ -541,7 +633,7 @@ The FieldsetWithContext object may contain [vendor extensions](#vendorExtensions
 
 ```json
 {
-    "expressionType": "groovy",
+    "lang": "groovy",
     "expression": "$40 == '1'",
     "description": "OrdType (40) equals 1 (Market)"
 }
@@ -551,14 +643,14 @@ Used to provide a digital description of the context for a functional (context-s
 
 Field Name | Type | Description
 ---|:---:|---
-<a name="contextExpressionType"></a>expressionType| `string` | **Required**<br/>Type of grammar used in expression field. Value MUST be `groovy`, `javascript` or `jsep`. Default: `groovy`.
+<a name="lang"></a>lang| `string` | **Required**<br/>Language used in `expression` field. Options are `groovy` or `javascript`. Default: `groovy`.
 <a name="contextExpression"></a>expression| `string` | **Required**<br/>Expression. The message context is considered to be in effect if this expression evaluates to true.
 <a name="contextDescription"></a>description | `string` | **Required**<br/>Human-readable description of the context.
 
 The Context object may contain [vendor extensions](#vendorExtensions).
 
 
-### <a name="fieldObject"></a>Field [Updated in 2.1]
+### <a name="fieldObject"></a>Field
 
 ```json
 {
@@ -633,19 +725,19 @@ The Context object may contain [vendor extensions](#vendorExtensions).
 }
 ```
 
-Array of fields to be present in a given fieldset (message or block).
+An array of fields to be present in a given fieldset (message or block).
 
 Each field entry takes one of two forms:
 - A reference to a block defined elsewhere using the `blockKey` reference, or
 - An individual field defined in the fieldset.
 
-**IMPORTANT** Re-used header and trailer blocks MUST be explicitly referenced within `fields` arrays just like any other block. There is no "assumption" of their presence based on protocol. (This requirement allows FinSpec to support the definition of multiple header / trailer blocks, with flexibility for authors to indicate the correct choice for a given fieldset).
+**IMPORTANT** Re-used header and trailer blocks MUST be explicitly referenced within `fields` arrays just like any other block. There is no "assumption" of their presence based on protocol. (This requirement allows FinSpec to support the definition of multiple header/trailer blocks, with flexibility for authors to indicate the correct choice for a given fieldset).
 
 Field Name | Type | Description
 ---|:---:|---
 <a name="fieldOffset"></a>offset | `integer` | **Required for offset-based protocols**<br/>Zero-based offset of the field within the message for binary APIs.
 <a name="fieldPosition"></a>position | `integer` | **Optional**<br/>Zero-based position of the field within the message for text/tag-value APIs. Where absent, ordering should be assumed from positioning within the JSON.
-<a name="fieldkey"></a>key | `string` | **Optional**<br/>Unique field identifier. In case the same wire_id appears multiple times in the same message. [Added in 2.1]
+<a name="fieldkey"></a>key | `string` | **Optional**<br/>Unique field identifier. In case the same wire_id appears multiple times in the same message.
 <a name="fieldWireId"></a>wireId | `string` | **Required for tag-value protocols**<br/>Wire identifier for the field (eg tag 35 in FIX).
 <a name="fieldBlockKey"></a>blockKey | `string` | **Required for blocks** <br/>The unique reference for the block from the `blocks` section.
 <a name="fieldDescription"></a>description | `string` | **Optional**<br/>Description of the purpose and use of the field.
@@ -741,14 +833,14 @@ The BitsArray object may contain [vendor extensions](#vendorExtensions).
     "conditions": [
         {
             "label": "PriceOnLimitOrder",
-            "expressionType": "groovy",
+            "lang": "groovy",
             "expression": "($40 == 2)",
             "isReqd": true,
             "isAbsent": false
         },
         {
             "label": "NoPriceOnMarketOrder",
-            "expressionType": "groovy",
+            "lang": "groovy",
             "expression": "($40 == 1)",
             "isReqd": false,
             "isAbsent": true
@@ -760,12 +852,12 @@ The BitsArray object may contain [vendor extensions](#vendorExtensions).
 
 A simple array of conditions, **each of which should be evaluated in turn and the loop exited when the first evaluates to true**. See below for a description of condition grammar.
 
-**NOTE** In order for conditions to be examined, `alwaysRequired` should be set to `false` on the parent field, to avoid the parent field always being considered mandatory.
+**NOTE** For conditions to be examined, `alwaysRequired` should be set to `false` on the parent field, to avoid the parent field always being considered mandatory.
 
 Field Name | Type | Description
 ---|:---:|---
 <a name="conditionLabel"></a>label| `string` | **Required**<br/>Name of the condition rule.
-<a name="conditionExpressionType"></a>expressionType| `string` | **Optional**<br/>Type of grammar used in expression field. Value MUST be `"groovy"` or `"jsep"`. Default: `groovy`.
+<a name="lang"></a>lang| `string` | **Optional**<br/>Language used in `expression` field. Options are `grooy` or `javascript`. Default: `groovy`.
 <a name="conditionExpression"></a>expression| `string` | **Required**<br/>Condition expression. This block will only take effect if this expression evaluates to true.
 <a name="conditionIsReqd"></a>isReqd | `boolean` | **Required**<br/>Field is mandatory in such condition.
 <a name="conditionIsAbsent"></a>isAbsent | `boolean` | **Required**<br/>Field should not be present in such condition.
@@ -793,11 +885,11 @@ Field 44 must NOT be present
 ($2_OrderQty > 100)
 ```
 
-In simple terms, it's a conditional expression used in if statements which evaluates to true or false.
+In simple terms, it's a conditional expression used in if statements which evaluate to true or false.
 
-For tag values based APIs, value of the tag is expressed as: `$<wireId>` e.g. $40
+For tag values based APIs, the value of the tag is expressed as: `$<wireId>` e.g. $40
 
-For others e.g. native APIs, value of field is expressed as: `$<position>_<name>` e.g. $2_Price
+For others e.g. native APIs, the value of a field is expressed as: `$<position>_<name>` e.g. $2_Price
 
 Tokens that can be used in condition expression are:
 
@@ -808,30 +900,32 @@ Tokens that can be used in condition expression are:
 5. In the case of `groovy`, the comparison operator of ==~ may be used to indicate a regular expression.
 
 
-### <a name="exampleArray"></a>ExamplesArray
+### <a name="examplesObject"></a>ExamplesObject [Revised in 3.0]
 
 ```json
 {
-    "examples": [
-        {
+    "examples": {
+        "example_1": {
+            "name": "Market order example",
+            "raw": "8=FIX.4.2|9=69|35=A|34=12|49=SENDER|52=20140228-05:42:38.026|56=TARGET|98=0|108=120|10=238|",
             "example": "8=FIX.4.2|9=69|5=A|34=12|49=SENDER|52=20140228-05:42:38.026|56=TARGET|98=0|108=120|10=238|",
             "description": "Market order example"
         },
         ...
-    ]
+    }
 }
 ```
 
-A simple array of examples associated with the fieldset. While we encourage placing the message example in the `example` attribute itself, this is optional should it be too restrictive for the use case. In such cases, the example should be placed in the `description` instead.
-
-**TIP:** Use the HTML tag `<code>` to format messages nicely.
+A keyed array of examples of various types. This object is placed in the root of the FinSpec document and referred to from within Fieldset objects using the unique key associate with each example. This structure allows examples to be conveniently re-used or shared between different Fieldsets.
 
 Field Name | Type | Description
 ---|:---:|---
-<a name="exampleExample"></a>example | `string` | **Optional**<br/>Actual example.
-<a name="exampleDescription"></a>description | `string` | **Required**<br/>Description (or purpose) of the example.
+<a name="exampleName"></a>name | `string` | **Optional**<br/>Example name or title.
+<a name="exampleRaw"></a>raw | `string` | **Optional**<br/>Actual example of a **complete** message (not just a fragement of it). Note that this should be plain text and not HTML. 
+<a name="exampleExample"></a>example | `string` | **Optional**<br/>A more user-friendly display, intended to allow users to understand the example more clearly, perhaps by only listing certain fields/values of interest. May contain HTML.
+<a name="exampleDescription"></a>description | `string` | **Required**<br/>Description (or purpose) of the example. May contain HTML.
 
-The ExampleArray object may contain [vendor extensions](#vendorExtensions).
+Each (sub-)object within the examplesObject may contain [vendor extensions](#vendorExtensions), but the top-level examplesObject may not.
 
 ---
 
@@ -842,30 +936,159 @@ The ExampleArray object may contain [vendor extensions](#vendorExtensions).
     "notes": [
         {
             "note": "One really interesting fact about this field is...",
-            "created_by_text": "Joe Bloggs",
-            "updated_at": "2019-02-25 14:07:07"
+            "createdByText": "Joe Bloggs",
+            "updatedAt": "2019-02-25 14:07:07"
         },
         ...
     ]
 }
 ```
 
-A simple array of noted associated with a document / fieldset / field (depending on where the array appears).
+A simple array of noted associated with a document/fieldset/field (depending on where the array appears).
 
 Field Name | Type | Description
 ---|:---:|---
 <a name="noteNote"></a>note | `string` | **Required**<br/>The text of the note (may contain HTML).
-<a name="noteCreatedByText"></a>created_by_text | `string` | **Required**<br/>Full name of the person (or process) that created the note.
-<a name="noteUpdatedAt"></a>updated_at | `string` | **Required**<br/>Timestamp of the late update to this note in YYYY-MM-DD HH:mm:ss format.
+<a name="noteCreatedByText"></a>createdByText | `string` | **Required**<br/>Full name of the person (or process) that created the note.
+<a name="noteUpdatedAt"></a>updatedAt | `string` | **Required**<br/>Timestamp of the late update to this note in YYYY-MM-DD HH:mm:ss format.
 
 The NotesArray object may contain [vendor extensions](#vendorExtensions).
 
 ---
 
 
-## <a name="workflows"></a>WorkflowsObject
+## <a name="transformsArray"></a>Transforms [NEW in FinSpec 3.0]
 
-**NOTE** Structure has changed under v2.1.
+```json
+{
+    "transforms": [
+        {
+            "scope": {...},
+            "actions": [
+                ...
+            ]
+        },
+        ...
+    ]
+}
+```
+
+The transforms array provides a list of agreed transformation `actions` to be performed by the receiving application. 
+
+**IMPORTANT**: It is assumed that order in which the transformations are applied will strictly match the order of their appearance within the `transforms` array. Further, it is assumed that the transformation will apply to all tag(s) present which match the indicated scope. For example, an instruction to drop field 555 should be interpreted as an instruction to drop *all* such fields should they appear in multiple places.
+
+Each Transform object is defined as follows:
+
+Field Name | Type | Description
+---|:---:|---
+scope | [Scope](#transformScopeObject) | **Optional (but recommended!)**<br/>Used to filter the scope of the transform to messages which match the scope. Absence of `scope` implies the `actions` should be performed on all messages (both inbound and outbound).
+actions | [Actions](#transformActionsArray) | **Required**<br/>Used to describe the action(s) to be performed on messages which match the `scope`.
+
+Each Transform object may contain [vendor extensions](#vendorExtensions).
+
+## <a name="transformScopeObject"></a>Transform Scope
+
+```json
+{
+    "scope": {
+        "type": "block",
+        "key": "sg563fgd",
+        "direction": "in",
+        "lang": "groovy",
+        "condition": "$55 && $55 != 'VOD'"
+    }
+}
+```
+
+The Scope object filters the set of messages down to those that should have the transformation action applied to them. A given message must satisfy **all** of the indicated conditions in order for it to be considered in-scope.
+
+The object is defined as follows:
+
+Field Name | Type | Description
+---|:---:|---
+type | `string` | **Optional (but recommended!)**<br/>Used to identify the type of messages on which to perform the action. Options are `block`, `technical` or `functional`.
+key | `string` | **Required if `type` present**<br/>The relevant unique key for the block / message targetted by this transformation.
+direction | `string` | **Optional**<br/>The direction of the message. Options are `in`, `out` and `both`.
+lang | `string` | **Optional**<br/>Language used for the `condition` field. Options are `groovy` or `javascript`. Default: `groovy`. 
+condition | `string` | **Optional**<br/>An expression evaluating to a boolean, where tag numbers are prefixed with the '$' sign. 
+
+The Scope object may contain [vendor extensions](#vendorExtensions).
+
+## <a name="transformActionsArray"></a>Transform Actions
+
+```json
+{
+    "actions": [
+        {
+            "type": "drop",
+            "tag": "612"
+        },
+        {
+            "type": "store",
+            "lang": "groovy",            
+            "uid": "$49+'-'+$11",
+            "expression": "$UID = $2000",
+        },
+        {
+            "type": "expression",
+            "lang": "groovy",
+            "expression": "$923 = $89.split(':')[0]"
+        },
+        {
+            "type": "plugin",
+            "expression": "$923 = plugin.yourCommand($923)"
+        }
+        ...
+    ]
+}
+```
+
+The Action object indicates the set of transformation actions that should be performed *in order* on scoped messages.
+
+To permit maximum flexibility, FinSpec defines only four "core" action types, while allowing the full power of JavaScript and Groovy scripting languages to accomodate a wide range of use cases:
+
+Action Type | Description
+---|---|
+`drop` | An instruction to drop one or more field(s) referred to in the `tag` attribute.
+`store` | An instruction to store (or restore) a value to disk for later use, under an index indicated by `$UID`. This is typically used to temporarily remove values from inbound messages and echo them on responses.
+`expression` | Manipulate (or set) a tag equal to an evaluated expression.
+`plugin` | Manipulate (or set) a tag equal to a value returned from a third-party plugin.
+
+
+Each action object has the following attributes:
+
+Field Name | Type | Description
+---|:---:|---
+type | `string` | **Required**<br/>Identifies the type of action to be performed. Options are `drop`, `store`, `expression` or `plugin`.
+tag | `string` | **Required** (`drop` only)<br/>The tag to be dropped for `drop` types. Ignored for any other `type`.
+uid | `string` | **Required** (`store` only)<br/>An expression to generate a unique index for the sotrage of The tag to be dropped for `drop` types. Ignored for any other `type`.
+lang | `string` | **Optional**<br/>Language used in an `expression` type action. Options are `groovy` (default) and `javascript`.
+expression | `string` | **Required** (`store`, `expression`, `plugin` only)<br/>An expression to manipulate a field in a message, set or retrieve a $UID from storage, or to a call to an external plugin. 
+
+Each action object may contain [vendor extensions](#vendorExtensions).
+
+**IMPORTANT** Field references ($ references) are assumed to be strings, and therefore care must be taken with certain mathematical operations such as `+` which both Groovy and JavaScript use for string concatenation. Remember to cast values to numeric equivalents as required.
+
+For convenience, we've listed some common transformation examples below and their corresponding expressions.
+
+|Transformation | Actions
+|---|---|
+Copy field 44 into field 144 | `[{"type": "expression", "expression": "$144=$44"}]`
+Move field 44 into field 144 | `[{"type": "expression", "expression": "$144=$44"},{"type": "drop", "tag": "44"}]`
+Set 1002 equal to the sum of fields 1000 and 1001 | `[{"type": "expression", "expression": "$1002=$1000.toInteger()+$1001.toInteger()"}]`
+Prefix field 180 with the string 'foo:' | `[{"type": "expression", "expression": "$180='foo:'+$180"}]`
+Combine fields 243 and 337 into a field 999 | `[{"type": "expression", "expression": "$999=$243+$337"}]`
+Default field 266 to 'bar' if it isn't set | `[{"type": "expression", "expression": "$266=($266)?$266:'bar'"}]`
+Multiply field 15 is 'GBX' then change to 'GBP' and multiply 44 by 100 | `[{"type": "expression", "expression": "$44=($15=='GBX')?$44*100:$44"},{"type": "expression", "expression": "$15=($15=='GBX')?'GBP':'GBX'"}]`
+Split 1000 into fields 450 and 560 using a delimiter of ':', and then drop 1000 |`[{"type": "expression", "expression": "$450=$1000.split(':')[0]"},{"type": "expression", "expression": "$560=$1000.split(':')[1]"},{"type": "drop", "tag": "1000"}]`
+Store field 890 using a reference derived from fields 49 and 11, and then drop it from the message | `[{"type": "store", "uid": "$49+'-'+$11", "expression": "$UID=$890"},{"type": "drop", "tag": "890"}]`
+Restore a saved value into field 890 using fields 49 and 11 if it isn't already present | `[{"type": "store", "uid": "$49+'-'+$11", "expression": "$890=($890)?$890:$UID"}}]`
+
+
+---
+
+
+## <a name="workflows"></a>WorkflowsObject
 
 ```json
 {
@@ -885,15 +1108,13 @@ The workflows object section is a simple list of workflow objects, each defined 
 
 Field Name | Type | Description
 ---|:---:|---
-<a name="workflowNav"></a>nav | [WorkflowNav](#workflowNavObject) | **Required**<br/>[Added in 2.1] List of individual workflow described in this specifications. Must contain at least 1 workflow.
+<a name="workflowNav"></a>nav | [WorkflowNav](#workflowNavObject) | **Required**<br/>List of individual workflow described in this specifications. Must contain at least 1 workflow.
 <a name="workflowStates"></a>states | [State](#stateObject) | **Required**<br/>list of possible individual states the object (e.g. Orders, Quote) can take in the workflow
-<a name="workflowEvent"></a>event | [Event](#eventMessageObject) | **optional**<br/>[Added in 2.1] List of market related events that trigger or result from a transition.
+<a name="workflowEvent"></a>event | [Event](#eventMessageObject) | **optional**<br/>List of market related events that trigger or result from a transition.
 <a name="workflowTransitions"></a>transitions | [Transition](#transitionObject) | **Required**<br/> Description of transitions (including triggering event - FIX msg - and resulting state)
 
-The IncludeMessageArray have been decommissioned in 2.1.
 
-
-### <a name="workflowNavObject"></a>workflowNav [Added in 2.1]
+### <a name="workflowNavObject"></a>workflowNav
 
 ```json
  "nav": {
@@ -912,7 +1133,7 @@ Field Name | Type | Description
 <a name="workflowDescription"></a>description | `string` | **Required**<br/>Description of the specific workflow being modelled.
 
 
-### <a name="stateObject"></a>State  [Updated in 2.1]
+### <a name="stateObject"></a>State
 
 ```json
 {
@@ -931,14 +1152,12 @@ Field Name | Type | Description
 <a name="statedescription"></a>description | `string` | **Optional**<br/>Description of this specific state
 <a name="isInitial"></a>isInitial | `boolean` | **Required**<br/>Is this an initial state? can not transition from any other state.
 <a name="isFinal"></a>isFinal | `boolean` | **Required**<br/>Is this a final state? Can not transition to any further state.
-<a name="stateisDefaultError"></a>isDefaultError | `boolean` | **Optional (default to `FALSE`)**<br/>Is this the default state/message for rejection [Added in 2.1]
+<a name="stateisDefaultError"></a>isDefaultError | `boolean` | **Optional (default to `FALSE`)**<br/>Is this the default state/message for rejection
 
-State ref object has been removed starting 2.1
-
-**NOTE:** Within a state objects, it is expected that exactly one state is marked as `isInitial`, and a second state is marked as `isFinal`.
+**NOTE:** Within state objects, it is expected that exactly one state is marked as `isInitial`, and a second state is marked as `isFinal`.
 
 
-### <a name="eventObject"></a>event [Added in 2.1]
+### <a name="eventObject"></a>event
 
 ```json
 "MARKET_OPEN": {
@@ -961,10 +1180,10 @@ Field Name | Type | Description
     "description": "Cancellation of an open order",
     "start": ["Order.Acknowledged","Order.PartiallyFilled"],
     "trigger": {
-                    "type": "technical",
-                    "key": "KBfFbiqQ",
-                    "direction": "in"
-        },
+        "type": "technical",
+        "key": "KBfFbiqQ",
+        "direction": "in"
+    },
     "responses": [
         {
             "messageWireId": "9",
@@ -1002,11 +1221,11 @@ Field Name | Type | Description
 ---|:---:|---
 <a name="transitionDescription"></a>description | `string` | **Required**<br/>Description of this transition
 <a name="transitionStart">transitionStart</a>start | `Array` | **Required**<br/>List of states the transition can initiate from.
-<a name="transitionTrigger">trigger</a>trigger | [Trigger](#triggerObject) | **Optional**<br/> Solicited message (Action) required to trigger the transition.[Renamed and Updated in 2.1]
+<a name="transitionTrigger">trigger</a>trigger | [Trigger](#triggerObject) | **Optional**<br/> Solicited message (Action) required to trigger the transition.
 <a name="responses"></a>responses | [Array](#responseObject) | **Required**<br/>List of possible responses: messages with field conditions.
 
 
-#### <a name="triggerObject"></a>Trigger [Renamed and Updated in 2.1]
+#### <a name="triggerObject"></a>Trigger
 
 
 The 'trigger' object is defined by the fields below:
@@ -1017,10 +1236,10 @@ Field Name | Type | Description
 <a name="transitionType"></a>Type | `string` | **Required**<br/>Type of the message serving as a transition. Possible values: "technical", "functional", "event".
 <a name="transitionKey"></a>Key | `string` | **Required**<br/> Reference of the message.
 <a name="transitionDirection"></a>Direction | `string` | **Required**<br/>Direction of the message. Possible values: "In" or "Out"
-<a name="transitionWhere"></a>Where | `string` | **Optional**<br/>Specific field condition in the message, expressed as a `groovy` expression.
+<a name="transitionWhere"></a>Where | `string` | **Optional**<br/>Specific field condition in the message, expressed as a `groovy` or `javascript` expression.
 
 
-#### <a name="responseObject"></a>Response [Updated in 2.1]
+#### <a name="responseObject"></a>Response
 
 ```json
 "bbbb2266": {
@@ -1052,9 +1271,9 @@ Field Name | Type | Description
 <a name="responseDescription"></a>Description | `string` | **Optional**<br/>Description of the response.
 
 
-#### <a name="withObject"></a>With [Added in 2.1]
+#### <a name="withObject"></a>With
 
-The 'with' object contains a series of objects. For sake of clarity, we have organised those objects under 5 different blocks:
+The 'with' object contains a series of objects. For the sake of clarity, we have organised those objects under 5 different blocks:
 
 Block Name |  Description
 ---|---
@@ -1064,9 +1283,9 @@ Block Name |  Description
 [withMath](#withMathObject) | Objects used to define the operators to compute the value of the tag.
 [withIf](#withIfObject) | Objects used to define the conditions to compute the value of the tag.
 
-Please read following sections for details on the content of each blocks of objects.
+Please read the following sections for details on the content of each block of objects.
 
-#### <a name="withSimpleValueObject"></a>withSimpleValue [Added in 2.1]
+#### <a name="withSimpleValueObject"></a>withSimpleValue
 
 ```json
 
@@ -1091,7 +1310,7 @@ Field Name | Type | Description
 <a name="withSimpleValueDate">Date</a> | `string` | **Optional**<br/>date to be computed in the following format YYYYMMDD. Can also be a compute instruction like TODAY, YESTERDAY.
 <a name="withSimpleValueTime">Time</a> | `string` | **Optional**<br/>Time in timestampUTC. Can also be a compute instruction like NOW.
 
-#### <a name="withReferencedValueObject"></a>withReferencedValue [Added in 2.1]
+#### <a name="withReferencedValueObject"></a>withReferencedValue
 
 ```json
 "with": {
@@ -1118,7 +1337,7 @@ Field Name | Type | Description
 
 Note that This and Last are mutually exclusive.
 
-#### <a name="withRangeObject"></a>withRange [Added in 2.1]
+#### <a name="withRangeObject"></a>withRange
 
 ```json
 "32": {
@@ -1138,7 +1357,7 @@ Field Name | Type | Description
 <a name="withRangeMin">Min</a> | [with](#withObject) | **Optional**<br/>Min value of this field - used for integer fields.
 <a name="withRangeMax">Max</a> | [with](#withObject) | **Optional**<br/>Max value of this field - used for integer fields.
 
-#### <a name="withMathObject"></a>withMath [Added in 2.1]
+#### <a name="withMathObject"></a>withMath
 
 ```json
 "6": {
@@ -1190,12 +1409,13 @@ Field Name | Type | Description
 <a name="withMathDivideDenominator">Denominator</a> | [with](#withObject) | **Required**<br/>Denominator of the divide operation.
 
 
-#### <a name="withIfObject"></a>withIf [Added in 2.1]
+#### <a name="withIfObject"></a>withIf
 
 ```json
 "31": {
 	"if": [
 		{
+            "lang": "groovy",            
 			"condition": "$54 == 1",
 			"max": {
 				"last": "44",
@@ -1203,6 +1423,7 @@ Field Name | Type | Description
 			}
 		},
 		{
+            "lang": "groovy",
 			"condition": "$54 != 1",
 			"min": {
 				"last": "44",
@@ -1219,9 +1440,10 @@ Field Name | Type | Description
 ---|:---:|---
 <a name="withIfArray">if</a> | [withIfArray](#withIfArray) | **Required**<br/>Array of conditions used to define the value of a tag - It contains at least 1 object.
 
-The <a name="withIfArray"></a>If is a series of 'Ifcondition' objects defined by the following mandatory 2 objects:
+The <a name="withIfArray"></a>If is a series of 'Ifcondition' objects defined by the following attributes:
 
 Field Name | Type | Description
 ---|:---:|---
-<a name="withIfArrayCondition">Condition</a> | `string` | **Required**<br/>Tag value condition expressed in `groovy` expression.
-<a name="withIfArrayRef">#withObject</a> | [with](#withObject) | **Required**<br/>Resulting value of the tag.
+lang | `string` | **Optional**<br/>The language of the `condition` expression. Options are `groovy` (default) or `javascript`.
+<a name="withIfArrayCondition">Condition</a> | `string` | **Required**<br/>Condition expressed in either `groovy` or `javascript`.
+<a name="withIfArrayRef">withObject</a> | [with](#withObject) | **Required**<br/>Resulting value of the tag.
