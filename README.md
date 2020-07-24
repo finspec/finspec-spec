@@ -18,9 +18,9 @@ We would **strongly recommend** upgrading to 3.0 as soon as possible. Please con
 
 Version | Date | Notes | Guide
 --- | --- | --- | ---
-[[3.0](https://github.com/finspec/finspec-spec/blob/master/schemas/v3.x/3-0-schema.json)] | 2020-07-30 | Layout and Transform extensions. | [[Link](https://gitlab.com/fixspec/finspec-spec/-/blob/master/documentation/schema_def_3.0.md)]
-[[2.1](https://github.com/finspec/finspec-spec/blob/master/schemas/v2.1/schema.json)] | 2019-01-18 | Update to workflow schema. | [[Link](https://gitlab.com/fixspec/finspec-spec/-/blob/master/documentation/schema_def_2.1.md)]
-[[2.0](https://github.com/finspec/finspec-spec/blob/master/schemas/v2.0/schema.json)] | 2018-06-27 | Support for navigation and history keys. Extended block (component) support. Retire 0.x versions. | [[Link](https://gitlab.com/fixspec/finspec-spec/-/blob/master/documentation/schema_def_2.0.md)]
+[[3.0](https://github.com/finspec/finspec-spec/blob/master/schemas/v3.x/3-0-schema.json)] | 2020-07-24 | Layout and Transform extensions. | [[Link](https://github.com/finspec/finspec-spec/-/blob/master/documentation/schema_def_3.0.md)]
+[[2.1](https://github.com/finspec/finspec-spec/blob/master/schemas/v2.1/schema.json)] | 2019-01-18 | Update to workflow schema. | [[Link](https://github.com/finspec/finspec-spec/-/blob/master/documentation/schema_def_2.1.md)]
+[[2.0](https://github.com/finspec/finspec-spec/blob/master/schemas/v2.0/schema.json)] | 2018-06-27 | Support for navigation and history keys. Extended block (component) support. Retire 0.x versions. | [[Link](https://github.com/finspec/finspec-spec/-/blob/master/documentation/schema_def_2.0.md)]
 [1.2] | 2018-02-14 | Support for machine readable bit fields. | (Retired)
 [1.1] | 2017-03-10 | Support for functional (context-specific) messages. | (Retired)
 [1.0] | 2017-02-28 | Enhanced protocol metadata, informational messages and change history. | (Retired)
