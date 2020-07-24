@@ -8,6 +8,9 @@ A number of important innovations have been introduced to this version. In no pa
 *  Ability to flexibly embed field tables and examples within message presentations using custom HTML tags
 *  Changes to examples array, making them global and differentiating raw versus illustrative examples. 
 *  Ablity to control the positioning of fields and examples within HTML descriptive sections.
+*  A new, optional `transforms` section to capture expected logic for message transformations by the receiving application: [Transforms](#transformsArray).
+*  Change to `createdByText` and `updatedAt` in [Notes](#notesArray)to ensure consistent camel-case naming convention.
+*  Addition of JavaScript as permitted expression language (in addtion to Groovy), with corresponding changes to various condition blocks.
 
 
 ## Format
@@ -87,7 +90,8 @@ blocks | [Blocks](#blocksObject) | **Required if supported by protocol**<br/>A l
 messages     | [Messages](#messagesObject)         | **Required**<br/>A list of messages used in the API specification.
 examples     | [Examples](#examplesObject)         | **Optional**<br/>A keyed list of message examples.
 notes     | [Notes](#notesArray)         | **Optional**<br/>An list of notes about the specification as a whole.
-workflows    | [Workflows](#workflowsObject)           | **Optional**<br/>A list of finite state machine style workflow (optional)
+workflows    | [Workflows](#workflowsObject)           | **Optional**<br/>A list of finite state machine style workflow
+transforms    | [Transforms](#transformsArray)           | **Optional**<br/>A list of message-level transformations to be performed by the receiving application
 
 The Root object may contain [vendor extensions](#vendorExtensions).
 
@@ -590,7 +594,7 @@ The Fieldset object may contain [vendor extensions](#vendorExtensions).
     "direction": "in",
     "description": "...",
     "context": {
-        "expressionType": "groovy",
+        "lang": "groovy",
         "expression": "$40 == '1'",
         "description": "OrdType (40) equals 1 (Market)"
     },
@@ -629,7 +633,7 @@ The FieldsetWithContext object may contain [vendor extensions](#vendorExtensions
 
 ```json
 {
-    "expressionType": "groovy",
+    "lang": "groovy",
     "expression": "$40 == '1'",
     "description": "OrdType (40) equals 1 (Market)"
 }
@@ -639,7 +643,7 @@ Used to provide a digital description of the context for a functional (context-s
 
 Field Name | Type | Description
 ---|:---:|---
-<a name="contextExpressionType"></a>expressionType| `string` | **Required**<br/>Type of grammar used in expression field. Value MUST be `groovy`, `javascript` or `jsep`. Default: `groovy`.
+<a name="lang"></a>lang| `string` | **Required**<br/>Language used in `expression` field. Options are `groovy` or `javascript`. Default: `groovy`.
 <a name="contextExpression"></a>expression| `string` | **Required**<br/>Expression. The message context is considered to be in effect if this expression evaluates to true.
 <a name="contextDescription"></a>description | `string` | **Required**<br/>Human-readable description of the context.
 
@@ -829,14 +833,14 @@ The BitsArray object may contain [vendor extensions](#vendorExtensions).
     "conditions": [
         {
             "label": "PriceOnLimitOrder",
-            "expressionType": "groovy",
+            "lang": "groovy",
             "expression": "($40 == 2)",
             "isReqd": true,
             "isAbsent": false
         },
         {
             "label": "NoPriceOnMarketOrder",
-            "expressionType": "groovy",
+            "lang": "groovy",
             "expression": "($40 == 1)",
             "isReqd": false,
             "isAbsent": true
@@ -853,7 +857,7 @@ A simple array of conditions, **each of which should be evaluated in turn and th
 Field Name | Type | Description
 ---|:---:|---
 <a name="conditionLabel"></a>label| `string` | **Required**<br/>Name of the condition rule.
-<a name="conditionExpressionType"></a>expressionType| `string` | **Optional**<br/>Type of grammar used in expression field. Value MUST be `"groovy"` or `"jsep"`. Default: `groovy`.
+<a name="lang"></a>lang| `string` | **Optional**<br/>Language used in `expression` field. Options are `grooy` or `javascript`. Default: `groovy`.
 <a name="conditionExpression"></a>expression| `string` | **Required**<br/>Condition expression. This block will only take effect if this expression evaluates to true.
 <a name="conditionIsReqd"></a>isReqd | `boolean` | **Required**<br/>Field is mandatory in such condition.
 <a name="conditionIsAbsent"></a>isAbsent | `boolean` | **Required**<br/>Field should not be present in such condition.
@@ -932,8 +936,8 @@ Each (sub-)object within the examplesObject may contain [vendor extensions](#ven
     "notes": [
         {
             "note": "One really interesting fact about this field is...",
-            "created_by_text": "Joe Bloggs",
-            "updated_at": "2019-02-25 14:07:07"
+            "createdByText": "Joe Bloggs",
+            "updatedAt": "2019-02-25 14:07:07"
         },
         ...
     ]
@@ -945,10 +949,141 @@ A simple array of noted associated with a document / fieldset / field (depending
 Field Name | Type | Description
 ---|:---:|---
 <a name="noteNote"></a>note | `string` | **Required**<br/>The text of the note (may contain HTML).
-<a name="noteCreatedByText"></a>created_by_text | `string` | **Required**<br/>Full name of the person (or process) that created the note.
-<a name="noteUpdatedAt"></a>updated_at | `string` | **Required**<br/>Timestamp of the late update to this note in YYYY-MM-DD HH:mm:ss format.
+<a name="noteCreatedByText"></a>createdByText | `string` | **Required**<br/>Full name of the person (or process) that created the note.
+<a name="noteUpdatedAt"></a>updatedAt | `string` | **Required**<br/>Timestamp of the late update to this note in YYYY-MM-DD HH:mm:ss format.
 
 The NotesArray object may contain [vendor extensions](#vendorExtensions).
+
+---
+
+
+## <a name="transformsArray"></a>Transforms [NEW in FinSpec 3.0]
+
+```json
+{
+    "transforms": [
+        {
+            "scope": {...},
+            "actions": [
+                ...
+            ]
+        },
+        ...
+    ]
+}
+```
+
+The transforms array provides a list of agreed transformation `actions` to be performed by the receiving application. 
+
+**IMPORTANT**: It is assumed that order in which the transformations are applied will strictly match the order of their appearance within the `transforms` array. Further, it is assumed that the transformation will apply to all tag(s) present which match the indicated scope. For example, an instruction to drop field 555 should be interpreted as an instruction to drop *all* such fields should they appear in multiple places.
+
+Each Transform object is defined as follows:
+
+Field Name | Type | Description
+---|:---:|---
+scope | [Scope](#transformScopeObject) | **Optional (but recommended!)**<br/>Used to filter the scope of the transform to messages which match the scope. Absence of `scope` implies the `actions` should be performed on all messages (both inbound and outbound).
+actions | [Actions](#transformActionsArray) | **Required**<br/>Used to describe the action(s) to be performed on messages which match the `scope`.
+
+Each Transform object may contain [vendor extensions](#vendorExtensions).
+
+## <a name="transformScopeObject"></a>Transform Scope
+
+```json
+{
+    "scope": {
+        "type": "block",
+        "key": "sg563fgd",
+        "direction": "in",
+        "lang": "groovy",
+        "condition": "$55 && $55 != 'VOD'"
+    }
+}
+```
+
+The Scope object filters the set of messages down to those that should have the transformation action applied to them. A given message must satisfy **all** of the indicated conditions in order for it to be considered in-scope.
+
+The object is defined as follows:
+
+Field Name | Type | Description
+---|:---:|---
+type | `string` | **Optional (but recommended!)**<br/>Used to identify the type of messages on which to perform the action. Options are `block`, `technical` or `functional`.
+key | `string` | **Required if `type` present**<br/>The relevant unique key for the block / message targetted by this transformation.
+direction | `string` | **Optional**<br/>The direction of the message. Options are `in`, `out` and `both`.
+lang | `string` | **Optional**<br/>Language used for the `condition` field. Options are `groovy` or `javascript`. Default: `groovy`. 
+condition | `string` | **Optional**<br/>An expression evaluating to a boolean, where tag numbers are prefixed with the '$' sign. 
+
+The Scope object may contain [vendor extensions](#vendorExtensions).
+
+## <a name="transformActionsArray"></a>Transform Actions
+
+```json
+{
+    "actions": [
+        {
+            "type": "drop",
+            "tag": "612"
+        },
+        {
+            "type": "store",
+            "lang": "groovy",            
+            "uid": "$49+'-'+$11",
+            "expression": "$UID = $2000",
+        },
+        {
+            "type": "expression",
+            "lang": "groovy",
+            "expression": "$923 = $89.split(':')[0]"
+        },
+        {
+            "type": "plugin",
+            "expression": "$923 = plugin.yourCommand($923)"
+        }
+        ...
+    ]
+}
+```
+
+The Action object indicates the set of transformation actions that should be performed *in order* on scoped messages.
+
+To permit maximum flexibility, FinSpec defines only four "core" action types, while allowing the full power of JavaScript and Groovy scripting languages to accomodate a wide range of use cases:
+
+Action Type | Description
+---|---|
+`drop` | An instruction to drop one or more field(s) referred to in the `tag` attribute.
+`store` | An instruction to store (or restore) a value to disk for later use, under an index indicated by `$UID`. This is typically used to temporarily remove values from inbound messages and echo them on responses.
+`expression` | Manipulate (or set) a tag equal to an evaluated expression.
+`plugin` | Manipulate (or set) a tag equal to a value returned from a third-party plugin.
+
+
+Each action object has the following attributes:
+
+Field Name | Type | Description
+---|:---:|---
+type | `string` | **Required**<br/>Identifies the type of action to be performed. Options are `drop`, `store`, `expression` or `plugin`.
+tag | `string` | **Required** (`drop` only)<br/>The tag to be dropped for `drop` types. Ignored for any other `type`.
+uid | `string` | **Required** (`store` only)<br/>An expression to generate a unique index for the sotrage of The tag to be dropped for `drop` types. Ignored for any other `type`.
+lang | `string` | **Optional**<br/>Language used in an `expression` type action. Options are `groovy` (default) and `javascript`.
+expression | `string` | **Required** (`store`, `expression`, `plugin` only)<br/>An expression to manipulate a field in a message, set or retrieve a $UID from storage, or to a call to an external plugin. 
+
+Each action object may contain [vendor extensions](#vendorExtensions).
+
+**IMPORTANT** Field references ($ references) are assumed to be strings, and therefore care must be taken with certain mathematical operations such as `+` which both Groovy and JavaScript use for string concatenation. Remember to cast values to numeric equivalents as required.
+
+For convenience, we've listed some common transformation examples below and their corresponding expressions.
+
+|Transformation | Actions
+|---|---|
+Copy field 44 into field 144 | `[{"type": "expression", "expression": "$144=$44"}]`
+Move field 44 into field 144 | `[{"type": "expression", "expression": "$144=$44"},{"type": "drop", "tag": "44"}]`
+Set 1002 equal to the sum of fields 1000 and 1001 | `[{"type": "expression", "expression": "$1002=$1000.toInteger()+$1001.toInteger()"}]`
+Prefix field 180 with the string 'foo:' | `[{"type": "expression", "expression": "$180='foo:'+$180"}]`
+Combine fields 243 and 337 into a field 999 | `[{"type": "expression", "expression": "$999=$243+$337"}]`
+Default field 266 to 'bar' if it isn't set | `[{"type": "expression", "expression": "$266=($266)?$266:'bar'"}]`
+Multiply field 15 is 'GBX' then change to 'GBP' and multiply 44 by 100 | `[{"type": "expression", "expression": "$44=($15=='GBX')?$44*100:$44"},{"type": "expression", "expression": "$15=($15=='GBX')?'GBP':'GBX'"}]`
+Split 1000 into fields 450 and 560 using a delimiter of ':', and then drop 1000 |`[{"type": "expression", "expression": "$450=$1000.split(':')[0]"},{"type": "expression", "expression": "$560=$1000.split(':')[1]"},{"type": "drop", "tag": "1000"}]`
+Store field 890 using a reference derived from fields 49 and 11, and then drop it from the message | `[{"type": "store", "uid": "$49+'-'+$11", "expression": "$UID=$890"},{"type": "drop", "tag": "890"}]`
+Restore a saved value into field 890 using fields 49 and 11 if it isn't already present | `[{"type": "store", "uid": "$49+'-'+$11", "expression": "$890=($890)?$890:$UID"}}]`
+
 
 ---
 
@@ -1045,10 +1180,10 @@ Field Name | Type | Description
     "description": "Cancellation of an open order",
     "start": ["Order.Acknowledged","Order.PartiallyFilled"],
     "trigger": {
-                    "type": "technical",
-                    "key": "KBfFbiqQ",
-                    "direction": "in"
-        },
+        "type": "technical",
+        "key": "KBfFbiqQ",
+        "direction": "in"
+    },
     "responses": [
         {
             "messageWireId": "9",
@@ -1101,7 +1236,7 @@ Field Name | Type | Description
 <a name="transitionType"></a>Type | `string` | **Required**<br/>Type of the message serving as a transition. Possible values: "technical", "functional", "event".
 <a name="transitionKey"></a>Key | `string` | **Required**<br/> Reference of the message.
 <a name="transitionDirection"></a>Direction | `string` | **Required**<br/>Direction of the message. Possible values: "In" or "Out"
-<a name="transitionWhere"></a>Where | `string` | **Optional**<br/>Specific field condition in the message, expressed as a `groovy` expression.
+<a name="transitionWhere"></a>Where | `string` | **Optional**<br/>Specific field condition in the message, expressed as a `groovy` or `javascript` expression.
 
 
 #### <a name="responseObject"></a>Response
@@ -1280,6 +1415,7 @@ Field Name | Type | Description
 "31": {
 	"if": [
 		{
+            "lang": "groovy",            
 			"condition": "$54 == 1",
 			"max": {
 				"last": "44",
@@ -1287,6 +1423,7 @@ Field Name | Type | Description
 			}
 		},
 		{
+            "lang": "groovy",
 			"condition": "$54 != 1",
 			"min": {
 				"last": "44",
@@ -1303,9 +1440,10 @@ Field Name | Type | Description
 ---|:---:|---
 <a name="withIfArray">if</a> | [withIfArray](#withIfArray) | **Required**<br/>Array of conditions used to define the value of a tag - It contains at least 1 object.
 
-The <a name="withIfArray"></a>If is a series of 'Ifcondition' objects defined by the following mandatory 2 objects:
+The <a name="withIfArray"></a>If is a series of 'Ifcondition' objects defined by the following attributes:
 
 Field Name | Type | Description
 ---|:---:|---
-<a name="withIfArrayCondition">Condition</a> | `string` | **Required**<br/>Tag value condition expressed in `groovy` expression.
-<a name="withIfArrayRef">#withObject</a> | [with](#withObject) | **Required**<br/>Resulting value of the tag.
+lang | `string` | **Optional**<br/>The language of the `condition` expression. Options are `groovy` (default) or `javascript`.
+<a name="withIfArrayCondition">Condition</a> | `string` | **Required**<br/>Condition expressed in either `groovy` or `javascript`.
+<a name="withIfArrayRef">withObject</a> | [with](#withObject) | **Required**<br/>Resulting value of the tag.
