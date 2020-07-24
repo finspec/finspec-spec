@@ -1,0 +1,1302 @@
+{
+  "finspec": "0.2",
+  "info": {
+    "version": "1.0",
+    "issueDate": "2016-03-29",
+    "liveDate": "2016-03-29",
+    "issuer": "FixSpec",
+    "title": "Sample Equity Spec",
+    "contacts": [
+      {
+        "name": "FixSpec Ltd.",
+        "phone": "+44 7908 860 436",
+        "email": "happytohelp@fixspec.com",
+        "url": "http://www.fixspec.com"
+      }
+    ]
+  },
+  "protocol": "fix",
+  "protocolVersion": "4.3",
+  "isBinary": false,
+  "datatypes": [
+    {
+      "name": "char",
+      "baseType": "char",
+      "description": "Single character value, can include any alphanumeric character or punctuation except the delimiter. All char fields are case sensitive (i.e. m != M)."
+    },
+    {
+      "name": "Boolean",
+      "baseType": "char",
+      "description": "Char field containing one of two values: 'Y' = True/Yes, 'N' = False/No"
+    },
+    {
+      "name": "int",
+      "baseType": "integer",
+      "description": "Sequence of digits without commas or decimals and optional sign character (ASCII characters '-'' and '0' - '9'). The sign character utilizes one byte (i.e. positive int is '99999' while negative int is '-99999'). Note that int values may contain leading zeros (e.g. '00023' = '23')."
+    },
+    {
+      "name": "String",
+      "baseType": "string",
+      "description": "Alpha-numeric free format strings, can include any character or punctuation except the delimiter. All String fields are case sensitive (i.e. morstatt != Morstatt)."
+    },
+    {
+      "name": "UTCTimestamp",
+      "baseType": "string",
+      "pattern": "^20\\d{2}-(0\\d|1[012])-([0-2]\\d|3[01]) ([0-1][0-9]|2[0-4]):([0-5][0-9]):([0-5][0-9])([.]\\d{3}){0,1}$",
+      "description": "String field representing Time/date combination represented in UTC (Universal Time Coordinated, also known as 'GMT') in either YYYYMMDD-HH:MM:SS (whole seconds) or YYYYMMDD-HH:MM:SS.sss (milliseconds) format, colons, dash, and period required.",
+      "examples": [
+        {
+          "example": "2016-01-15 10:40:14",
+          "description" : "UTCTimestamp without milliseconds"
+        },
+        {
+          "example": "2016-02-16 11:55:24.472",
+          "description" :  "UTCTimestamp with milliseconds"
+        }
+      ]
+    },
+    {
+      "name": "SeqNum",
+      "baseType": "integer",
+      "description": "Integer field representing a message sequence number. Value must be positive."
+    },
+    {
+      "name": "NumInGroup",
+      "baseType": "integer",
+      "description": "Integer field representing the number of entries in a repeating group. Value must be positive."
+    },
+    {
+      "name": "Price",
+      "baseType": "number",
+      "description": "Numeric field representing a price.",
+      "precision": 4
+    }
+  ],
+  "commonBlocks": {
+    "header": {
+      "name": "Standard Header",
+      "wireId": "header",
+      "description": "This is the standard header.",
+      "fields": [
+        {
+          "position": 0,
+          "name": "Beginstring",
+          "wireId": "8",
+          "alwaysRequired": true,
+          "datatype": "String",
+          "values": [
+            {
+              "enum": "FIX.4.3",
+              "description": "FIX.4.3"
+            }
+          ]
+        },
+        {
+          "position": 1,
+          "name": "BodyLength",
+          "wireId": "9",
+          "alwaysRequired": true,
+          "datatype": "int",
+          "description": "The message length in bytes"
+        },
+        {
+          "position": 2,
+          "name": "MsgType",
+          "wireId": "35",
+          "alwaysRequired": true,
+          "datatype": "String",
+          "description": "The message type code"
+        },
+        {
+          "position": 3,
+          "name": "SenderCompID",
+          "wireId": "49",
+          "alwaysRequired": true,
+          "datatype": "String",
+          "description": "Used to identify the message sender."
+        },
+        {
+          "position": 4,
+          "name": "TargetCompID",
+          "wireId": "56",
+          "alwaysRequired": true,
+          "datatype": "String",
+          "description": "Used to identify the message recipient."
+        },
+        {
+          "position": 5,
+          "name": "MsgSeqNum",
+          "wireId": "34",
+          "alwaysRequired": true,
+          "datatype": "SeqNum",
+          "description": " The message sequence number"
+        },
+        {
+          "position": 6,
+          "name": "PossDupFlag",
+          "wireId": "43",
+          "alwaysRequired": false,
+          "datatype": "Boolean",
+          "description": "Populated for retransmitted messages",
+          "values": [
+            {
+              "enum": "N",
+              "isDefault": true,
+              "description": "Original transmission"
+            },
+            {
+              "enum": "Y",
+              "description": "Possible duplicate"
+            }
+          ]
+        },
+        {
+          "position": 7,
+          "name": "PossResend",
+          "wireId": "97",
+          "alwaysRequired": false,
+          "datatype": "Boolean",
+          "description": "Populated when there is a chance that the message is a duplicate of a message sent under a different sequence number",
+          "values": [
+            {
+              "enum": "N",
+              "isDefault": true,
+              "description": "Original transmission"
+            },
+            {
+              "enum": "Y",
+              "description": "Possible resend"
+            }
+          ]
+        },
+        {
+          "position": 8,
+          "name": "SendingTime",
+          "wireId": "52",
+          "alwaysRequired": true,
+          "datatype": "UTCTimestamp",
+          "description": "The time of message transmission, in UTC."
+        }
+      ]
+    },
+    "footer": {
+      "name": "Standard Footer",
+      "wireId": "footer",
+      "description": "This is the standard trailer.",
+      "fields": [
+        {
+          "position": 0,
+          "name": "CheckSum",
+          "wireId": "10",
+          "alwaysRequired": true,
+          "datatype": "String",
+          "description": "3 byte checksum calculated in accordance with the FIX specification."
+        }
+      ]
+    }
+  },
+  "messages": {
+    "session": [
+      {
+        "name": "Heartbeat",
+        "wireId": "0",
+        "direction": "both",
+        "description": "Monitor connection status.",
+        "fields": [
+          {
+            "position": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Standard FIX header.",
+            "datatype": "block"
+          },
+          {
+            "position": 1,
+            "name": "TestReqID",
+            "alwaysRequired": false,
+            "description": "Must be populated when the heartbeat is a response to a TestRequest message.",
+            "wireId": "112",
+            "datatype": "String"
+          },
+          {
+            "position": 2,
+            "name": "Footer",
+            "blockId": "footer",
+            "alwaysRequired": true,
+            "description": "Standard FIX footer.",
+            "datatype": "block"
+          }
+        ]
+      },
+      {
+        "name": "TestRequest",
+        "wireId": "1",
+        "direction": "both",
+        "description": "Inquire connection status.",
+        "fields": [
+          {
+            "position": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Standard FIX header.",
+            "datatype": "block"
+          },
+          {
+            "position": 1,
+            "name": "TestReqID",
+            "alwaysRequired": true,
+            "description": "Test request id. Any string can be used.",
+            "wireId": "112",
+            "datatype": "String"
+          },
+          {
+            "position": 2,
+            "name": "Footer",
+            "blockId": "footer",
+            "alwaysRequired": true,
+            "description": "Standard FIX footer.",
+            "datatype": "block"
+          }
+        ]
+      },
+      {
+        "name": "ResendRequest",
+        "wireId": "2",
+        "direction": "both",
+        "description": "Fill in message gaps.",
+        "fields": [
+          {
+            "position": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Standard FIX header.",
+            "datatype": "block"
+          },
+          {
+            "position": 1,
+            "name": "BeginSeqNo",
+            "alwaysRequired": true,
+            "description": "Sequence number of the first message requested to be resent",
+            "wireId": "7",
+            "datatype": "SeqNum"
+          },
+          {
+            "position": 2,
+            "name": "EndSeqNo",
+            "alwaysRequired": true,
+            "description": "Sequence number of the last message requested to be resent, or zero if all messages subsequent to BeginSeqNo are to be resent.",
+            "wireId": "16",
+            "datatype": "SeqNum"
+          },
+          {
+            "position": 3,
+            "name": "Footer",
+            "blockId": "footer",
+            "alwaysRequired": true,
+            "description": "Standard FIX footer.",
+            "datatype": "block"
+          }
+        ]
+      },
+      {
+        "name": "Reject",
+        "wireId": "3",
+        "direction": "both",
+        "description": "Reject a single invalid message.",
+        "fields": [
+          {
+            "position": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Standard FIX header.",
+            "datatype": "block"
+          },
+          {
+            "position": 1,
+            "name": "RefSeqNum",
+            "alwaysRequired": true,
+            "description": "The sequence number of the rejected message",
+            "wireId": "45",
+            "datatype": "SeqNum"
+          },
+          {
+            "position": 2,
+            "name": "RefTagID",
+            "alwaysRequired": false,
+            "description": "The tag number of the FIX field being referenced",
+            "wireId": "371",
+            "datatype": "int"
+          },
+          {
+            "position": 3,
+            "name": "RefMsgType",
+            "alwaysRequired": false,
+            "description": "The type code for the message being referenced",
+            "wireId": "372",
+            "datatype": "String"
+          },
+          {
+            "position": 4,
+            "name": "SessionRejectReason",
+            "alwaysRequired": false,
+            "description": "Code to identify the reason for a session level reject message, if appropriate",
+            "wireId": "373",
+            "datatype": "int",
+            "values": [
+              {
+                "enum": "12",
+                "description": "XML Validation error"
+              },
+              {
+                "enum": "17",
+                "description": "Non data value includes field delimiter (SOH character)"
+              },
+              {
+                "enum": "16",
+                "description": "Incorrect NumInGroup count for repeating group"
+              },
+              {
+                "enum": "15",
+                "description": "Repeating group fields out of order"
+              },
+              {
+                "enum": "14",
+                "description": "Tag specified out of required order"
+              },
+              {
+                "enum": "11",
+                "description": "Invalid MsgType"
+              },
+              {
+                "enum": "0",
+                "description": "Invalid tag number"
+              },
+              {
+                "enum": "9",
+                "description": "CompID problem"
+              },
+              {
+                "enum": "8",
+                "description": "Signature problem"
+              },
+              {
+                "enum": "7",
+                "description": "Decryption problem"
+              },
+              {
+                "enum": "6",
+                "description": "Incorrect data format for value"
+              },
+              {
+                "enum": "5",
+                "description": "Value is incorrect (out of range) for this tag"
+              },
+              {
+                "enum": "4",
+                "description": "Tag specified without a value"
+              },
+              {
+                "enum": "3",
+                "description": "Undefined Tag"
+              },
+              {
+                "enum": "10",
+                "description": "SendingTime accuracy problem"
+              },
+              {
+                "enum": "13",
+                "description": "Tag appears more than once"
+              },
+              {
+                "enum": "2",
+                "description": "Tag not defined for this message type"
+              },
+              {
+                "enum": "1",
+                "description": "Required tag missing"
+              }
+            ]
+          },
+          {
+            "position": 5,
+            "name": "Text",
+            "alwaysRequired": false,
+            "description": "Message to explain the reason for rejection, where possible",
+            "wireId": "58",
+            "datatype": "String"
+          },
+          {
+            "position": 6,
+            "name": "Footer",
+            "blockId": "footer",
+            "alwaysRequired": true,
+            "description": "Standard FIX footer.",
+            "datatype": "block"
+          }
+        ]
+      },
+      {
+        "name": "SequenceReset",
+        "wireId": "4",
+        "direction": "both",
+        "description": "Resynchronize sequence numbers.",
+        "fields": [
+          {
+            "position": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Standard FIX header.",
+            "datatype": "block"
+          },
+          {
+            "position": 1,
+            "name": "GapFillFlag",
+            "alwaysRequired": false,
+            "description": "Used to indicate that message is being used in gap-fill-mode",
+            "wireId": "123",
+            "datatype": "Boolean",
+            "values": [
+              {
+                "enum": "Y",
+                "description": "Gap Fill message, MsgSeqNum field valid"
+              },
+              {
+                "enum": "N",
+                "description": "Sequence Reset, ignore MsgSeqNum"
+              }
+            ]
+          },
+          {
+            "position": 2,
+            "name": "NewSeqNo",
+            "alwaysRequired": true,
+            "description": "The new next message sequence number to be used.",
+            "wireId": "36",
+            "datatype": "SeqNum"
+          },
+          {
+            "position": 3,
+            "name": "Footer",
+            "blockId": "footer",
+            "alwaysRequired": true,
+            "description": "Standard FIX footer.",
+            "datatype": "block"
+          }
+        ]
+      },
+      {
+        "name": "Logout",
+        "wireId": "5",
+        "description": "Closing of a connection to the system is initiated by sending a Logout message to the other party. This should then be acknowledged by the other party by replying with a Logout message.Either the client or UBS may initiate disconnection.",
+        "fields": [
+          {
+            "position": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Standard FIX header.",
+            "datatype": "block"
+          },
+          {
+            "position": 1,
+            "name": "Text",
+            "alwaysRequired": false,
+            "description": "Will be populated in the event of venue disconnection to provide a reason for the disconnection.",
+            "wireId": "58",
+            "datatype": "String"
+          },
+          {
+            "position": 3,
+            "name": "Footer",
+            "blockId": "footer",
+            "alwaysRequired": true,
+            "description": "Standard FIX footer.",
+            "datatype": "block"
+          }
+        ]
+      },
+      {
+        "name": "Logon",
+        "wireId": "A",
+        "description": "The logon message authenticates a user establishing a connection to a remote system.",
+        "fields": [
+          {
+            "position": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Standard FIX header.",
+            "datatype": "block"
+          },
+          {
+            "position": 1,
+            "name": "HeartBtInt",
+            "alwaysRequired": true,
+            "description": "The heartbeat interval.",
+            "wireId": "108",
+            "datatype": "int",
+            "values": [
+              {
+                "enum": "30",
+                "description": "30 seconds"
+              }
+            ]
+          },
+          {
+            "position": 2,
+            "name": "ResetSeqNumFlag",
+            "alwaysRequired": false,
+            "description": "Indicates both sides of the FIX session should reset sequence numbers. Should only be specified when this message is sent to instruct a sequence number reset.",
+            "wireId": "141",
+            "datatype": "Boolean",
+            "values": [
+              {
+                "enum": "Y",
+                "description": "Yes, reset sequence numbers"
+              },
+              {
+                "enum": "N",
+                "description": "No"
+              }
+            ]
+          },
+          {
+            "position": 3,
+            "name": "Footer",
+            "blockId": "footer",
+            "alwaysRequired": true,
+            "description": "Standard FIX footer.",
+            "datatype": "block"
+          }
+        ]
+      }
+    ],
+    "application": [
+      {
+        "name": "NewOrderSingle",
+        "wireId": "D",
+        "direction": "in",
+        "description": "The new order message used to submit the new order in given security(symbol)/",
+        "fields": [
+          {
+            "position": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Standard FIX header.",
+            "datatype": "block"
+          },
+          {
+            "position": 1,
+            "name": "ClOrdID",
+            "alwaysRequired": true,
+            "description": "Unique identifier of the order as assigned by the client",
+            "wireId": "11",
+            "datatype": "String"
+          },
+          {
+            "position": 2,
+            "name": "NoPartyIDs",
+            "alwaysRequired": true,
+            "description": "The number of repeating groups to follow. The repeating groups should contain unique combinations of PartyID, PartyIDSource, and PartyRole.",
+            "wireId": "453",
+            "datatype": "NumInGroup",
+            "fields": [
+              {
+                "position": 0,
+                "name": "PartyID",
+                "alwaysRequired": true,
+                "description": "The party id (counterparty, trader etc.)",
+                "wireId": "448",
+                "datatype": "String"
+              },
+              {
+                "position": 1,
+                "name": "PartyIDSource",
+                "alwaysRequired": true,
+                "description": "The type of party id.",
+                "wireId": "447",
+                "datatype": "char",
+                "values": [
+                  {
+                    "enum": "D",
+                    "description": "Proprietary / Custom Code"
+                  }
+                ]
+              },
+              {
+                "position": 2,
+                "name": "PartyRole",
+                "alwaysRequired": true,
+                "description": "The type of party:",
+                "wireId": "452",
+                "datatype": "int",
+                "values": [
+                  {
+                    "enum": "11",
+                    "description": "Order Origination Trader (when trader id is given for field 448)"
+                  },
+                  {
+                    "enum": "13",
+                    "description": "Order Origination Firm (when counterparty id is given for field 448)"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "position": 3,
+            "name": "HandlInst",
+            "alwaysRequired": true,
+            "description": "Instructions for order handling",
+            "wireId": "21",
+            "datatype": "char",
+            "values": [
+              {
+                "enum": "1",
+                "description": "Automated execution order, private, no Broker intervention"
+              }
+            ]
+          },
+          {
+            "position": 4,
+            "name": "Symbol",
+            "alwaysRequired": true,
+            "description": "Common, 'human understood' representation of the security.",
+            "wireId": "55",
+            "datatype": "String"
+          },
+          {
+            "position": 5,
+            "name": "Side",
+            "alwaysRequired": true,
+            "description": "Buy or sell side.",
+            "wireId": "54",
+            "datatype": "char",
+            "values": [
+              {
+                "enum": "1",
+                "description": "Buy"
+              },
+              {
+                "enum": "2",
+                "description": "Sell"
+              }
+            ]
+          },
+          {
+            "position": 6,
+            "name": "TransactTime",
+            "alwaysRequired": true,
+            "description": "The time that this order request was initiated",
+            "wireId": "60",
+            "datatype": "UTCTimestamp"
+          },
+          {
+            "position": 7,
+            "name": "OrderQty",
+            "alwaysRequired": true,
+            "description": "The quantity of the order.",
+            "wireId": "38",
+            "datatype": "int"
+          },
+          {
+            "position": 8,
+            "name": "OrdType",
+            "alwaysRequired": true,
+            "description": "Type of this order.",
+            "wireId": "40",
+            "datatype": "char",
+            "values": [
+              {
+                "enum": "1",
+                "description": "Market"
+              },
+              {
+                "enum": "2",
+                "description": "Limit"
+              }
+            ]
+          },
+          {
+            "position": 9,
+            "name": "Price",
+            "alwaysRequired": false,
+            "conditions": [
+              {
+                "label": "PriceOnLimitOrder",
+                "expressionType": "jsep",
+                "expression": "($40 == 2)",
+                "isReqd": true,
+                "isAbsent": false
+              },
+              {
+                "label": "NoPriceOnMarketOrder",
+                "expressionType": "jsep",
+                "expression": "($40 == 1)",
+                "isReqd": false,
+                "isAbsent": true
+              }
+            ],
+            "description": "Limit price, required for limit orders.",
+            "wireId": "44",
+            "datatype": "Price"
+          },
+          {
+            "position": 10,
+            "name": "TimeInForce",
+            "alwaysRequired": true,
+            "description": "The execution strategy to be used.",
+            "wireId": "59",
+            "datatype": "char",
+            "values": [
+              {
+                "enum": "3",
+                "description": "Immediate or Cancel (“Fill and Kill”)"
+              },
+              {
+                "enum": "4",
+                "description": "Fill or Kill"
+              }
+            ]
+          },
+          {
+            "position": 11,
+            "name": "Footer",
+            "blockId": "footer",
+            "alwaysRequired": true,
+            "description": "Standard FIX footer.",
+            "datatype": "block"
+          }
+        ]
+      },
+      {
+        "name": "DontKnowTrade",
+        "direction": "in",
+        "wireId": "Q",
+        "description": "The Don’t Know Trade (DK) message notifies a trading partner that an electronically received execution has been rejected. This message can be thought of as an execution reject message.",
+        "fields": [
+          {
+            "position": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Standard FIX header.",
+            "datatype": "block"
+          },
+          {
+            "position": 1,
+            "name": "OrderID",
+            "alwaysRequired": true,
+            "description": "The OrderID corresponding to the problem execution.",
+            "wireId": "37",
+            "datatype": "String"
+          },
+          {
+            "position": 2,
+            "name": "ExecID",
+            "alwaysRequired": true,
+            "description": "The Execution ID of the problem execution.",
+            "wireId": "17",
+            "datatype": "String"
+          },
+          {
+            "position": 3,
+            "name": "DKReason",
+            "alwaysRequired": true,
+            "description": "The reason code corresponding to the problem. (If appropriate; use Z=other if not).",
+            "wireId": "127",
+            "datatype": "char",
+            "values": [
+              {
+                "enum": "B",
+                "description": "Wrong side"
+              },
+              {
+                "enum": "C",
+                "description": "Quantity exceeds order"
+              },
+              {
+                "enum": "D",
+                "description": "No matching order"
+              },
+              {
+                "enum": "E",
+                "description": "Price exceeds limit"
+              },
+              {
+                "enum": "Z",
+                "description": "Other"
+              },
+              {
+                "enum": "A",
+                "description": "Unknown symbol"
+              }
+            ]
+          },
+          {
+            "position": 4,
+            "name": "Symbol",
+            "alwaysRequired": true,
+            "description": "Order symbol. This should correspond to the execution report.",
+            "wireId": "55",
+            "datatype": "String"
+          },
+          {
+            "position": 5,
+            "name": "Side",
+            "alwaysRequired": true,
+            "description": "Order side. This should correspond to the execution report.",
+            "wireId": "54",
+            "datatype": "char",
+            "values": [
+              {
+                "enum": "1",
+                "description": "Buy"
+              },
+              {
+                "enum": "2",
+                "description": "Sell"
+              }
+            ]
+          },
+          {
+            "position": 6,
+            "name": "OrderQty",
+            "alwaysRequired": true,
+            "description": "This should correspond to the execution report.",
+            "wireId": "38",
+            "datatype": "int"
+          },
+          {
+            "position": 7,
+            "name": "LastQty",
+            "alwaysRequired": false,
+            "description": "Required if specified on the execution report",
+            "wireId": "32",
+            "datatype": "int"
+          },
+          {
+            "position": 8,
+            "name": "LastPx",
+            "alwaysRequired": false,
+            "description": "Required if specified on the execution report",
+            "wireId": "31",
+            "datatype": "Price"
+          },
+          {
+            "position": 9,
+            "name": "Text",
+            "alwaysRequired": true,
+            "description": "This should contain an error message indicating the nature of the problem.",
+            "wireId": "58",
+            "datatype": "String"
+          },
+          {
+            "position": 10,
+            "name": "Footer",
+            "blockId": "footer",
+            "alwaysRequired": true,
+            "description": "Standard FIX footer.",
+            "datatype": "block"
+          }
+        ]
+      },
+      {
+        "name": "ExecutionReport",
+        "direction": "out",
+        "wireId": "8",
+        "description": "Venue will send a series of Execution Report messages to the client to provide notification regarding order execution. Execution Report messages are used to indicate: order accepted, order partially filled, order filled, order cancelled, and order rejected.",
+        "fields": [
+          {
+            "position": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Standard FIX header.",
+            "datatype": "block"
+          },
+          {
+            "position": 1,
+            "name": "Ord QtyOrderID",
+            "alwaysRequired": true,
+            "description": "Unique identifier of the order as assigned by UBS.",
+            "wireId": "37",
+            "datatype": "String"
+          },
+          {
+            "position": 2,
+            "name": "ClOrdID",
+            "alwaysRequired": true,
+            "description": "The identifier of the order as assigned by the client in the New Order – Single message.",
+            "wireId": "11",
+            "datatype": "String"
+          },
+          {
+            "position": 3,
+            "name": "ExecID",
+            "alwaysRequired": true,
+            "description": "Unique identifier of the execution report, as assigned by UBS.",
+            "wireId": "17",
+            "datatype": "String"
+          },
+          {
+            "position": 4,
+            "name": "ExecType",
+            "alwaysRequired": true,
+            "description": "Describes the purpose of the execution report.",
+            "wireId": "150",
+            "datatype": "char",
+            "values": [
+              {
+                "enum": "0",
+                "description": "New (order accepted)"
+              },
+              {
+                "enum": "F",
+                "description": "Trade"
+              },
+              {
+                "enum": "4",
+                "description": "Cancelled (order cancelled / failed)"
+              },
+              {
+                "enum": "8",
+                "description": "Rejected (order rejected)"
+              }
+            ]
+          },
+          {
+            "position": 5,
+            "name": "OrdStatus",
+            "alwaysRequired": true,
+            "description": "Describes the current status of the order",
+            "wireId": "39",
+            "datatype": "char",
+            "values": [
+              {
+                "enum": "0",
+                "description": "New ( order accepted)"
+              },
+              {
+                "enum": "1",
+                "description": "Partially Filled"
+              },
+              {
+                "enum": "2",
+                "description": "Filled"
+              },
+              {
+                "enum": "4",
+                "description": "Cancelled (order cancelled / failed)"
+              },
+              {
+                "enum": "8",
+                "description": "Rejected (order rejected)"
+              }
+            ]
+          },
+          {
+            "position": 6,
+            "name": "OrdRejReason",
+            "alwaysRequired": false,
+            "description": "May be supplied when ExecType = 8 (Rejected), to indicate the reason for the rejection, if the reason corresponds to one of the standard codes for this field.",
+            "wireId": "103",
+            "datatype": "int",
+            "values": [
+              {
+                "enum": "2",
+                "description": "Exchange closed"
+              },
+              {
+                "enum": "1",
+                "description": "Unknown symbol"
+              },
+              {
+                "enum": "3",
+                "description": "Order exceeds limit"
+              },
+              {
+                "enum": "4",
+                "description": "Too late to enter"
+              },
+              {
+                "enum": "5",
+                "description": "Unknown Order"
+              },
+              {
+                "enum": "7",
+                "description": "Duplicate of a verbally communicated order"
+              },
+              {
+                "enum": "9",
+                "description": "Trade Along required"
+              },
+              {
+                "enum": "10",
+                "description": "Invalid Investor ID"
+              },
+              {
+                "enum": "6",
+                "description": "Duplicate Order (e.g. dupe ClOrdID)"
+              },
+              {
+                "enum": "11",
+                "description": "Unsupported order characteristic"
+              },
+              {
+                "enum": "12",
+                "description": "Surveillence Option"
+              },
+              {
+                "enum": "0",
+                "description": "Broker / Exchange option"
+              },
+              {
+                "enum": "8",
+                "description": "Stale Order"
+              }
+            ]
+          },
+          {
+            "position": 7,
+            "name": "Symbol",
+            "alwaysRequired": true,
+            "description": "Order symbol. This will match the symbol specified in the order request.",
+            "wireId": "55",
+            "datatype": "String"
+          },
+          {
+            "position": 8,
+            "name": "Side",
+            "alwaysRequired": true,
+            "description": "Specifies the side of the order. This will match the side specified in the order request.",
+            "wireId": "54",
+            "datatype": "char",
+            "values": [
+              {
+                "enum": "1",
+                "description": "Buy"
+              },
+              {
+                "enum": "2",
+                "description": "Sell"
+              }
+            ]
+          },
+          {
+            "position": 9,
+            "name": "OrderQty",
+            "alwaysRequired": true,
+            "description": "The quantity, as specified in the order request",
+            "wireId": "38",
+            "datatype": "int"
+          },
+          {
+            "position": 10,
+            "name": "OrdType",
+            "alwaysRequired": true,
+            "description": "The order type, as specified in the order request",
+            "wireId": "40",
+            "datatype": "char",
+            "values": [
+              {
+                "enum": "1",
+                "description": "Market"
+              },
+              {
+                "enum": "2",
+                "description": "Limit"
+              }
+            ]
+          },
+          {
+            "position": 11,
+            "name": "Price",
+            "alwaysRequired": false,
+            "description": "The price specified on the order request, if one was present",
+            "wireId": "44",
+            "datatype": "Price"
+          },
+          {
+            "position": 12,
+            "name": "TimeInForce",
+            "alwaysRequired": true,
+            "description": "The time in force value as specified on the order request.",
+            "wireId": "59",
+            "datatype": "char",
+            "values": [
+              {
+                "enum": "3",
+                "description": "Immediate or Cancel (IOC)"
+              },
+              {
+                "enum": "4",
+                "description": "Fill or Kill (FOK)"
+              }
+            ]
+          },
+          {
+            "position": 13,
+            "name": "LastQty",
+            "alwaysRequired": true,
+            "description": "If ExecType(150) = Trade(F), then this will contain the quantity of the order fill being reported. Otherwise this field will contain zero.",
+            "wireId": "32",
+            "datatype": "int"
+          },
+          {
+            "position": 14,
+            "name": "LastPx",
+            "alwaysRequired": false,
+            "description": "If ExecType(150) = Trade(F), then this will contain the rate at which the fill being reported was executed. Otherwise this field will not be specified.",
+            "wireId": "31",
+            "datatype": "Price"
+          },
+          {
+            "position": 15,
+            "name": "LeavesQty",
+            "alwaysRequired": true,
+            "description": "The quantity open for further execution.If OrdStatus(39) is Cancelled (4) or Rejected(8) then this will be zero. Otherwise it will take the value:OrderQty(38) – CumQty(14)",
+            "wireId": "151",
+            "datatype": "int"
+          },
+          {
+            "position": 16,
+            "name": "CumQty",
+            "alwaysRequired": true,
+            "description": "The cumulative, currently executed quantity for the order.",
+            "wireId": "14",
+            "datatype": "int"
+          },
+          {
+            "position": 17,
+            "name": "AvgPx",
+            "alwaysRequired": true,
+            "description": "The average price of all fills for this order.",
+            "wireId": "6",
+            "datatype": "Price"
+          },
+          {
+            "position": 18,
+            "name": "Text",
+            "alwaysRequired": false,
+            "description": "May be used to return an error message if the ExecType = 8 (Rejected) or 4 (Cancelled).",
+            "wireId": "58",
+            "datatype": "String"
+          },
+          {
+            "position": 19,
+            "name": "Footer",
+            "blockId": "footer",
+            "alwaysRequired": true,
+            "description": "Standard FIX footer.",
+            "datatype": "block"
+          }
+        ]
+      },
+      {
+        "name": "BusinessMessageReject",
+        "direction": "out",
+        "wireId": "j",
+        "description": "Used to reject an invalid Don’t Know Trade message.",
+        "fields": [
+          {
+            "position": 0,
+            "name": "Header",
+            "blockId": "header",
+            "alwaysRequired": true,
+            "description": "Standard FIX header.",
+            "datatype": "block"
+          },
+          {
+            "position": 1,
+            "name": "RefSeqNum",
+            "alwaysRequired": false,
+            "description": "The sequence number of the rejected message",
+            "wireId": "45",
+            "datatype": "SeqNum"
+          },
+          {
+            "position": 2,
+            "name": "RefMsgType",
+            "alwaysRequired": true,
+            "description": "The type code for the message being rejected",
+            "wireId": "372",
+            "datatype": "String"
+          },
+          {
+            "position": 3,
+            "name": "BusinessRejectRefID",
+            "alwaysRequired": false,
+            "description": "The 'business-level' ID field for the message being rejected. For a Don’t Know Trade message, this will be the ExecID field.",
+            "wireId": "379",
+            "datatype": "String"
+          },
+          {
+            "position": 4,
+            "name": "BusinessRejectReason",
+            "alwaysRequired": true,
+            "description": "Code to identify the reason for the rejection.",
+            "wireId": "380",
+            "datatype": "int",
+            "values": [
+              {
+                "enum": "3",
+                "description": "Unsupported Message Type"
+              },
+              {
+                "enum": "7",
+                "description": "DeliverTo firm not available at this time"
+              },
+              {
+                "enum": "4",
+                "description": "Application not available"
+              },
+              {
+                "enum": "6",
+                "description": "Not authorized"
+              },
+              {
+                "enum": "0",
+                "description": "Other"
+              },
+              {
+                "enum": "5",
+                "description": "Conditionally Required Field Missing"
+              },
+              {
+                "enum": "1",
+                "description": "Unkown ID"
+              },
+              {
+                "enum": "2",
+                "description": "Unknown Security"
+              }
+            ]
+          },
+          {
+            "position": 5,
+            "name": "Text",
+            "alwaysRequired": false,
+            "description": "This will contain an error message indicating the nature of the problem.",
+            "wireId": "58",
+            "datatype": "String"
+          },
+          {
+            "position": 6,
+            "name": "Footer",
+            "blockId": "footer",
+            "alwaysRequired": true,
+            "description": "Standard FIX footer.",
+            "datatype": "block"
+          }
+        ]
+      }
+    ]
+  }
+}
